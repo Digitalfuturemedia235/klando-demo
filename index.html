@@ -1,3 +1,6 @@
+Here is the full updated `index.html`, including the small-button fix and the new customer layout. The JavaScript is unchanged.
+
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -247,7 +250,11 @@ button.btn.red {
   }
 
   #vCust > .card:first-child {
-    grid-row: span 2;
+    grid-column: 1;
+  }
+
+  #vCust > .card:nth-child(2) {
+    grid-column: 2;
   }
 
   #vDrv {
@@ -360,6 +367,12 @@ button.btn.red {
 
 .footer small {
   color: #c5d8cc;
+}
+
+button.btn.sm {
+  width: auto;
+  padding: 9px 13px;
+  margin-top: 6px;
 }
 </style>
 </head>
@@ -794,3 +807,4 @@ async function loadAdmin(){
 </script>
 </body>
 </html>
+```
