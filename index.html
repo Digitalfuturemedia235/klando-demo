@@ -301,6 +301,66 @@ button.btn.red {
     gap: 6px;
   }
 }
+
+.hero {
+  background: linear-gradient(120deg, #064528, #087743);
+  color: white;
+  padding: 32px 28px;
+  border-radius: 22px;
+  margin-bottom: 25px;
+  box-shadow: 0 12px 28px rgba(6,69,40,.16);
+}
+
+.hero-label {
+  color: #ffad42;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.hero h2 {
+  color: white;
+  font-size: clamp(27px, 5vw, 40px);
+  line-height: 1.15;
+  margin: 15px 0;
+}
+
+.hero h2 span {
+  color: #ffad42;
+}
+
+.hero p {
+  max-width: 580px;
+  color: rgba(255,255,255,.85);
+  line-height: 1.7;
+}
+
+.footer {
+  background: #063d25;
+  color: white;
+  text-align: center;
+  padding: 32px 15px;
+  margin-top: 40px;
+}
+
+.footer h2 {
+  letter-spacing: 3px;
+  font-size: 25px;
+}
+
+.footer p {
+  color: #e5f2e9;
+}
+
+.footer div {
+  color: #ffad42;
+  font-weight: 700;
+  margin: 12px;
+}
+
+.footer small {
+  color: #c5d8cc;
+}
 </style>
 </head>
 <body>
@@ -310,6 +370,18 @@ button.btn.red {
   <button id="logoutBtn" type="button" class="hide" data-i18n="logout"></button>
 </header>
 <main>
+  <section class="hero">
+    <div class="hero-label">KLANDO · MOBILITÉ URBAINE</div>
+    <h2>Vos déplacements.<br>
+      <span>En toute simplicité.</span>
+    </h2>
+    <p>
+      Commandez votre moto-taxi en quelques secondes.
+      Retrouvez des conducteurs disponibles et déplacez-vous
+      librement dans N'Djaména.
+    </p>
+  </section>
+
   <div id="cfgWarn" class="msg err hide"></div>
   <div id="globalMsg"></div>
 
@@ -387,6 +459,13 @@ button.btn.red {
     <div id="admMsg"></div>
   </section>
 </main>
+
+<footer class="footer">
+  <h2>KLANDO</h2>
+  <p>Votre ville. Votre trajet. Votre liberté.</p>
+  <div>Une initiative E&Bz Afrika</div>
+  <small>© 2026 KLANDO · N'Djaména, République du Tchad 🇹🇩</small>
+</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
