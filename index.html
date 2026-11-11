@@ -1,6 +1,3 @@
-Here is the full updated `index.html`, including the small-button fix and the new customer layout. The JavaScript is unchanged.
-
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -374,6 +371,66 @@ button.btn.sm {
   padding: 9px 13px;
   margin-top: 6px;
 }
+
+/* KLANDO PUBLIC CITY MAP */
+.home-heading {
+  padding: 12px 4px 18px;
+}
+
+.home-heading span {
+  color: #e88916;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.home-heading h2 {
+  font-size: clamp(25px, 5vw, 36px);
+  margin: 10px 0 5px;
+  color: #123d28;
+}
+
+.home-heading p {
+  color: #718078;
+  margin: 0;
+}
+
+.home-map {
+  height: 55vh;
+  min-height: 340px;
+  border-radius: 20px;
+  border: 1px solid #dce7df;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,.10);
+}
+
+.booking-panel {
+  position: relative;
+  background: white;
+  border-radius: 20px;
+  padding: 22px;
+  margin-top: -25px;
+  margin-left: 12px;
+  margin-right: 12px;
+  z-index: 500;
+  box-shadow: 0 8px 25px rgba(0,0,0,.12);
+}
+
+.booking-panel h3 {
+  margin-top: 0;
+  color: #123d28;
+}
+
+.booking-panel p {
+  color: #718078;
+}
+
+@media(max-width:600px) {
+  .home-map {
+    height: 52vh;
+    min-height: 300px;
+  }
+}
 </style>
 </head>
 <body>
@@ -393,6 +450,25 @@ button.btn.sm {
       Retrouvez des conducteurs disponibles et déplacez-vous
       librement dans N'Djaména.
     </p>
+  </section>
+
+  <section id="publicHome">
+    <div class="home-heading">
+      <span>📍 N'DJAMÉNA, TCHAD</span>
+      <h2>Votre ville, à portée de main.</h2>
+      <p>Repérez votre quartier et préparez votre prochain déplacement.</p>
+    </div>
+
+    <div id="mapHome" class="home-map"></div>
+
+    <div class="booking-panel">
+      <h3>Où souhaitez-vous aller ?</h3>
+      <p>Connectez-vous pour commander votre moto-taxi.</p>
+      <button class="btn" type="button"
+        onclick="document.getElementById('vAuth').scrollIntoView({behavior:'smooth'})">
+        Commander une moto →
+      </button>
+    </div>
   </section>
 
   <div id="cfgWarn" class="msg err hide"></div>
@@ -563,6 +639,8 @@ function mkMap(id){
 function show(v){
   ['vAuth','vCust','vDrv','vAdm'].forEach(x => $(x).classList.toggle('hide', x !== v));
   $('logoutBtn').classList.toggle('hide', v === 'vAuth');
+  $('publicHome').classList.toggle('hide', v !== 'vAuth');
+  if (v === 'vAuth') mkMap('mapHome');
 }
 const dist = (a,b) => { // haversine km
   const R=6371, r=x=>x*Math.PI/180, dLa=r(b[0]-a[0]), dLo=r(b[1]-a[1]);
@@ -807,4 +885,3 @@ async function loadAdmin(){
 </script>
 </body>
 </html>
-```
