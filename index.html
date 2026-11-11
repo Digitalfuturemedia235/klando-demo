@@ -1,247 +1,459 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KLANDO | Moto-taxi</title>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b6b3a">
+<title>KLANDO</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root {
-  --green: #123d2b;
-  --green2: #1d6042;
-  --orange: #f28c28;
-  --cream: #f5f7f4;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: var(--cream);
-  color: #18231d;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  background: var(--green);
-  color: white;
-  padding: 20px;
-}
-
-.brand {
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-.brand span {
-  color: var(--orange);
-}
-
-main {
-  max-width: 1100px;
-  margin: 25px auto;
-  padding: 15px;
-}
-
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-button {
-  background: var(--green2);
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.hidden {
-  display: none !important;
-}
+:root{--g:#0b6b3a;--g2:#e8f5ee;--y:#f4b400;--r:#c0392b;--t:#1d2b24;--m:#6b7a72;--b:#dfe6e2;--bg:#f5f7f6}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:16px}
+header{background:var(--g);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:1000}
+header h1{margin:0;font-size:20px;letter-spacing:1px;flex:1}
+header h1 small{display:block;font-size:11px;font-weight:400;letter-spacing:0;opacity:.85}
+header button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:8px;padding:7px 10px;font-size:13px}
+main{max-width:720px;margin:0 auto;padding:12px}
+.card{background:#fff;border:1px solid var(--b);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h2{margin:0 0 10px;font-size:17px}
+label{display:block;font-size:13px;color:var(--m);margin:10px 0 4px}
+input,select{width:100%;padding:11px;border:1px solid var(--b);border-radius:8px;font-size:16px;background:#fff}
+button.btn{background:var(--g);color:#fff;border:0;border-radius:8px;padding:12px 14px;font-size:15px;font-weight:600;width:100%;margin-top:12px}
+button.btn.alt{background:#fff;color:var(--g);border:1px solid var(--g)}
+button.btn.red{background:var(--r)}
+button.sm{width:auto;padding:8px 12px;font-size:13px;margin:6px 6px 0 0}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tabs button{flex:1;padding:10px;border:1px solid var(--b);background:#fff;border-radius:8px;font-size:14px}
+.tabs button.on{background:var(--g);color:#fff;border-color:var(--g)}
+.map{height:280px;border-radius:10px;border:1px solid var(--b);margin:8px 0}
+.msg{padding:10px;border-radius:8px;margin:8px 0;font-size:14px}
+.msg.err{background:#fdecea;color:#8a1f13}.msg.ok{background:var(--g2);color:#0b4f2b}.msg.warn{background:#fff6dd;color:#7a5b00}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:#eee;color:#444}
+.pill.pending{background:#fff1c9;color:#7a5b00}.pill.accepted,.pill.approved{background:#dcefff;color:#0a4a82}
+.pill.ongoing{background:#e8dcff;color:#4a2a8a}.pill.completed{background:var(--g2);color:#0b4f2b}
+.pill.cancelled,.pill.rejected{background:#fdecea;color:#8a1f13}
+.item{border-top:1px solid var(--b);padding:10px 0;font-size:14px}.item:first-child{border-top:0}
+.item .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.muted{color:var(--m);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--g2);border-radius:10px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px;color:var(--g)}.stat span{font-size:11px;color:var(--m)}
+.hide{display:none!important}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fare{font-size:22px;font-weight:700;color:var(--g)}
 </style>
 </head>
-
 <body>
-
 <header>
-  <div class="brand">KLAN<span>DO</span></div>
-  <div>La mobilité urbaine, simplement.</div>
+  <h1>KLANDO<small data-i18n="tagline"></small></h1>
+  <button id="langBtn" type="button">EN</button>
+  <button id="logoutBtn" type="button" class="hide" data-i18n="logout"></button>
 </header>
-
 <main>
+  <div id="cfgWarn" class="msg err hide"></div>
+  <div id="globalMsg"></div>
 
-<section id="authSection" class="card">
+  <!-- AUTH -->
+  <section id="vAuth" class="hide">
+    <div class="card">
+      <div class="tabs">
+        <button id="tabLogin" class="on" type="button" data-i18n="login"></button>
+        <button id="tabReg" type="button" data-i18n="register"></button>
+      </div>
+      <form id="fLogin">
+        <label data-i18n="email"></label><input id="lEmail" type="email" required autocomplete="email">
+        <label data-i18n="password"></label><input id="lPass" type="password" required autocomplete="current-password">
+        <button class="btn" type="submit" data-i18n="login"></button>
+      </form>
+      <form id="fReg" class="hide">
+        <label data-i18n="iam"></label>
+        <select id="rRole"><option value="customer" data-i18n="customer"></option><option value="driver" data-i18n="driver"></option></select>
+        <label data-i18n="fullname"></label><input id="rName" required autocomplete="name">
+        <label data-i18n="phone"></label><input id="rPhone" type="tel" required autocomplete="tel" placeholder="+235 ...">
+        <label data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
+        <label data-i18n="password"></label><input id="rPass" type="password" minlength="6" required autocomplete="new-password">
+        <div id="drvFields" class="hide">
+          <label data-i18n="vehicle"></label><input id="rVeh" placeholder="Honda, Yamaha...">
+          <label data-i18n="plate"></label><input id="rPlate">
+        </div>
+        <button class="btn" type="submit" data-i18n="createAccount"></button>
+      </form>
+      <div id="authMsg"></div>
+    </div>
+  </section>
 
-<h2>Bienvenue sur KLANDO</h2>
+  <!-- CUSTOMER -->
+  <section id="vCust" class="hide">
+    <div class="card">
+      <h2 data-i18n="requestRide"></h2>
+      <div class="tabs">
+        <button id="modeP" class="on" type="button" data-i18n="setPickup"></button>
+        <button id="modeD" type="button" data-i18n="setDest"></button>
+      </div>
+      <div id="mapC" class="map"></div>
+      <button id="gpsBtn" class="btn alt sm" type="button" data-i18n="useGps"></button>
+      <label data-i18n="pickup"></label><input id="cPick" data-i18n-ph="pickupPh">
+      <label data-i18n="destination"></label>
+      <div class="row"><input id="cDest" data-i18n-ph="destPh" style="flex:3"><button id="searchBtn" class="btn alt" type="button" style="flex:1;margin-top:0" data-i18n="search"></button></div>
+      <p class="muted" data-i18n="mapHint"></p>
+      <div class="sw"><span data-i18n="estFare"></span><span id="fare" class="fare">—</span></div>
+      <button id="reqBtn" class="btn" type="button" data-i18n="requestBtn"></button>
+      <div id="custMsg"></div>
+    </div>
+    <div class="card"><h2 data-i18n="myRides"></h2><div id="custRides"></div></div>
+  </section>
 
-<p>
-Connectez-vous ou créez un compte pour commander
-une moto-taxi ou devenir conducteur partenaire.
-</p>
+  <!-- DRIVER -->
+  <section id="vDrv" class="hide">
+    <div class="card">
+      <h2 data-i18n="myStatus"></h2>
+      <div id="drvInfo"></div>
+      <div id="drvSwitch" class="sw hide" style="margin-top:10px">
+        <span data-i18n="available"></span>
+        <button id="availBtn" class="btn sm" type="button" style="margin:0"></button>
+      </div>
+      <div id="drvMsg"></div>
+    </div>
+    <div class="card"><h2 data-i18n="activeRides"></h2><div id="drvMine"></div></div>
+    <div class="card"><h2 data-i18n="availableRequests"></h2><div id="drvPending"></div></div>
+  </section>
 
-<button onclick="showLogin()">Connexion</button>
-<button onclick="showRegister()">Créer un compte</button>
-
-<div id="loginForm">
-<h3>Connexion</h3>
-<input id="loginEmail" type="email" placeholder="Adresse e-mail">
-<input id="loginPassword" type="password" placeholder="Mot de passe">
-<button onclick="login()">Se connecter</button>
-</div>
-
-<div id="registerForm" class="hidden">
-<h3>Créer un compte</h3>
-<input id="name" placeholder="Nom complet">
-<input id="phone" placeholder="Téléphone">
-<input id="email" type="email" placeholder="Adresse e-mail">
-<input id="password" type="password" placeholder="Mot de passe">
-
-<select id="role">
-<option value="customer">Client</option>
-<option value="driver">Conducteur</option>
-</select>
-
-<button onclick="register()">Créer mon compte</button>
-</div>
-
-</section>
-
-<section id="dashboard" class="card hidden">
-<h2>Bienvenue sur KLANDO !</h2>
-<div id="dashboardContent"></div>
-<button onclick="logout()">Déconnexion</button>
-</section>
-
+  <!-- ADMIN -->
+  <section id="vAdm" class="hide">
+    <div class="card"><h2 data-i18n="overview"></h2><div id="admStats" class="stats"></div></div>
+    <div class="card"><h2 data-i18n="driversMap"></h2><div id="mapA" class="map"></div></div>
+    <div class="card"><h2 data-i18n="drivers"></h2><div id="admDrivers"></div></div>
+    <div class="card"><h2 data-i18n="allRides"></h2><div id="admRides"></div></div>
+    <div id="admMsg"></div>
+  </section>
 </main>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL =
-"https://mhtzbdopqfibdpowxyxm.supabase.co";
+/* ============ CONFIGURATION ============ */
+const SUPABASE_URL = 'https://mhtzbdopqfibdpowxyxm.supabase.co';
+// Paste the PUBLISHABLE (anon) key here. NEVER paste the secret / service_role key.
+const SUPABASE_KEY = sb_publishable_3OyX775wvqnzXQHqY4tcSg_klYZRBwY;
+const CITY_CENTER = [12.1348, 15.0557];            // N'Djaména
+const FARE = { base: 300, perKm: 100, min: 500, step: 50 }; // FCFA, adjust freely
+const REFRESH_MS = 10000, GPS_PUSH_MS = 20000;
 
-const SUPABASE_KEY =
-"sb_publishable_3OyX775wvqnzXQHqY4tcSg_klYZRBwY";
-
-const db = window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
-
-function showLogin() {
-  document.getElementById("loginForm").classList.remove("hidden");
-  document.getElementById("registerForm").classList.add("hidden");
+/* ============ TRANSLATIONS ============ */
+const I18N = {
+fr:{tagline:'La mobilité urbaine, simplement.',logout:'Quitter',login:'Connexion',register:'Inscription',email:'E-mail',password:'Mot de passe',
+iam:'Je suis',customer:'Client',driver:'Conducteur',fullname:'Nom complet',phone:'Téléphone',vehicle:'Moto (marque/modèle)',plate:'Plaque d’immatriculation',
+createAccount:'Créer mon compte',requestRide:'Demander une moto-taxi',setPickup:'Départ (carte)',setDest:'Arrivée (carte)',useGps:'📍 Ma position',
+pickup:'Adresse de départ',destination:'Destination',pickupPh:'Ex. Marché de Dembé',destPh:'Ex. Gounou Gaya',search:'Chercher',
+mapHint:'Touchez la carte pour placer le départ ou l’arrivée.',estFare:'Tarif estimé',requestBtn:'Commander',myRides:'Mes courses',
+myStatus:'Mon statut conducteur',available:'Disponible',activeRides:'Mes courses en cours',availableRequests:'Demandes disponibles',
+overview:'Vue d’ensemble',driversMap:'Conducteurs disponibles',drivers:'Conducteurs',allRides:'Toutes les courses',
+pending:'En attente',approved:'Approuvé',rejected:'Refusé',accepted:'Acceptée',ongoing:'En cours',completed:'Terminée',cancelled:'Annulée',
+approve:'Approuver',reject:'Refuser',accept:'Accepter',start:'Démarrer',finish:'Terminer',cancel:'Annuler',
+on:'Disponible',off:'Indisponible',goOn:'Se mettre disponible',goOff:'Se mettre indisponible',
+sCustomers:'Clients',sDrivers:'Conducteurs',sActive:'Dispos',sRides:'Courses',sDone:'Terminées',sPend:'En attente',
+noRides:'Aucune course.',noDrivers:'Aucun conducteur.',noReq:'Aucune demande pour le moment.',
+needPick:'Placez le départ sur la carte ou utilisez votre position.',needDest:'Indiquez une destination.',
+sent:'Course demandée. Un conducteur va l’accepter.',confirmMail:'Compte créé. Vérifiez votre e-mail pour confirmer, puis connectez-vous.',
+created:'Compte créé.',drvPending:'Votre dossier est en cours d’examen par l’administrateur.',drvRejected:'Votre dossier a été refusé. Contactez KLANDO.',
+drvApproved:'Dossier approuvé. Vous pouvez recevoir des courses.',drvNone:'Aucun profil conducteur trouvé. Contactez KLANDO.',
+gpsDenied:'Position GPS indisponible ou refusée.',gpsNoFn:'Suivi GPS conducteur : fonction base de données non installée.',
+cfgMissing:'Configuration manquante : collez la clé publique Supabase (SUPABASE_KEY) dans index.html.',
+err:'Erreur : ',from:'De',to:'Vers',customerL:'Client',noPos:'Position non trouvée.',km:'km'},
+en:{tagline:'Urban mobility, made simple.',logout:'Log out',login:'Log in',register:'Sign up',email:'Email',password:'Password',
+iam:'I am a',customer:'Customer',driver:'Driver',fullname:'Full name',phone:'Phone',vehicle:'Motorcycle (make/model)',plate:'License plate',
+createAccount:'Create my account',requestRide:'Request a moto-taxi',setPickup:'Pickup (map)',setDest:'Destination (map)',useGps:'📍 My location',
+pickup:'Pickup address',destination:'Destination',pickupPh:'e.g. Dembé market',destPh:'e.g. Gounou Gaya',search:'Search',
+mapHint:'Tap the map to place the pickup or destination.',estFare:'Estimated fare',requestBtn:'Request ride',myRides:'My rides',
+myStatus:'My driver status',available:'Available',activeRides:'My active rides',availableRequests:'Available requests',
+overview:'Overview',driversMap:'Available drivers',drivers:'Drivers',allRides:'All rides',
+pending:'Pending',approved:'Approved',rejected:'Rejected',accepted:'Accepted',ongoing:'Ongoing',completed:'Completed',cancelled:'Cancelled',
+approve:'Approve',reject:'Reject',accept:'Accept',start:'Start',finish:'Complete',cancel:'Cancel',
+on:'Available',off:'Unavailable',goOn:'Go available',goOff:'Go unavailable',
+sCustomers:'Customers',sDrivers:'Drivers',sActive:'Available',sRides:'Rides',sDone:'Completed',sPend:'Pending',
+noRides:'No rides.',noDrivers:'No drivers.',noReq:'No requests right now.',
+needPick:'Place the pickup on the map or use your location.',needDest:'Enter a destination.',
+sent:'Ride requested. A driver will accept it.',confirmMail:'Account created. Check your email to confirm, then log in.',
+created:'Account created.',drvPending:'Your application is being reviewed by the administrator.',drvRejected:'Your application was rejected. Contact KLANDO.',
+drvApproved:'Application approved. You can receive rides.',drvNone:'No driver profile found. Contact KLANDO.',
+gpsDenied:'GPS position unavailable or denied.',gpsNoFn:'Driver GPS tracking: database function not installed.',
+cfgMissing:'Missing configuration: paste the Supabase publishable key (SUPABASE_KEY) in index.html.',
+err:'Error: ',from:'From',to:'To',customerL:'Customer',noPos:'Location not found.',km:'km'}
+};
+let lang = (()=>{try{return localStorage.getItem('klando_lang')||'fr'}catch(e){return 'fr'}})();
+const t = k => (I18N[lang][k] ?? I18N.fr[k] ?? k);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => (n == null ? '—' : Number(n).toLocaleString('fr-FR') + ' FCFA');
+const pill = s => `<span class="pill ${esc(s)}">${esc(t(s))}</span>`;
+function flash(id, text, kind){ $(id).innerHTML = text ? `<div class="msg ${kind||'err'}">${esc(text)}</div>` : ''; }
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
+  $('langBtn').textContent = lang === 'fr' ? 'EN' : 'FR';
+  if (me.user) { renderAvail(); refresh(); }
 }
 
-function showRegister() {
-  document.getElementById("registerForm").classList.remove("hidden");
-  document.getElementById("loginForm").classList.add("hidden");
+/* ============ STATE & CLIENT ============ */
+const configured = SUPABASE_KEY && !SUPABASE_KEY.startsWith('PASTE_');
+const sb = configured ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+let me = { user:null, profile:null, driver:null, role:null };
+let timer = null, gpsWatch = null, gpsPushTimer = null, lastPos = null, gpsFnWarned = false;
+const maps = {};
+
+function mkMap(id){
+  if (maps[id]) { setTimeout(()=>maps[id].invalidateSize(),150); return maps[id]; }
+  const m = L.map(id).setView(CITY_CENTER, 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(m);
+  maps[id] = m; setTimeout(()=>m.invalidateSize(),150); return m;
+}
+function show(v){
+  ['vAuth','vCust','vDrv','vAdm'].forEach(x => $(x).classList.toggle('hide', x !== v));
+  $('logoutBtn').classList.toggle('hide', v === 'vAuth');
+}
+const dist = (a,b) => { // haversine km
+  const R=6371, r=x=>x*Math.PI/180, dLa=r(b[0]-a[0]), dLo=r(b[1]-a[1]);
+  const h=Math.sin(dLa/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+};
+const calcFare = km => Math.max(FARE.min, Math.round((FARE.base + FARE.perKm*km*1.3)/FARE.step)*FARE.step);
+
+/* ============ AUTH ============ */
+$('tabLogin').onclick = () => { $('tabLogin').classList.add('on'); $('tabReg').classList.remove('on'); $('fLogin').classList.remove('hide'); $('fReg').classList.add('hide'); flash('authMsg',''); };
+$('tabReg').onclick = () => { $('tabReg').classList.add('on'); $('tabLogin').classList.remove('on'); $('fReg').classList.remove('hide'); $('fLogin').classList.add('hide'); flash('authMsg',''); };
+$('rRole').onchange = () => $('drvFields').classList.toggle('hide', $('rRole').value !== 'driver');
+$('langBtn').onclick = () => { lang = lang === 'fr' ? 'en' : 'fr'; try{localStorage.setItem('klando_lang',lang)}catch(e){} applyLang(); };
+
+$('fLogin').onsubmit = async e => {
+  e.preventDefault(); flash('authMsg','');
+  const { error } = await sb.auth.signInWithPassword({ email:$('lEmail').value.trim(), password:$('lPass').value });
+  if (error) return flash('authMsg', t('err') + error.message);
+  await start();
+};
+$('fReg').onsubmit = async e => {
+  e.preventDefault(); flash('authMsg','');
+  const wantDriver = $('rRole').value === 'driver';
+  const meta = { display_name:$('rName').value.trim(), phone:$('rPhone').value.trim(), want_driver:wantDriver };
+  if (wantDriver) { meta.vehicle = $('rVeh').value.trim(); meta.vehicle_plate = $('rPlate').value.trim(); }
+  // Note: the role is NOT sent as a privilege. Admin is assigned only in the database.
+  const { data, error } = await sb.auth.signUp({ email:$('rEmail').value.trim(), password:$('rPass').value, options:{ data: meta } });
+  if (error) return flash('authMsg', t('err') + error.message);
+  if (!data.session) { flash('authMsg', t('confirmMail'), 'ok'); $('tabLogin').click(); return; }
+  await start();
+};
+$('logoutBtn').onclick = async () => { await sb.auth.signOut(); stopAll(); me = {user:null,profile:null,driver:null,role:null}; show('vAuth'); };
+
+/* ============ LOADING THE USER ============ */
+async function start(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) return show('vAuth');
+  me.user = session.user;
+  const md = me.user.user_metadata || {};
+  const pr = await sb.from('profiles').select('*').eq('id', me.user.id).maybeSingle();
+  me.profile = pr.data || null;
+  let dr = await sb.from('drivers').select('*').eq('user_id', me.user.id).maybeSingle();
+  me.driver = dr.data || null;
+  // First login of a driver applicant: create the pending driver record.
+  if (!me.driver && md.want_driver && (!me.profile || me.profile.role !== 'admin')) {
+    const ins = await sb.from('drivers').insert({
+      user_id: me.user.id, display_name: md.display_name || me.user.email, phone: md.phone || null,
+      vehicle: md.vehicle || null, vehicle_plate: md.vehicle_plate || null,
+      approval_status: 'pending', is_available: false }).select().maybeSingle();
+    if (ins.error) flash('globalMsg', t('err') + ins.error.message); else me.driver = ins.data;
+  }
+  const pRole = me.profile && me.profile.role;
+  me.role = pRole === 'admin' ? 'admin' : (me.driver || pRole === 'driver') ? 'driver' : 'customer';
+  if (me.role === 'admin') { show('vAdm'); mkMap('mapA'); }
+  else if (me.role === 'driver') { show('vDrv'); }
+  else { show('vCust'); initCustomer(); }
+  await refresh();
+  clearInterval(timer); timer = setInterval(refresh, REFRESH_MS);
+}
+function stopAll(){
+  clearInterval(timer); clearInterval(gpsPushTimer);
+  if (gpsWatch != null) navigator.geolocation.clearWatch(gpsWatch);
+  gpsWatch = null; gpsPushTimer = null;
+}
+async function refresh(){
+  if (!me.user) return;
+  try {
+    if (me.role === 'customer') await loadCustomer();
+    else if (me.role === 'driver') await loadDriver();
+    else if (me.role === 'admin') await loadAdmin();
+  } catch(e){ console.error(e); }
 }
 
-async function login() {
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
-
-  const {error} = await db.auth.signInWithPassword({
-    email,
-    password
+/* ============ CUSTOMER ============ */
+const C = { pick:null, dest:null, mode:'p', mk:{}, ready:false };
+function setMode(m){ C.mode = m; $('modeP').classList.toggle('on', m==='p'); $('modeD').classList.toggle('on', m==='d'); }
+$('modeP').onclick = () => setMode('p'); $('modeD').onclick = () => setMode('d');
+function placeMarker(kind, ll){
+  const m = maps.mapC; if (C.mk[kind]) m.removeLayer(C.mk[kind]);
+  C.mk[kind] = L.marker(ll).addTo(m).bindPopup(kind==='p'?t('setPickup'):t('setDest'));
+  updateFare();
+}
+function updateFare(){
+  if (C.pick && C.dest) { $('fare').textContent = money(calcFare(dist(C.pick, C.dest))); }
+  else $('fare').textContent = '—';
+}
+function initCustomer(){
+  const m = mkMap('mapC');
+  if (C.ready) return; C.ready = true;
+  m.on('click', ev => {
+    const ll = [ev.latlng.lat, ev.latlng.lng];
+    if (C.mode === 'p') { C.pick = ll; placeMarker('p', ll); if (!$('cPick').value) $('cPick').value = lang==='fr'?'Point sur la carte':'Map point'; setMode('d'); }
+    else { C.dest = ll; placeMarker('d', ll); }
   });
-
-  if(error) {
-    alert(error.message);
-    return;
-  }
-
-  loadDashboard();
 }
-
-async function register() {
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const role = document.getElementById("role").value;
-
-  const {data,error} = await db.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        display_name: name,
-        phone: phone,
-        role: role
-      }
-    }
+$('gpsBtn').onclick = () => {
+  if (!navigator.geolocation) return flash('custMsg', t('gpsDenied'), 'warn');
+  navigator.geolocation.getCurrentPosition(p => {
+    C.pick = [p.coords.latitude, p.coords.longitude]; placeMarker('p', C.pick);
+    maps.mapC.setView(C.pick, 15);
+    if (!$('cPick').value) $('cPick').value = lang==='fr'?'Ma position GPS':'My GPS position';
+    setMode('d'); flash('custMsg','');
+  }, () => flash('custMsg', t('gpsDenied'), 'warn'), { enableHighAccuracy:true, timeout:10000 });
+};
+$('searchBtn').onclick = async () => {
+  const q = $('cDest').value.trim(); if (!q) return;
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=td&q=' + encodeURIComponent(q + ', N\'Djamena'));
+    const j = await r.json();
+    if (!j.length) return flash('custMsg', t('noPos'), 'warn');
+    C.dest = [parseFloat(j[0].lat), parseFloat(j[0].lon)]; placeMarker('d', C.dest);
+    maps.mapC.setView(C.dest, 14); flash('custMsg','');
+  } catch(e){ flash('custMsg', t('noPos'), 'warn'); }
+};
+$('reqBtn').onclick = async () => {
+  flash('custMsg','');
+  if (!C.pick) return flash('custMsg', t('needPick'));
+  const dest = $('cDest').value.trim(); if (!dest) return flash('custMsg', t('needDest'));
+  const fare = C.dest ? calcFare(dist(C.pick, C.dest)) : FARE.min;
+  const name = (me.profile && me.profile.display_name) || (me.user.user_metadata||{}).display_name || me.user.email;
+  const { error } = await sb.from('rides').insert({
+    customer_id: me.user.id, customer_name: name,
+    pickup_address: $('cPick').value.trim() || 'GPS', destination: dest,
+    pickup_lat: C.pick[0], pickup_lng: C.pick[1],
+    destination_lat: C.dest ? C.dest[0] : null, destination_lng: C.dest ? C.dest[1] : null,
+    estimated_fare: fare, status: 'pending' });
+  if (error) return flash('custMsg', t('err') + error.message);
+  flash('custMsg', t('sent'), 'ok'); $('cDest').value = '';
+  if (C.mk.d) { maps.mapC.removeLayer(C.mk.d); C.mk.d = null; } C.dest = null; updateFare();
+  loadCustomer();
+};
+function rideHtml(r, actions){
+  return `<div class="item"><div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
+  <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(r.estimated_fare)} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${actions||''}</div>`;
+}
+async function loadCustomer(){
+  const { data, error } = await sb.from('rides').select('*').eq('customer_id', me.user.id).order('created_at',{ascending:false}).limit(20);
+  if (error) return flash('custMsg', t('err') + error.message);
+  $('custRides').innerHTML = (data||[]).map(r => rideHtml(r,
+    r.status==='pending' ? `<button class="btn red sm" data-cancel="${esc(r.id)}">${t('cancel')}</button>` : '')).join('') || `<p class="muted">${t('noRides')}</p>`;
+  document.querySelectorAll('[data-cancel]').forEach(b => b.onclick = async () => {
+    const { error } = await sb.from('rides').update({ status:'cancelled' }).eq('id', b.dataset.cancel).eq('status','pending');
+    if (error) flash('custMsg', t('err') + error.message); else loadCustomer();
   });
-
-  if(error) {
-    alert(error.message);
-    return;
-  }
-
-  if(data.session) {
-    loadDashboard();
-  } else {
-    alert("Compte créé ! Vérifiez votre adresse e-mail.");
-    showLogin();
-  }
 }
 
-async function loadDashboard() {
-  const {data:{user}} = await db.auth.getUser();
-
-  if(!user) return;
-
-  const {data:profile,error} = await db
-    .from("profiles")
-    .select("*")
-    .eq("id",user.id)
-    .single();
-
-  if(error) {
-    alert(error.message);
-    return;
+/* ============ DRIVER ============ */
+function renderAvail(){
+  if (!me.driver || !$('availBtn')) return;
+  const on = !!me.driver.is_available;
+  $('availBtn').textContent = on ? t('goOff') : t('goOn');
+  $('availBtn').className = 'btn sm' + (on ? ' red' : '');
+}
+$('availBtn').onclick = async () => {
+  const next = !me.driver.is_available;
+  const { error } = await sb.rpc('set_klando_driver_availability', { p_available: next });
+  if (error) return flash('drvMsg', t('err') + error.message);
+  me.driver.is_available = next; renderAvail(); manageGps(); loadDriver();
+};
+function manageGps(){
+  const need = me.driver && me.driver.approval_status === 'approved' && me.driver.is_available;
+  if (need && gpsWatch == null && navigator.geolocation) {
+    gpsWatch = navigator.geolocation.watchPosition(p => { lastPos = [p.coords.latitude, p.coords.longitude]; },
+      () => flash('drvMsg', t('gpsDenied'), 'warn'), { enableHighAccuracy:true, maximumAge:10000 });
+    gpsPushTimer = setInterval(pushGps, GPS_PUSH_MS); setTimeout(pushGps, 3000);
+  } else if (!need) {
+    if (gpsWatch != null) navigator.geolocation.clearWatch(gpsWatch);
+    gpsWatch = null; clearInterval(gpsPushTimer); gpsPushTimer = null;
   }
-
-  document.getElementById("authSection").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-
-  document.getElementById("dashboardContent").innerHTML =
-    "<h3>Bonjour " +
-    profile.display_name +
-    "</h3><p>Votre espace KLANDO : " +
-    profile.role +
-    "</p>";
+}
+async function pushGps(){
+  if (!lastPos) return;
+  const { error } = await sb.rpc('update_klando_driver_location', { p_lat:lastPos[0], p_lng:lastPos[1] });
+  if (error && !gpsFnWarned) { gpsFnWarned = true; console.warn(error); flash('drvMsg', t('gpsNoFn'), 'warn'); }
+}
+async function loadDriver(){
+  const dr = await sb.from('drivers').select('*').eq('user_id', me.user.id).maybeSingle();
+  if (dr.data) me.driver = dr.data;
+  const d = me.driver;
+  if (!d) { $('drvInfo').innerHTML = `<div class="msg warn">${t('drvNone')}</div>`; $('drvSwitch').classList.add('hide'); return; }
+  const st = d.approval_status;
+  $('drvInfo').innerHTML = `<div>${pill(st)} <b>${esc(d.display_name)}</b></div><div class="muted">${esc(d.vehicle||'')} ${esc(d.vehicle_plate||'')}</div>
+    <div class="msg ${st==='approved'?'ok':st==='rejected'?'err':'warn'}">${t(st==='approved'?'drvApproved':st==='rejected'?'drvRejected':'drvPending')}</div>`;
+  $('drvSwitch').classList.toggle('hide', st !== 'approved'); renderAvail(); manageGps();
+  if (st !== 'approved') { $('drvMine').innerHTML = $('drvPending').innerHTML = `<p class="muted">${t('noReq')}</p>`; return; }
+  const mine = await sb.from('rides').select('*').or(`driver_id.eq.${d.id},driver_id.eq.${me.user.id}`).order('created_at',{ascending:false}).limit(20);
+  $('drvMine').innerHTML = (mine.data||[]).map(r => {
+    let a = '';
+    if (r.status==='accepted') a = `<button class="btn sm" data-adv="${esc(r.id)}|ongoing">${t('start')}</button>`;
+    if (r.status==='ongoing') a = `<button class="btn sm" data-adv="${esc(r.id)}|completed">${t('finish')}</button>`;
+    return rideHtml(r, a);
+  }).join('') || `<p class="muted">${t('noRides')}</p>`;
+  const pend = await sb.from('rides').select('*').eq('status','pending').order('created_at',{ascending:false}).limit(30);
+  $('drvPending').innerHTML = d.is_available
+    ? ((pend.data||[]).map(r => rideHtml(r, `<button class="btn sm" data-acc="${esc(r.id)}">${t('accept')}</button>`)).join('') || `<p class="muted">${t('noReq')}</p>`)
+    : `<p class="muted">${t('goOn')}</p>`;
+  document.querySelectorAll('[data-acc]').forEach(b => b.onclick = async () => {
+    const { error } = await sb.rpc('accept_klando_ride', { p_ride_id: b.dataset.acc });
+    if (error) flash('drvMsg', t('err') + error.message); else { flash('drvMsg',''); loadDriver(); }
+  });
+  document.querySelectorAll('[data-adv]').forEach(b => b.onclick = async () => {
+    const [id, st2] = b.dataset.adv.split('|');
+    const { error } = await sb.rpc('update_klando_ride_status', { p_ride_id: id, p_new_status: st2 });
+    if (error) flash('drvMsg', t('err') + error.message); else { flash('drvMsg',''); loadDriver(); }
+  });
 }
 
-async function logout() {
-  await db.auth.signOut();
-  location.reload();
+/* ============ ADMIN ============ */
+let admMk = [];
+async function loadAdmin(){
+  const [d, r, c] = await Promise.all([
+    sb.from('drivers').select('*').order('created_at',{ascending:false}).limit(500),
+    sb.from('rides').select('*').order('created_at',{ascending:false}).limit(500),
+    sb.from('profiles').select('id',{count:'exact',head:true}).eq('role','customer')]);
+  if (d.error || r.error) return flash('admMsg', t('err') + (d.error||r.error).message);
+  const drivers = d.data||[], rides = r.data||[];
+  const stat = (n,l) => `<div class="stat"><b>${n}</b><span>${t(l)}</span></div>`;
+  $('admStats').innerHTML = stat(c.count ?? '—','sCustomers') + stat(drivers.filter(x=>x.approval_status==='approved').length,'sDrivers') +
+    stat(drivers.filter(x=>x.is_available && x.approval_status==='approved').length,'sActive') + stat(rides.length,'sRides') +
+    stat(rides.filter(x=>x.status==='completed').length,'sDone') + stat(drivers.filter(x=>x.approval_status==='pending').length,'sPend');
+  $('admDrivers').innerHTML = drivers.map(x => `<div class="item"><div class="top"><b>${esc(x.display_name)}</b>${pill(x.approval_status)}</div>
+    <div class="muted">${esc(x.phone||'')} · ${esc(x.vehicle||'')} ${esc(x.vehicle_plate||'')} · ${x.is_available?t('on'):t('off')}</div>
+    <button class="btn sm" data-ap="${esc(x.id)}|approved">${t('approve')}</button><button class="btn red sm" data-ap="${esc(x.id)}|rejected">${t('reject')}</button></div>`).join('') || `<p class="muted">${t('noDrivers')}</p>`;
+  $('admRides').innerHTML = rides.slice(0,40).map(x => rideHtml(x)).join('') || `<p class="muted">${t('noRides')}</p>`;
+  document.querySelectorAll('[data-ap]').forEach(b => b.onclick = async () => {
+    const [id, s] = b.dataset.ap.split('|');
+    const { error } = await sb.from('drivers').update({ approval_status: s }).eq('id', id);
+    if (error) flash('admMsg', t('err') + error.message); else { flash('admMsg',''); loadAdmin(); }
+  });
+  const m = mkMap('mapA'); admMk.forEach(x => m.removeLayer(x)); admMk = [];
+  drivers.filter(x => x.is_available && x.approval_status==='approved' && x.latitude != null && x.longitude != null)
+    .forEach(x => admMk.push(L.marker([x.latitude, x.longitude]).addTo(m).bindPopup(esc(x.display_name))));
 }
 
-db.auth.getSession().then(({data}) => {
-  if(data.session) loadDashboard();
-});
+/* ============ BOOT ============ */
+(async function boot(){
+  applyLang();
+  if (!configured) { $('cfgWarn').textContent = t('cfgMissing'); $('cfgWarn').classList.remove('hide'); show('vAuth'); return; }
+  sb.auth.onAuthStateChange(ev => { if (ev === 'SIGNED_OUT') { stopAll(); me = {user:null,profile:null,driver:null,role:null}; show('vAuth'); } });
+  await start();
+})();
 </script>
-
 </body>
 </html>
