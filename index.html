@@ -431,7 +431,13 @@ button.btn.sm {
     min-height: 300px;
   }
 }
-</style>
+/* KLANDO FIX: Keep hidden dashboards hidden */
+#vCust.hide,
+#vDrv.hide,
+#vAdm.hide,
+#vAuth.hide {
+  display: none !important;
+}</style>
 </head>
 <body>
 <header>
@@ -892,4 +898,3 @@ async function loadAdmin(){
 </script>
 </body>
 </html>
-```
