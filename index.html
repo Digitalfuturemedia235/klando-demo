@@ -592,4 +592,193 @@ async function loadDriver(){
     return;
   }
 
-  $('drvInf
+  $('drvInfo').innerHTML=`
+    <p><b>${esc(driver.display_name||me.user.email)}</b></p>
+    <p>${esc(driver.vehicle||'')} · ${esc(driver.vehicle_plate||'')}</p>
+    <p>${pill(driver.approval_status||'pending')}</p>
+    <p class="muted">${driver.approval_status==='approved'?t('drvApproved'):driver.approval_status==='rejected'?t('drvRejected'):t('drvPending')}</p>`;
+
+  const approved=driver.approval_status==='approved';
+  $('drvSwitch').classList.toggle('hide',!approved);
+  $('availBtn').textContent=driver.is_available?t('goOff'):t('goOn');
+  $('availBtn').classList.toggle('alt',!driver.is_available);
+
+  if (approved) startDriverGPS();
+  else stopDriverGPS();
+
+  const {data:mine,error:e1}=await sb.from('rides').select('*')
+    .eq('driver_id',driver.id).in('status',['accepted','ongoing'])
+    .order('created_at',{ascending:false});
+  if (e1) throw e1;
+
+  $('drvMine').innerHTML=!mine.length?`<p class="muted">${t('noRides')}</p>`:mine.map(r=>`
+    <div class="item">
+      <div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>${pill(r.status)}</div>
+      <p>${money(r.fare)}</p>
+      ${r.status==='accepted'?`<button class="btn sm" onclick="rideStatus('${esc(r.id)}','ongoing')">${t('start')}</button>`:''}
+      ${r.status==='ongoing'?`<button class="btn sm" onclick="rideStatus('${esc(r.id)}','completed')">${t('finish')}</button>`:''}
+    </div>`).join('');
+
+  const {data:pending,error:e2}=await sb.from('rides').select('*')
+    .eq('status','pending').is('driver_id',null)
+    .order('created_at',{ascending:true}).limit(30);
+  if (e2) throw e2;
+
+  $('drvPending').innerHTML=!approved?`<p class="muted">${t('drvPending')}</p>`:
+    !pending.length?`<p class="muted">${t('noReq')}</p>`:pending.map(r=>`
+      <div class="item">
+        <div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>${pill(r.status)}</div>
+        <p>${money(r.fare)} · ${esc(r.distance_km||'')} km</p>
+        <button class="btn sm" onclick="acceptRide('${esc(r.id)}')">${t('accept')}</button>
+      </div>`).join('');
+}
+
+$('availBtn').onclick=async()=>{
+  if(!me.driver)return;
+  const next=!me.driver.is_available;
+  const {error}=await sb.rpc('set_klando_driver_availability',{p_available:next});
+  if(error)return flash('drvMsg',t('err')+error.message);
+  flash('drvMsg',next?'Vous êtes disponible.':'Vous êtes indisponible.','ok');
+  await loadDriver();
+};
+
+window.acceptRide=async rideId=>{
+  const {error}=await sb.rpc('accept_klando_ride',{p_ride_id:rideId});
+  if(error)return flash('drvMsg',t('err')+error.message);
+  flash('drvMsg','Course acceptée.','ok');
+  await loadDriver();
+};
+
+window.rideStatus=async(rideId,status)=>{
+  const {error}=await sb.rpc('update_klando_ride_status',{
+    p_ride_id:rideId,p_status:status
+  });
+  if(error)return flash('drvMsg',t('err')+error.message);
+  await loadDriver();
+};
+
+function stopDriverGPS(){
+  if(gpsWatch!==null)navigator.geolocation.clearWatch(gpsWatch);
+  gpsWatch=null;
+  clearInterval(gpsPushTimer);
+  gpsPushTimer=null;
+}
+
+function startDriverGPS(){
+  if(!navigator.geolocation||gpsWatch!==null)return;
+  gpsWatch=navigator.geolocation.watchPosition(pos=>{
+    lastPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
+  },err=>console.warn('GPS:',err.message),{
+    enableHighAccuracy:true,maximumAge:10000,timeout:20000
+  });
+
+  gpsPushTimer=setInterval(async()=>{
+    if(!lastPos||!me.driver||!me.driver.is_available)return;
+    const {error}=await sb.rpc('update_klando_driver_location',{
+      p_lat:lastPos.lat,p_lng:lastPos.lng
+    });
+    if(error&&!gpsFnWarned){
+      gpsFnWarned=true;
+      console.warn('GPS database update:',error.message);
+    }
+  },GPS_PUSH_MS);
+}
+
+/* ============ ADMIN ============ */
+async function loadAdmin(){
+  const [driversResult,ridesResult,profilesResult]=await Promise.all([
+    sb.from('drivers').select('*').order('created_at',{ascending:false}),
+    sb.from('rides').select('*').order('created_at',{ascending:false}).limit(100),
+    sb.from('profiles').select('*')
+  ]);
+
+  if(driversResult.error)throw driversResult.error;
+  if(ridesResult.error)throw ridesResult.error;
+  if(profilesResult.error)throw profilesResult.error;
+
+  const drivers=driversResult.data||[];
+  const rides=ridesResult.data||[];
+  const profiles=profilesResult.data||[];
+
+  $('admStats').innerHTML=`
+    <div class="stat"><b>${profiles.length}</b><span>${t('sCustomers')}</span></div>
+    <div class="stat"><b>${drivers.length}</b><span>${t('sDrivers')}</span></div>
+    <div class="stat"><b>${drivers.filter(d=>d.is_available).length}</b><span>${t('sActive')}</span></div>
+    <div class="stat"><b>${rides.length}</b><span>${t('sRides')}</span></div>
+    <div class="stat"><b>${rides.filter(r=>r.status==='completed').length}</b><span>${t('sDone')}</span></div>
+    <div class="stat"><b>${rides.filter(r=>r.status==='pending').length}</b><span>${t('sPend')}</span></div>`;
+
+  $('admDrivers').innerHTML=!drivers.length?`<p class="muted">${t('noDrivers')}</p>`:drivers.map(d=>`
+    <div class="item">
+      <div class="top"><b>${esc(d.display_name||'Conducteur')}</b>${pill(d.approval_status||'pending')}</div>
+      <p class="muted">${esc(d.phone||'')} · ${esc(d.vehicle||'')} · ${esc(d.vehicle_plate||'')}</p>
+      ${d.approval_status!=='approved'?`<button class="btn sm" onclick="approveDriver('${esc(d.id)}','approved')">${t('approve')}</button>`:''}
+      ${d.approval_status!=='rejected'?`<button class="btn red sm" onclick="approveDriver('${esc(d.id)}','rejected')">${t('reject')}</button>`:''}
+    </div>`).join('');
+
+  $('admRides').innerHTML=!rides.length?`<p class="muted">${t('noRides')}</p>`:rides.map(r=>`
+    <div class="item">
+      <div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>${pill(r.status)}</div>
+      <p class="muted">${money(r.fare)} · ${new Date(r.created_at).toLocaleString()}</p>
+      <p class="muted">Paiement : ${esc(r.payment_method||'cash')} · ${esc(r.payment_status||'unpaid')}</p>
+    </div>`).join('');
+
+  const payments=rides.filter(r=>r.payment_method==='airtel_money'&&r.payment_status==='awaiting_verification');
+  $('admPayments').innerHTML=!payments.length?'<p class="muted">Aucun paiement à vérifier.</p>':payments.map(r=>`
+    <div class="item">
+      <b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>
+      <p>${money(r.fare)}</p>
+      <p>Référence : <b>${esc(r.payment_reference||'Non fournie')}</b></p>
+      <button class="btn sm" onclick="verifyPayment('${esc(r.id)}')">Confirmer le paiement reçu</button>
+    </div>`).join('');
+
+  const map=mkMap('mapA');
+  map.eachLayer(layer=>{if(layer instanceof L.Marker)map.removeLayer(layer);});
+  drivers.filter(d=>d.is_available&&d.latitude&&d.longitude).forEach(d=>{
+    L.marker([d.latitude,d.longitude]).addTo(map)
+      .bindPopup(esc(d.display_name||'Conducteur disponible'));
+  });
+}
+
+window.approveDriver=async(id,status)=>{
+  const {error}=await sb.from('drivers').update({approval_status:status})
+    .eq('id',id);
+  if(error)return flash('admMsg',t('err')+error.message);
+  flash('admMsg','Statut du conducteur mis à jour.','ok');
+  await loadAdmin();
+};
+
+window.verifyPayment=async rideId=>{
+  if(!confirm('Confirmez-vous avoir effectivement reçu ce paiement Airtel Money ?'))return;
+  const {error}=await sb.rpc('verify_klando_payment',{p_ride_id:rideId});
+  if(error)return flash('admMsg',t('err')+error.message);
+  flash('admMsg','Paiement confirmé.','ok');
+  await loadAdmin();
+};
+
+/* ============ INITIALIZATION ============ */
+async function boot(){
+  applyLang();
+  if(!configured){
+    $('cfgWarn').textContent=t('cfgMissing');
+    $('cfgWarn').classList.remove('hide');
+    show('vAuth');
+    return;
+  }
+  const {data:{session}}=await sb.auth.getSession();
+  if(session)await start();
+  else show('vAuth');
+
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_IN'&&session&&!me.user)await start();
+    if(event==='SIGNED_OUT'){
+      stopAll();
+      me={user:null,profile:null,driver:null,role:null};
+      show('vAuth');
+    }
+  });
+}
+boot();
+</script>
+</body>
+</html>
