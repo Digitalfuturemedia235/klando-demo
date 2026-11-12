@@ -34,14 +34,17 @@ button.sm{width:auto;padding:8px 12px;font-size:13px;margin:6px 6px 0 0}
 .pill.pending{background:#fff1c9;color:#7a5b00}.pill.accepted,.pill.approved{background:#dcefff;color:#0a4a82}
 .pill.ongoing{background:#e8dcff;color:#4a2a8a}.pill.completed{background:var(--g2);color:#0b4f2b}
 .pill.cancelled,.pill.rejected{background:#fdecea;color:#8a1f13}
-.item{border-top:1px solid var(--b);padding:10px 0;font-size:14px}.item .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.item{border-top:1px solid var(--b);padding:10px 0;font-size:14px}.item:first-child{border-top:0}
+.item .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .muted{color:var(--m);font-size:13px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat{background:var(--g2);border-radius:10px;padding:10px;text-align:center}
 .stat b{display:block;font-size:22px;color:var(--g)}.stat span{font-size:11px;color:var(--m)}
 .hide{display:none!important}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.fare{font-size:22px;font-weight:700;color:var(--g)}
+.fare{font-size:22px;font-weight:700;color:var(--g)}/* =========================================
+   KLANDO PREMIUM DESIGN SYSTEM — 2026
+   ========================================= */
 :root {
   --g: #075b35; --g2: #e8f4ed; --y: #ff8a00; --r: #c0392b;
   --t: #172b21; --m: #718078; --b: #e3eae5; --bg: #f5f8f5;
@@ -113,6 +116,45 @@ button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
 .booking-panel h3 { margin-top: 0; color: #123d28; }
 .booking-panel p { color: #718078; }
 @media(max-width:600px) { .home-map { height: 52vh; min-height: 300px; } }
+/* Keep Leaflet controls inside their map and below the sticky header. */
+.leaflet-control-container,
+.leaflet-top,
+.leaflet-bottom { z-index: 400 !important; }
+.leaflet-control-attribution { max-width: calc(100% - 12px); font-size: 10px; }
+@media (max-width: 600px) {
+  header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    min-height: 70px;
+  }
+  header h1 {
+    min-width: 0;
+    font-size: 23px;
+    line-height: 1.15;
+    letter-spacing: 1.5px;
+    overflow-wrap: anywhere;
+  }
+  header h1 small {
+    font-size: 10px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    white-space: normal;
+    margin-top: 3px;
+  }
+  header button {
+    white-space: nowrap;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+  .leaflet-control-attribution {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+}
 #vCust.hide, #vDrv.hide, #vAdm.hide, #vAuth.hide { display: none !important; }
 </style>
 </head>
@@ -370,7 +412,6 @@ const C = { pick:null, dest:null, mode:'p', mk:{}, ready:false, destQuery:'' };
 let destinationLookup = 0;
 
 function setMode(m){ C.mode = m; $('modeP').classList.toggle('on', m==='p'); $('modeD').classList.toggle('on', m==='d'); }
-
 $('modeP').onclick = () => setMode('p');
 $('modeD').onclick = () => setMode('d');
 
@@ -443,7 +484,7 @@ function initCustomer(){
       setMode('d');
     } else {
       C.dest = ll;
-      C.destQuery = '';
+      C.destQuery = ''; // A map-selected destination is not tied to the typed text.
       placeMarker('d', ll);
     }
   });
@@ -465,6 +506,7 @@ $('searchBtn').onclick = async () => {
   if (q) await geocodeDestination(q);
 };
 
+// Geocode when the customer leaves the destination field.
 $('cDest').addEventListener('blur', async () => {
   const q = $('cDest').value.trim();
   if (q && q !== C.destQuery) await geocodeDestination(q);
@@ -477,6 +519,7 @@ $('reqBtn').onclick = async () => {
   const dest = $('cDest').value.trim();
   if (!dest) return flash('custMsg', t('needDest'));
 
+  // A valid destination is mandatory. Never submit a ride with a guessed minimum fare.
   if (!C.dest || C.destQuery !== dest) {
     const located = await geocodeDestination(dest);
     if (!located || !C.dest || C.destQuery !== dest) {
@@ -511,7 +554,6 @@ function rideHtml(r, actions){
   return `<div class="item"><div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
   <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(r.estimated_fare)} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${actions||''}</div>`;
 }
-
 async function loadCustomer(){
   const { data, error } = await sb.from('rides').select('*').eq('customer_id', me.user.id).order('created_at',{ascending:false}).limit(20);
   if (error) return flash('custMsg', t('err') + error.message);
@@ -530,14 +572,12 @@ function renderAvail(){
   $('availBtn').textContent = on ? t('goOff') : t('goOn');
   $('availBtn').className = 'btn sm' + (on ? ' red' : '');
 }
-
 $('availBtn').onclick = async () => {
   const next = !me.driver.is_available;
   const { error } = await sb.rpc('set_klando_driver_availability', { p_available: next });
   if (error) return flash('drvMsg', t('err') + error.message);
   me.driver.is_available = next; renderAvail(); manageGps(); loadDriver();
 };
-
 function manageGps(){
   const need = me.driver && me.driver.approval_status === 'approved' && me.driver.is_available;
   if (need && gpsWatch == null && navigator.geolocation) {
@@ -549,13 +589,11 @@ function manageGps(){
     gpsWatch = null; clearInterval(gpsPushTimer); gpsPushTimer = null;
   }
 }
-
 async function pushGps(){
   if (!lastPos) return;
   const { error } = await sb.rpc('update_klando_driver_location', { p_lat:lastPos[0], p_lng:lastPos[1] });
   if (error && !gpsFnWarned) { gpsFnWarned = true; console.warn(error); flash('drvMsg', t('gpsNoFn'), 'warn'); }
 }
-
 async function loadDriver(){
   const dr = await sb.from('drivers').select('*').eq('user_id', me.user.id).maybeSingle();
   if (dr.data) me.driver = dr.data;
@@ -590,7 +628,6 @@ async function loadDriver(){
 
 /* ============ ADMIN ============ */
 let admMk = [];
-
 async function loadAdmin(){
   const [d, r, c] = await Promise.all([
     sb.from('drivers').select('*').order('created_at',{ascending:false}).limit(500),
