@@ -2,8 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#151515">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KLANDO">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151515'/%3E%3Ctext x='32' y='47' font-size='42' font-weight='900' text-anchor='middle' fill='%23ff8a00' font-family='Arial'%3EK%3C/text%3E%3C/svg%3E">
 <title>KLANDO</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
 <style>
@@ -118,11 +123,60 @@ button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
 .toast.ok{border-left-color:#2ecc71}.toast.warn{border-left-color:#f1c40f}
 @keyframes tin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast{animation:none}}
+
+/* ---- Premium polish ---- */
+header{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right));padding-top:max(14px,env(safe-area-inset-top))}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#ffa329,#ff7a00);font-size:22px;box-shadow:0 4px 12px rgba(255,138,0,.35);flex:none}
+.brand .word{display:block;line-height:1.1;min-width:0}
+#langBtn{background:transparent;color:#fff;border:1px solid #4a4a4a}
+#langBtn::before{content:"🌐 "}
+#langBtn:hover{border-color:var(--klando-orange);background:transparent;color:var(--klando-orange)}
+.card{border-radius:20px}
+.card h2{display:flex;align-items:center;gap:10px}
+.card h2::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--klando-orange);flex:none}
+input,select{min-height:48px}
+button.btn.sm{min-height:44px}
+.tabs button{min-height:46px}
+.hero{position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,0,.35),transparent 70%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;align-items:center}
+.hero-cta .btn{width:auto;margin:0;padding:15px 26px}
+.hero-cta .ghost{color:#fff;text-decoration:none;font-weight:700;padding:14px 18px;border:1px solid rgba(255,255,255,.3);border-radius:12px}
+.hero-cta .ghost:hover{border-color:var(--klando-orange);color:var(--klando-orange)}
+.hero-feats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.hero-feats span{font-size:13px;padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14)}
+.farebox{background:linear-gradient(135deg,#151515,#2b2b2b);color:#fff;border-radius:16px;padding:14px 16px;margin:14px 0 4px}
+.farebox .fare{color:var(--klando-orange)}
+.farebox .muted{color:#bbb}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.paypick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.paypick button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;border:2px solid #e3e3e3;background:#fff;border-radius:14px;font-weight:700;font-size:13px;color:#151515;min-height:70px;line-height:1.2}
+.paypick button i{font-style:normal;font-size:20px}
+.paypick button.on{border-color:var(--klando-orange);background:#fff6ea;box-shadow:0 0 0 3px rgba(255,138,0,.15)}
+#liveCard{border-top:4px solid var(--klando-orange)}
+.drv{display:flex;align-items:center;gap:12px;margin:8px 0}
+.drv .av{width:46px;height:46px;border-radius:50%;background:var(--klando-orange);color:#151515;display:grid;place-items:center;font-weight:900;font-size:19px;flex:none}
+#drvSwitch{background:#fafafa;border:1px solid #eee;border-radius:14px;padding:10px 14px}
+.stat b{font-size:28px}
+.item:hover{background:#fcfcfc}
+.social{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}
+.social a{color:#fff;text-decoration:none;border:1px solid #444;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:700}
+.social a:hover{border-color:var(--klando-orange);color:var(--klando-orange)}
+.social:empty{display:none}
+.footer{padding-bottom:max(32px,env(safe-area-inset-bottom))}
+@media (max-width:600px){
+  .brand .logo{width:38px;height:38px;font-size:19px}
+  .hero-cta .btn,.hero-cta .ghost{width:100%;text-align:center}
+  #toasts{top:70px}
+  .paypick button{font-size:12px}
+}
 </style>
 </head>
 <body>
 <header>
-  <h1><span class="brand-accent">K</span>LANDO<small data-i18n="tagline"></small></h1>
+  <h1 class="brand"><span class="logo" aria-hidden="true">🏍️</span><span class="word"><span class="brand-accent">K</span>LANDO<small data-i18n="tagline"></small></span></h1>
   <button id="langBtn" type="button">EN</button>
   <button id="logoutBtn" type="button" class="hide" data-i18n="logout"></button>
 </header>
@@ -132,6 +186,11 @@ button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
     <div class="hero-label" data-i18n="heroLabel"></div>
     <h2 data-i18n-html="heroTitleHtml"></h2>
     <p data-i18n="heroText"></p>
+    <div class="hero-cta">
+      <button class="btn" type="button" onclick="document.getElementById('vAuth').scrollIntoView({behavior:'smooth'})" data-i18n="bookingBtn"></button>
+      <a class="ghost" href="#publicHome" data-i18n="heroMore"></a>
+    </div>
+    <div class="hero-feats"><span data-i18n="feat1"></span><span data-i18n="feat2"></span><span data-i18n="feat3"></span></div>
   </section>
   <section id="publicHome">
     <div class="home-heading">
@@ -196,10 +255,17 @@ button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
       <label for="cDest" data-i18n="destination"></label>
       <div class="row"><input id="cDest" data-i18n-ph="destPh" style="flex:3"><button id="searchBtn" class="btn alt" type="button" style="flex:1;margin-top:0" data-i18n="search"></button></div>
       <p class="muted" data-i18n="mapHint"></p>
-      <div class="sw"><span data-i18n="estFare"></span><span id="fare" class="fare">—</span></div>
-      <div id="fareNote" class="muted" style="text-align:right"></div>
-      <label for="paymentMethod" data-i18n="paymentMethod"></label>
-      <select id="paymentMethod"><option value="cash" data-i18n="cash"></option><option value="airtel_money">Airtel Money</option><option value="moov_money">Moov Money</option></select>
+      <div class="farebox">
+        <div class="sw"><span data-i18n="estFare"></span><span id="fare" class="fare">—</span></div>
+        <div id="fareNote" class="muted" style="text-align:right"></div>
+      </div>
+      <label id="payLbl" for="paymentMethod" data-i18n="paymentMethod"></label>
+      <div id="payPick" class="paypick" role="radiogroup" aria-labelledby="payLbl">
+        <button type="button" role="radio" data-pay="cash" class="on" aria-checked="true"><i>💵</i><span data-i18n="cash"></span></button>
+        <button type="button" role="radio" data-pay="airtel_money" aria-checked="false"><i>📱</i><span>Airtel Money</span></button>
+        <button type="button" role="radio" data-pay="moov_money" aria-checked="false"><i>📲</i><span>Moov Money</span></button>
+      </div>
+      <select id="paymentMethod" class="sr" tabindex="-1" aria-hidden="true"><option value="cash" data-i18n="cash"></option><option value="airtel_money">Airtel Money</option><option value="moov_money">Moov Money</option></select>
       <div id="airtelInstructions" class="msg warn hide"></div>
       <button id="reqBtn" class="btn" type="button" data-i18n="requestBtn"></button>
       <div id="custMsg"></div>
@@ -226,6 +292,7 @@ button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
 </main>
 <footer class="footer">
   <h2>KLANDO</h2><p data-i18n="footerTagline"></p>
+  <div id="social" class="social"></div>
   <div data-i18n="initiative"></div><small data-i18n="copyright"></small>
 </footer>
 <script>
@@ -284,6 +351,19 @@ const PAY = {
   airtel_money: { label: 'Airtel Money', number: '+235 65 28 92 22' },
   moov_money:   { label: 'Moov Money',   number: MOOV_NUMBER }
 };
+/* Social links shown in the footer. Leave a value empty to hide it. Use full https:// addresses;
+   whatsapp takes a phone number with country code, digits only (e.g. '23565289222'). */
+const SOCIAL = { facebook:'', instagram:'', tiktok:'', x:'', youtube:'', whatsapp:'' };
+const SOCIAL_LABEL = { facebook:'Facebook', instagram:'Instagram', tiktok:'TikTok', x:'X', youtube:'YouTube', whatsapp:'WhatsApp' };
+function renderSocial(){
+  const box = $('social'); if (!box) return;
+  box.innerHTML = Object.keys(SOCIAL).map(k => {
+    let v = String(SOCIAL[k] || '').trim(); if (!v) return '';
+    if (k === 'whatsapp') v = 'https://wa.me/' + v.replace(/\D/g, '');
+    if (!/^https:\/\//i.test(v)) return '';   // only https links are ever rendered
+    return `<a href="${esc(v)}" target="_blank" rel="noopener noreferrer">${SOCIAL_LABEL[k]}</a>`;
+  }).join('');
+}
 let drvActive = false, liveActive = false, liveRideId = null;
 const payLabel = m => PAY[m] ? PAY[m].label : t('cash');
 const payNumber = m => (PAY[m] && PAY[m].number) || t('numberTba');
@@ -354,7 +434,8 @@ Object.assign(I18N.fr, {
   nPaidT:'Paiement confirmé 💚', nPaidB:'Votre paiement a bien été reçu. Merci !',
   iArrived:'Je suis arrivé', iCash:'Espèces reçues', arrivedSent:'Arrivée signalée au client.',
   arrivedNoFn:'Fonction « arrivée » non installée en base. Le client sera tout de même averti automatiquement quand vous serez à moins de 100 m.',
-  cashDone:'Paiement en espèces enregistré.'
+  cashDone:'Paiement en espèces enregistré.',
+  heroMore:'Découvrir', feat1:'🏍️ Moto-taxi en quelques secondes', feat2:'📍 Suivi en direct', feat3:'💳 Airtel Money, Moov Money ou espèces'
 });
 Object.assign(I18N.en, {
   liveTitle:'My ride, live', stReq:'Requested', stRoute:'On the way', stArrived:'Arrived', stRide:'Riding', stDone:'Completed',
@@ -376,7 +457,8 @@ Object.assign(I18N.en, {
   nPaidT:'Payment confirmed 💚', nPaidB:'Your payment was received. Thank you!',
   iArrived:'I have arrived', iCash:'Cash received', arrivedSent:'Arrival sent to the customer.',
   arrivedNoFn:'The “arrival” database function is not installed. The customer will still be alerted automatically when you are within 100 m.',
-  cashDone:'Cash payment recorded.'
+  cashDone:'Cash payment recorded.',
+  heroMore:'Learn more', feat1:'🏍️ A moto-taxi in seconds', feat2:'📍 Live tracking', feat3:'💳 Airtel Money, Moov Money or cash'
 });
 let lang = (()=>{try{return localStorage.getItem('klando_lang')||'fr'}catch(e){return 'fr'}})();
 if (!I18N[lang]) lang = 'fr';
@@ -400,6 +482,7 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-html]').forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
   $('langBtn').textContent = lang === 'fr' ? 'EN' : 'FR';
+  syncPay();
   if (me.user) { renderAvail(); refresh(); }
 }
 
@@ -641,7 +724,14 @@ function updateMethodInfo(){
   box.innerHTML = t('mobileInstructions').replace('{number}', esc(payNumber(m))).replace('{method}', esc(payLabel(m)));
   box.classList.remove('hide');
 }
-$('paymentMethod').onchange = updateMethodInfo;
+/* The payment cards drive the hidden <select>, so the rest of the code keeps reading $('paymentMethod').value. */
+function syncPay(){
+  const v = $('paymentMethod').value;
+  document.querySelectorAll('#payPick button').forEach(b => { const on = b.dataset.pay === v; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+  updateMethodInfo();
+}
+document.querySelectorAll('#payPick button').forEach(b => b.onclick = () => { $('paymentMethod').value = b.dataset.pay; syncPay(); });
+$('paymentMethod').onchange = syncPay;
 
 $('reqBtn').onclick = async () => {
   flash('custMsg','');
@@ -669,8 +759,7 @@ $('reqBtn').onclick = async () => {
     if (error) return flash('custMsg', t('err') + error.message);
     flash('custMsg', t('sent'), 'ok');
     $('cDest').value = '';
-    $('paymentMethod').value = 'cash';
-    $('airtelInstructions').classList.add('hide');
+    $('paymentMethod').value = 'cash'; syncPay();
     if (C.mk.d && maps.mapC) { maps.mapC.removeLayer(C.mk.d); C.mk.d = null; }
     C.dest = null; C.destQuery = '';
     updateFare();
@@ -871,7 +960,7 @@ function renderLive(r, d){
   let who = '';
   if (d && d.display_name) {
     const tel = String(d.phone || '').replace(/[^0-9+]/g, '');
-    who = `<div class="muted"><b>${esc(d.display_name)}</b> · ${esc(d.vehicle || '')} ${esc(d.vehicle_plate || '')}</div>` + (tel ? `<a class="call" href="tel:${esc(tel)}">${t('call')}</a>` : '');
+    who = `<div class="drv"><span class="av">${esc(String(d.display_name).trim().charAt(0).toUpperCase())}</span><div><b>${esc(d.display_name)}</b><div class="muted">${esc(d.vehicle || '')} ${esc(d.vehicle_plate || '')}</div></div></div>` + (tel ? `<a class="call" href="tel:${esc(tel)}">${t('call')}</a>` : '');
   }
   $('liveInfo').innerHTML = `<div class="live-line">${esc(line)}</div>${who}
     <div class="sw" style="margin-top:8px"><span>${t(r.status === 'completed' ? 'finalFare' : 'liveFare')}</span><span class="fare">${money(finalFare(r))}</span></div>`;
@@ -1018,6 +1107,7 @@ async function loadAdmin(){
 
 /* ============ BOOT ============ */
 (async function boot(){
+  renderSocial();
   applyLang();
   if (!configured) { $('cfgWarn').textContent = t('cfgMissing'); $('cfgWarn').classList.remove('hide'); show('vAuth'); return; }
   if (!sb) {
