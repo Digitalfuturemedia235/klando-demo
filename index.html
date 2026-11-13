@@ -3,159 +3,121 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b6b3a">
+<meta name="theme-color" content="#151515">
 <title>KLANDO</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
 <style>
-:root{--g:#0b6b3a;--g2:#e8f5ee;--y:#f4b400;--r:#c0392b;--t:#1d2b24;--m:#6b7a72;--b:#dfe6e2;--bg:#f5f7f6}
+:root{
+  --g:#ff8a00; --g2:#fff1df; --y:#ff8a00; --r:#c0392b;
+  --t:#151515; --m:#626262; --b:#e7e7e7; --bg:#f7f7f7;
+  --klando-orange:#ff8a00; --klando-black:#151515;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:16px}
-header{background:#fff;color:#111;padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:1000;border-bottom:3px solid #ff8a00;box-shadow:0 3px 14px rgba(0,0,0,.08)}
-header h1{margin:0;font-size:20px;letter-spacing:1px;flex:1;color:#151515;font-weight:900}
-header h1 small{display:block;font-size:11px;font-weight:500;letter-spacing:0;color:#555;opacity:1}
-header button{background:#171717;color:#fff;border:1px solid #ff8a00;border-radius:8px;padding:7px 10px;font-size:13px}
-main{max-width:720px;margin:0 auto;padding:12px}
-.card{background:#fff;border:1px solid var(--b);border-radius:12px;padding:14px;margin-bottom:12px}
-.card h2{margin:0 0 10px;font-size:17px}
-label{display:block;font-size:13px;color:var(--m);margin:10px 0 4px}
-input,select{width:100%;padding:11px;border:1px solid var(--b);border-radius:8px;font-size:16px;background:#fff}
-button.btn{background:var(--g);color:#fff;border:0;border-radius:8px;padding:12px 14px;font-size:15px;font-weight:600;width:100%;margin-top:12px}
-button.btn.alt{background:#fff;color:var(--g);border:1px solid var(--g)}
-button.btn.red{background:var(--r)}
-button.sm{width:auto;padding:8px 12px;font-size:13px;margin:6px 6px 0 0}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+header{background:#151515;color:#fff;padding:14px 22px;min-height:68px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:1000;border-bottom:3px solid var(--klando-orange);box-shadow:0 4px 18px rgba(0,0,0,.12)}
+header h1{margin:0;font-size:25px;letter-spacing:2px;flex:1;color:#fff;font-weight:900;min-width:0}
+header h1 small{display:block;font-size:11px;font-weight:500;letter-spacing:.5px;color:#ccc;margin-top:2px}
+.brand-accent{color:var(--klando-orange)}
+header button{background:var(--klando-orange);color:#151515;border:1px solid var(--klando-orange);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+header button:hover{background:#ffa329}
+#langBtn{min-width:46px;font-weight:900}
+main{max-width:1100px;margin:24px auto;padding:16px}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:20px;padding:22px;margin-bottom:20px;box-shadow:0 8px 26px rgba(0,0,0,.05)}
+.card h2{margin:0 0 16px;font-size:19px;font-weight:800;color:#151515}
+label{display:block;font-size:13px;font-weight:650;color:#555;margin:15px 0 4px}
+input,select{width:100%;padding:14px;border:1px solid #dcdcdc;border-radius:12px;font-size:16px;background:#fcfcfc;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--klando-orange);box-shadow:0 0 0 3px rgba(255,138,0,.16)}
+button{cursor:pointer;font-family:inherit;transition:transform .18s,box-shadow .18s,background .18s}
+button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+button.btn{background:var(--klando-orange);color:#151515;border:0;border-radius:12px;padding:14px 18px;font-size:15px;font-weight:750;width:100%;margin-top:14px;box-shadow:0 5px 12px rgba(255,138,0,.18)}
+button.btn:hover:not(:disabled){background:#ffa329;transform:translateY(-1px);box-shadow:0 8px 18px rgba(255,138,0,.24)}
+button.btn.alt{background:#151515;color:#fff;border:1px solid #151515;box-shadow:none}
+button.btn.alt:hover:not(:disabled){background:#333}
+button.btn.red{background:var(--r);color:#fff}
+button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
 .row{display:flex;gap:8px}.row>*{flex:1}
-.tabs{display:flex;gap:6px;margin-bottom:10px}
-.tabs button{flex:1;padding:10px;border:1px solid var(--b);background:#fff;border-radius:8px;font-size:14px}
-.tabs button.on{background:var(--g);color:#fff;border-color:var(--g)}
-.map{height:280px;border-radius:10px;border:1px solid var(--b);margin:8px 0}
-.msg{padding:10px;border-radius:8px;margin:8px 0;font-size:14px}
-.msg.err{background:#fdecea;color:#8a1f13}.msg.ok{background:var(--g2);color:#0b4f2b}.msg.warn{background:#fff6dd;color:#7a5b00}
-.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;background:#eee;color:#444}
-.pill.pending{background:#fff1c9;color:#7a5b00}.pill.accepted,.pill.approved{background:#dcefff;color:#0a4a82}
-.pill.ongoing{background:#e8dcff;color:#4a2a8a}.pill.completed{background:var(--g2);color:#0b4f2b}
+.tabs{display:flex;gap:9px;margin-bottom:10px}
+.tabs button{flex:1;padding:12px;border:1px solid var(--b);background:#fff;border-radius:12px;font-size:14px;font-weight:650}
+.tabs button.on{background:var(--klando-orange);color:#151515;border-color:var(--klando-orange)}
+.map{height:330px;border-radius:16px;border:1px solid #dce7df;overflow:hidden;margin:8px 0}
+.msg{padding:13px;border-radius:12px;margin:8px 0;font-size:14px}
+.msg.err{background:#fdecea;color:#8a1f13}.msg.ok{background:#edf7ef;color:#205b31}.msg.warn{background:#fff6dd;color:#7a5b00}
+.pill{display:inline-block;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700;background:#eee;color:#444;white-space:nowrap}
+.pill.pending{background:#fff1df;color:#8a4b00}.pill.accepted,.pill.approved{background:#dcefff;color:#0a4a82}
+.pill.ongoing{background:#e8dcff;color:#4a2a8a}.pill.completed{background:#edf7ef;color:#205b31}
 .pill.cancelled,.pill.rejected{background:#fdecea;color:#8a1f13}
-.item{border-top:1px solid var(--b);padding:10px 0;font-size:14px}.item:first-child{border-top:0}
+.item{border-top:1px solid #edf1ee;padding:15px 2px;font-size:14px}.item:first-child{border-top:0}
 .item .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .muted{color:var(--m);font-size:13px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:var(--g2);border-radius:10px;padding:10px;text-align:center}
-.stat b{display:block;font-size:22px;color:var(--g)}.stat span{font-size:11px;color:var(--m)}
+.stat{background:var(--g2);border:1px solid #ffd5a3;border-radius:15px;padding:16px 8px;text-align:center}
+.stat b{display:block;font-size:25px;color:#151515}.stat span{font-size:11px;color:var(--m)}
 .hide{display:none!important}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.fare{font-size:22px;font-weight:700;color:var(--g)}/* =========================================
-   KLANDO PREMIUM DESIGN SYSTEM — 2026
-   ========================================= */
-:root {
-  --g: #075b35; --g2: #e8f4ed; --y: #ff8a00; --r: #c0392b;
-  --t: #172b21; --m: #718078; --b: #e3eae5; --bg: #f5f8f5;
+.fare{font-size:27px;font-weight:850;color:#e87900}
+#vAuth .card{max-width:520px;margin:35px auto}
+#vAuth .tabs{margin-bottom:22px}
+.hero{background:linear-gradient(125deg,#111 0%,#242424 100%);color:#fff;padding:32px 28px;border-radius:22px;margin-bottom:25px;box-shadow:0 12px 28px rgba(0,0,0,.16)}
+.hero-label{color:var(--klando-orange);font-weight:800;font-size:11px;letter-spacing:2px}
+.hero h2{color:#fff;font-size:clamp(27px,5vw,40px);line-height:1.15;margin:15px 0}
+.hero h2 span{color:var(--klando-orange)}
+.hero p{max-width:580px;color:rgba(255,255,255,.85);line-height:1.7;margin:0}
+.home-heading{padding:12px 4px 18px}
+.home-heading span{color:#e87900;font-size:11px;font-weight:800;letter-spacing:2px}
+.home-heading h2{font-size:clamp(25px,5vw,36px);margin:10px 0 5px;color:#151515}
+.home-heading p{color:var(--m);margin:0}
+.home-map{height:55vh;min-height:340px;border-radius:20px;border:1px solid #dce7df;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.10)}
+.booking-panel{position:relative;background:#fff;border-radius:20px;padding:22px;margin:-25px 12px 0;z-index:500;box-shadow:0 8px 25px rgba(0,0,0,.12);border-top:4px solid var(--klando-orange)}
+.booking-panel h3{margin-top:0;color:#151515}
+.booking-panel p{color:var(--m)}
+.footer{background:#151515;color:#fff;text-align:center;padding:32px 15px;margin-top:40px;border-top:4px solid var(--klando-orange)}
+.footer h2{letter-spacing:3px;font-size:25px;color:var(--klando-orange);margin:0 0 8px}
+.footer p{color:#e5e5e5;margin:0}
+.footer div{color:var(--klando-orange);font-weight:700;margin:12px}
+.footer small{color:#bbb}
+/* Keep Leaflet controls inside their map and below the sticky header */
+.leaflet-control-container,.leaflet-top,.leaflet-bottom{z-index:400!important}
+.leaflet-control-attribution{max-width:calc(100% - 12px);font-size:10px}
+@media (min-width:850px){
+  #vCust{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
+  #vDrv{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+  #vDrv>.card:first-child{grid-column:1/-1}
+  #vAdm{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+  #vAdm>.card{margin-bottom:0}
+  #vAdm>#admMsg{grid-column:1/-1}
 }
-* { box-sizing: border-box; }
-body { background: var(--bg); color: var(--t); font-family: Inter, system-ui, -apple-system, sans-serif; line-height: 1.5; }
-header { background:#fff; color:#151515; padding:16px 22px; min-height:72px; border-bottom:3px solid #ff8a00; box-shadow:0 4px 18px rgba(0,0,0,.08); }
-header h1 { color:#151515; font-size:25px; font-weight:900; letter-spacing:2px; }
-header h1 small { color:#555; font-size:11px; letter-spacing:.5px; margin-top:2px; }
-header button { background:#171717; color:#fff; border:1px solid #ff8a00; border-radius:12px; padding:9px 14px; font-weight:700; cursor:pointer; }
-main { max-width: 1100px; margin: 28px auto; padding: 16px; }
-.card { background: #fff; border: 1px solid #e7eee8; border-radius: 20px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 26px rgba(24,65,42,.055); }
-.card h2 { font-size: 19px; font-weight: 800; color: #123d28; margin-bottom: 16px; }
-label { font-weight: 650; color: #52675b; margin-top: 15px; }
-input, select { padding: 14px; border: 1px solid #dce7df; border-radius: 12px; background: #fbfdfb; transition: .2s; }
-input:focus, select:focus { outline: none; border-color: var(--g); box-shadow: 0 0 0 3px rgba(7,91,53,.10); }
-button { cursor: pointer; transition: transform .18s, box-shadow .18s; }
-button.btn { background: linear-gradient(110deg, #075b35, #087743); border: none; border-radius: 12px; padding: 14px 18px; font-weight: 750; box-shadow: 0 5px 12px rgba(7,91,53,.15); }
-button.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(7,91,53,.2); }
-button.btn.alt { background: #fff; color: var(--g); border: 1px solid #b9d4c2; box-shadow: none; }
-button.btn.red { background: #c0392b; }
-.tabs { gap: 9px; }
-.tabs button { border-radius: 12px; padding: 12px; font-weight: 650; }
-.tabs button.on { background: var(--g); color: #fff; border-color: var(--g); }
-.map { height: 330px; border-radius: 16px; border: 1px solid #dce7df; overflow: hidden; }
-.fare { color: var(--g); font-size: 27px; font-weight: 850; }
-.stat { background: linear-gradient(145deg, #e8f4ed, #f4faf6); border: 1px solid #dcebe0; border-radius: 15px; padding: 16px 8px; }
-.stat b { color: var(--g); font-size: 25px; }
-.item { border-color: #edf1ee; padding: 15px 2px; }
-.pill { padding: 5px 11px; border-radius: 20px; font-weight: 700; }
-.msg { border-radius: 12px; padding: 13px; }
-#vAuth .card { max-width: 520px; margin: 35px auto; }
-#vAuth .tabs { margin-bottom: 22px; }
-#vAuth button.btn { margin-top: 20px; }
-@media (min-width: 850px) {
-  #vCust { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; align-items: start; }
-  #vCust > .card:first-child { grid-column: 1; }
-  #vCust > .card:nth-child(2) { grid-column: 2; }
-  #vDrv { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
-  #vDrv > .card:first-child { grid-column: 1 / -1; }
-  #vAdm { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
-  #vAdm > .card { margin-bottom: 0; }
+@media (max-width:600px){
+  header{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:11px 14px;min-height:64px}
+  header h1{font-size:23px;line-height:1.15;letter-spacing:1.5px}
+  header h1 small{font-size:10px;line-height:1.25;white-space:normal}
+  header button{padding:8px 10px;font-size:12px;border-radius:10px}
+  main{padding:12px;margin:12px auto}
+  .card{padding:17px;border-radius:17px}
+  .map{height:270px}
+  .home-map{height:52vh;min-height:300px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .row{gap:6px}
+  .hero{padding:24px 20px}
+  .leaflet-control-attribution{font-size:9px;line-height:1.2}
 }
-@media (max-width: 600px) {
-  header { padding: 12px 15px; }
-  main { padding: 12px; margin: 12px auto; }
-  .card { padding: 17px; border-radius: 17px; }
-  .map { height: 270px; }
-  .stats { grid-template-columns: repeat(2, 1fr); }
-  .row { gap: 6px; }
-}
-.hero { background: linear-gradient(120deg, #064528, #087743); color: white; padding: 32px 28px; border-radius: 22px; margin-bottom: 25px; box-shadow: 0 12px 28px rgba(6,69,40,.16); }
-.hero-label { color: #ffad42; font-weight: 800; font-size: 11px; letter-spacing: 2px; }
-.hero h2 { color: white; font-size: clamp(27px, 5vw, 40px); line-height: 1.15; margin: 15px 0; }
-.hero h2 span { color: #ffad42; }
-.hero p { max-width: 580px; color: rgba(255,255,255,.85); line-height: 1.7; }
-.footer { background: #063d25; color: white; text-align: center; padding: 32px 15px; margin-top: 40px; }
-.footer h2 { letter-spacing: 3px; font-size: 25px; }
-.footer p { color: #e5f2e9; }
-.footer div { color: #ffad42; font-weight: 700; margin: 12px; }
-.footer small { color: #c5d8cc; }
-button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
-.home-heading { padding: 12px 4px 18px; }
-.home-heading span { color: #e88916; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
-.home-heading h2 { font-size: clamp(25px, 5vw, 36px); margin: 10px 0 5px; color: #123d28; }
-.home-heading p { color: #718078; margin: 0; }
-.home-map { height: 55vh; min-height: 340px; border-radius: 20px; border: 1px solid #dce7df; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,.10); }
-.booking-panel { position: relative; background: white; border-radius: 20px; padding: 22px; margin-top: -25px; margin-left: 12px; margin-right: 12px; z-index: 500; box-shadow: 0 8px 25px rgba(0,0,0,.12); }
-.booking-panel h3 { margin-top: 0; color: #123d28; }
-.booking-panel p { color: #718078; }
-@media(max-width:600px) { .home-map { height: 52vh; min-height: 300px; } }
-.brand-accent{color:#ff8a00}
-.leaflet-control-container,
-.leaflet-top,
-.leaflet-bottom { z-index: 400 !important; }
-.leaflet-control-attribution { max-width: calc(100% - 12px); font-size: 10px; }
-@media (max-width: 600px) {
-  header {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 14px;
-    min-height: 70px;
-  }
-  header h1 {
-    min-width: 0;
-    font-size: 23px;
-    line-height: 1.15;
-    letter-spacing: 1.5px;
-    overflow-wrap: anywhere;
-  }
-  header h1 small {
-    font-size: 10px;
-    line-height: 1.25;
-    letter-spacing: 0;
-    white-space: normal;
-    margin-top: 3px;
-  }
-  header button {
-    white-space: nowrap;
-    padding: 8px 10px;
-    font-size: 12px;
-    border-radius: 10px;
-  }
-  .leaflet-control-attribution {
-    font-size: 9px;
-    line-height: 1.2;
-  }
-}
-#vCust.hide, #vDrv.hide, #vAdm.hide, #vAuth.hide { display: none !important; }
+/* ---- Live ride tracking, steps, toasts ---- */
+#liveCard{grid-column:1/-1}
+.steps{display:flex;gap:6px;margin:10px 0 14px}
+.step{flex:1;text-align:center;font-size:11px;color:var(--m);line-height:1.25}
+.step i{display:flex;width:28px;height:28px;margin:0 auto 5px;border-radius:50%;background:#eee;color:#555;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:12px}
+.step.done i{background:#151515;color:#fff}
+.step.cur i{background:var(--klando-orange);color:#151515;box-shadow:0 0 0 4px rgba(255,138,0,.25)}
+.step.cur span{color:#151515;font-weight:700}
+.live-line{font-size:17px;font-weight:700;margin:6px 0 4px}
+.call{display:inline-block;margin:6px 8px 6px 0;padding:9px 14px;border-radius:12px;background:#151515;color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+.mk{font-size:26px;line-height:36px;text-align:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+#toasts{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:3000;display:flex;flex-direction:column;gap:8px;width:min(92vw,420px);pointer-events:none}
+.toast{pointer-events:auto;background:#151515;color:#fff;border-left:5px solid var(--klando-orange);border-radius:12px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:2px;font-size:14px;animation:tin .25s ease}
+.toast b{color:var(--klando-orange);font-size:15px}
+.toast.ok{border-left-color:#2ecc71}.toast.warn{border-left-color:#f1c40f}
+@keyframes tin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}}
 </style>
 </head>
 <body>
@@ -164,23 +126,24 @@ button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
   <button id="langBtn" type="button">EN</button>
   <button id="logoutBtn" type="button" class="hide" data-i18n="logout"></button>
 </header>
+<div id="toasts" role="status" aria-live="polite"></div>
 <main>
   <section id="publicHero" class="hero">
-    <div class="hero-label">KLANDO · MOBILITÉ URBAINE</div>
-    <h2>Vos déplacements.<br><span>En toute simplicité.</span></h2>
-    <p>Commandez votre moto-taxi en quelques secondes. Retrouvez des conducteurs disponibles et déplacez-vous librement dans N'Djaména.</p>
+    <div class="hero-label" data-i18n="heroLabel"></div>
+    <h2 data-i18n-html="heroTitleHtml"></h2>
+    <p data-i18n="heroText"></p>
   </section>
   <section id="publicHome">
     <div class="home-heading">
-      <span>📍 N'DJAMÉNA, TCHAD</span>
-      <h2>Votre ville, à portée de main.</h2>
-      <p>Repérez votre quartier et préparez votre prochain déplacement.</p>
+      <span data-i18n="cityLabel"></span>
+      <h2 data-i18n="cityTitle"></h2>
+      <p data-i18n="cityText"></p>
     </div>
     <div id="mapHome" class="home-map"></div>
     <div class="booking-panel">
-      <h3>Où souhaitez-vous aller ?</h3>
-      <p>Connectez-vous pour commander votre moto-taxi.</p>
-      <button class="btn" type="button" onclick="document.getElementById('vAuth').scrollIntoView({behavior:'smooth'})">Commander une moto →</button>
+      <h3 data-i18n="bookingTitle"></h3>
+      <p data-i18n="bookingText"></p>
+      <button class="btn" type="button" onclick="document.getElementById('vAuth').scrollIntoView({behavior:'smooth'})" data-i18n="bookingBtn"></button>
     </div>
   </section>
   <div id="cfgWarn" class="msg err hide"></div>
@@ -192,20 +155,20 @@ button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
         <button id="tabReg" type="button" data-i18n="register"></button>
       </div>
       <form id="fLogin">
-        <label data-i18n="email"></label><input id="lEmail" type="email" required autocomplete="email">
-        <label data-i18n="password"></label><input id="lPass" type="password" required autocomplete="current-password">
+        <label for="lEmail" data-i18n="email"></label><input id="lEmail" type="email" required autocomplete="email">
+        <label for="lPass" data-i18n="password"></label><input id="lPass" type="password" required autocomplete="current-password">
         <button class="btn" type="submit" data-i18n="login"></button>
       </form>
       <form id="fReg" class="hide">
-        <label data-i18n="iam"></label>
+        <label for="rRole" data-i18n="iam"></label>
         <select id="rRole"><option value="customer" data-i18n="customer"></option><option value="driver" data-i18n="driver"></option></select>
-        <label data-i18n="fullname"></label><input id="rName" required autocomplete="name">
-        <label data-i18n="phone"></label><input id="rPhone" type="tel" required autocomplete="tel" placeholder="+235 ...">
-        <label data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
-        <label data-i18n="password"></label><input id="rPass" type="password" minlength="6" required autocomplete="new-password">
+        <label for="rName" data-i18n="fullname"></label><input id="rName" required autocomplete="name">
+        <label for="rPhone" data-i18n="phone"></label><input id="rPhone" type="tel" required autocomplete="tel" placeholder="+235 ...">
+        <label for="rEmail" data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
+        <label for="rPass" data-i18n="password"></label><input id="rPass" type="password" minlength="6" required autocomplete="new-password">
         <div id="drvFields" class="hide">
-          <label data-i18n="vehicle"></label><input id="rVeh" placeholder="Honda, Yamaha...">
-          <label data-i18n="plate"></label><input id="rPlate">
+          <label for="rVeh" data-i18n="vehicle"></label><input id="rVeh" data-i18n-ph="vehiclePh">
+          <label for="rPlate" data-i18n="plate"></label><input id="rPlate">
         </div>
         <button class="btn" type="submit" data-i18n="createAccount"></button>
       </form>
@@ -213,6 +176,14 @@ button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
     </div>
   </section>
   <section id="vCust" class="hide">
+    <div id="liveCard" class="card hide">
+      <div class="sw"><h2 data-i18n="liveTitle" style="margin:0"></h2><span id="livePill"></span></div>
+      <div id="liveSteps" class="steps"></div>
+      <div id="liveInfo"></div>
+      <div id="mapLive" class="map"></div>
+      <div id="livePay"></div>
+      <div id="liveMsg"></div>
+    </div>
     <div class="card">
       <h2 data-i18n="requestRide"></h2>
       <div class="tabs">
@@ -221,14 +192,15 @@ button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
       </div>
       <div id="mapC" class="map"></div>
       <button id="gpsBtn" class="btn alt sm" type="button" data-i18n="useGps"></button>
-      <label data-i18n="pickup"></label><input id="cPick" data-i18n-ph="pickupPh">
-      <label data-i18n="destination"></label>
+      <label for="cPick" data-i18n="pickup"></label><input id="cPick" data-i18n-ph="pickupPh">
+      <label for="cDest" data-i18n="destination"></label>
       <div class="row"><input id="cDest" data-i18n-ph="destPh" style="flex:3"><button id="searchBtn" class="btn alt" type="button" style="flex:1;margin-top:0" data-i18n="search"></button></div>
       <p class="muted" data-i18n="mapHint"></p>
       <div class="sw"><span data-i18n="estFare"></span><span id="fare" class="fare">—</span></div>
-      <label for="paymentMethod">Mode de paiement / Payment method</label>
-      <select id="paymentMethod"><option value="cash">Espèces / Cash</option><option value="airtel_money">Airtel Money</option></select>
-      <div id="airtelInstructions" class="msg warn hide">Envoyez le montant exact au <b>+235 65 28 92 22</b> via Airtel Money. Après le transfert, saisissez la référence de transaction dans « Mes courses ». Le paiement reste en attente jusqu’à vérification.</div>
+      <div id="fareNote" class="muted" style="text-align:right"></div>
+      <label for="paymentMethod" data-i18n="paymentMethod"></label>
+      <select id="paymentMethod"><option value="cash" data-i18n="cash"></option><option value="airtel_money">Airtel Money</option><option value="moov_money">Moov Money</option></select>
+      <div id="airtelInstructions" class="msg warn hide"></div>
       <button id="reqBtn" class="btn" type="button" data-i18n="requestBtn"></button>
       <div id="custMsg"></div>
     </div>
@@ -248,23 +220,75 @@ button.btn.sm { width: auto; padding: 9px 13px; margin-top: 6px; }
     <div class="card"><h2 data-i18n="driversMap"></h2><div id="mapA" class="map"></div></div>
     <div class="card"><h2 data-i18n="drivers"></h2><div id="admDrivers"></div></div>
     <div class="card"><h2 data-i18n="allRides"></h2><div id="admRides"></div></div>
-    <div class="card"><h2>Paiements à vérifier / Payments to verify</h2><div id="admPayments"></div></div>
+    <div class="card"><h2 data-i18n="adminPayments"></h2><div id="admPayments"></div></div>
     <div id="admMsg"></div>
   </section>
 </main>
 <footer class="footer">
-  <h2>KLANDO</h2><p>Votre ville. Votre trajet. Votre liberté.</p>
-  <div>Une initiative E&Bz Afrika</div><small>© 2026 KLANDO · N'Djaména, République du Tchad 🇹🇩</small>
+  <h2>KLANDO</h2><p data-i18n="footerTagline"></p>
+  <div data-i18n="initiative"></div><small data-i18n="copyright"></small>
 </footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* Load map and database libraries with CDN fallbacks; the app starts once both attempts finish. */
+(function () {
+  function loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = url; s.onload = resolve;
+      s.onerror = () => reject(new Error('Could not load ' + url));
+      document.head.appendChild(s);
+    });
+  }
+  async function loadWithFallback(primary, fallback) {
+    try { await loadScript(primary); return true; }
+    catch (e1) {
+      try { await loadScript(fallback); return true; }
+      catch (e2) { console.error(e1, e2); return false; }
+    }
+  }
+  (async () => {
+    const [leafletOK, supabaseOK] = await Promise.all([
+      loadWithFallback('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js','https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js'),
+      loadWithFallback('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2')
+    ]);
+    window.KLANDO_DEPENDENCIES = { leafletOK, supabaseOK };
+    document.dispatchEvent(new Event('klando-dependencies-ready'));
+  })();
+})();
+</script>
+<script>
+document.addEventListener('klando-dependencies-ready', function () {
 /* ============ CONFIGURATION ============ */
 const SUPABASE_URL = 'https://mhtzbdopqfibdpowxyxm.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_3OyX775wvqnzXQHqY4tcSg_klYZRBwY';
 const CITY_CENTER = [12.1348, 15.0557];
-const FARE = { base: 300, perKm: 100, min: 500, step: 50 };
-const REFRESH_MS = 10000, GPS_PUSH_MS = 20000;
+/* Fare limits in XAF (FCFA). Night hours are measured on N'Djaména time, whatever the phone's clock says. */
+const FARE = {
+  base: 300, perKm: 100, step: 50,
+  day:   { min: 500,  max: 1500 },
+  night: { min: 1000, max: 2000 },
+  nightStart: 20, nightEnd: 5   // night = 20:00 to 04:59
+};
+function isNight(){
+  let h;
+  try { h = parseInt(new Intl.DateTimeFormat('en-GB', { hour:'2-digit', hourCycle:'h23', timeZone:'Africa/Ndjamena' }).format(new Date()), 10); }
+  catch(e){ h = new Date().getHours(); }
+  return h >= FARE.nightStart || h < FARE.nightEnd;
+}
+const REFRESH_MS = 10000;   // normal refresh
+const LIVE_MS = 4000;       // refresh while a customer has a ride in progress
+const GPS_PUSH_MS = 8000;   // driver position upload (feeds the customer's live map)
+/* Mobile-money accounts. Fill in MOOV_NUMBER (e.g. '+235 6x xx xx xx') once KLANDO has its Moov Money number. */
+const MOOV_NUMBER = '';
+const PAY = {
+  airtel_money: { label: 'Airtel Money', number: '+235 65 28 92 22' },
+  moov_money:   { label: 'Moov Money',   number: MOOV_NUMBER }
+};
+let drvActive = false, liveActive = false, liveRideId = null;
+const payLabel = m => PAY[m] ? PAY[m].label : t('cash');
+const payNumber = m => (PAY[m] && PAY[m].number) || t('numberTba');
+const finalFare = r => (r.final_fare != null ? r.final_fare : r.estimated_fare);
+const isMissingFn = e => !!e && (e.code === 'PGRST202' || e.code === '42883' || /could not find the function|does not exist/i.test(e.message || ''));
 
 /* ============ TRANSLATIONS ============ */
 const I18N = {
@@ -286,7 +310,8 @@ created:'Compte créé.',drvPending:'Votre dossier est en cours d’examen par l
 drvApproved:'Dossier approuvé. Vous pouvez recevoir des courses.',drvNone:'Aucun profil conducteur trouvé. Contactez KLANDO.',
 gpsDenied:'Position GPS indisponible ou refusée.',gpsNoFn:'Suivi GPS conducteur : fonction base de données non installée.',
 cfgMissing:'Configuration manquante : collez la clé publique Supabase (SUPABASE_KEY) dans index.html.',
-err:'Erreur : ',from:'De',to:'Vers',customerL:'Client',noPos:'Position non trouvée.',km:'km'},
+err:'Erreur : ',from:'De',to:'Vers',customerL:'Client',noPos:'Position non trouvée.',km:'km',heroLabel:'KLANDO · MOBILITÉ URBAINE',heroTitleHtml:'Vos déplacements.<br><span>En toute simplicité.</span>',heroText:'Commandez votre moto-taxi en quelques secondes. Retrouvez des conducteurs disponibles et déplacez-vous librement dans N’Djaména.',cityLabel:'📍 N’DJAMÉNA, TCHAD',cityTitle:'Votre ville, à portée de main.',cityText:'Repérez votre quartier et préparez votre prochain déplacement.',bookingTitle:'Où souhaitez-vous aller ?',bookingText:'Connectez-vous pour commander votre moto-taxi.',bookingBtn:'Commander une moto →',paymentMethod:'Mode de paiement',cash:'Espèces',airtelInstructions:'Envoyez le montant exact au <b>+235 65 28 92 22</b> via Airtel Money. Après le transfert, saisissez la référence de transaction dans « Mes courses ». Le paiement reste en attente jusqu’à vérification.',adminPayments:'Paiements à vérifier',footerTagline:'Votre ville. Votre trajet. Votre liberté.',initiative:'Une initiative E&Bz Afrika',copyright:'© 2026 KLANDO · N’Djaména, République du Tchad 🇹🇩',vehiclePh:'Honda, Yamaha…',payment:'Paiement',unpaid:'Non payé',awaiting:'À vérifier',paid:'Payé',failed:'Échec',refunded:'Remboursé',reference:'Référence',transferPrompt:'Transférez {amount} au <b>+235 65 28 92 22</b>, puis indiquez la référence reçue.',referenceLabel:'Référence de transaction Airtel Money',referencePlaceholder:'Ex. référence SMS Airtel',sendReference:'Envoyer la référence',enterReference:'Veuillez saisir la référence de transaction.',referenceSent:'Référence envoyée. Paiement en attente de vérification.',amount:'Montant',confirmPayment:'Confirmer la réception du paiement',noPayment:'Aucun paiement à vérifier.',confirmReceived:'Avez-vous vérifié que le montant est bien arrivé sur votre compte Airtel Money ?',paymentConfirmed:'Paiement confirmé.',clientName:'Client',dayRate:'Tarif de jour',nightRate:'Tarif de nuit',mapPoint:'Point sur la carte',myGps:'Ma position GPS',
+mapFail:'La carte ne peut pas être chargée. Vérifiez votre connexion Internet puis rechargez la page.',sbFail:'Le service de connexion ne peut pas être chargé. Vérifiez votre connexion Internet puis rechargez la page.'},
 en:{tagline:'Urban mobility, made simple.',logout:'Log out',login:'Log in',register:'Sign up',email:'Email',password:'Password',
 iam:'I am a',customer:'Customer',driver:'Driver',fullname:'Full name',phone:'Phone',vehicle:'Motorcycle (make/model)',plate:'License plate',
 createAccount:'Create my account',requestRide:'Request a moto-taxi',setPickup:'Pickup (map)',setDest:'Destination (map)',useGps:'📍 My location',
@@ -302,34 +327,100 @@ noRides:'No rides.',noDrivers:'No drivers.',noReq:'No requests right now.',
 needPick:'Place the pickup on the map or use your location.',needDest:'Enter a destination.',
 sent:'Ride requested. A driver will accept it.',confirmMail:'Account created. Check your email to confirm, then log in.',
 created:'Account created.',drvPending:'Your application is being reviewed by the administrator.',drvRejected:'Your application was rejected. Contact KLANDO.',
-drvApproved:'Application approved. You can receive rides.',drvRejected:'Your application was rejected. Contact KLANDO.',
-drvNone:'No driver profile found. Contact KLANDO.',gpsDenied:'GPS position unavailable or denied.',
-gpsNoFn:'Driver GPS tracking: database function not installed.',cfgMissing:'Missing configuration: paste the Supabase publishable key (SUPABASE_KEY) in index.html.',
-err:'Error: ',from:'From',to:'To',customerL:'Customer',noPos:'Location not found.',km:'km'}
+drvApproved:'Application approved. You can receive rides.',drvNone:'No driver profile found. Contact KLANDO.',
+gpsDenied:'GPS position unavailable or denied.',gpsNoFn:'Driver GPS tracking: database function not installed.',
+cfgMissing:'Missing configuration: paste the Supabase publishable key (SUPABASE_KEY) in index.html.',
+err:'Error: ',from:'From',to:'To',customerL:'Customer',noPos:'Location not found.',km:'km',heroLabel:'KLANDO · URBAN MOBILITY',heroTitleHtml:'Your journeys.<br><span>Made simple.</span>',heroText:'Book a motorcycle taxi in seconds. Find available drivers and move freely around N’Djamena.',cityLabel:'📍 N’DJAMENA, CHAD',cityTitle:'Your city, within reach.',cityText:'Find your neighbourhood and get ready for your next trip.',bookingTitle:'Where would you like to go?',bookingText:'Log in to book your motorcycle taxi.',bookingBtn:'Book a motorcycle →',paymentMethod:'Payment method',cash:'Cash',airtelInstructions:'Send the exact amount to <b>+235 65 28 92 22</b> via Airtel Money. After the transfer, enter the transaction reference under “My rides”. The payment will remain pending until it is verified.',adminPayments:'Payments to verify',footerTagline:'Your city. Your ride. Your freedom.',initiative:'An E&Bz Afrika initiative',copyright:'© 2026 KLANDO · N’Djamena, Republic of Chad 🇹🇩',vehiclePh:'Honda, Yamaha…',payment:'Payment',unpaid:'Unpaid',awaiting:'Awaiting verification',paid:'Paid',failed:'Failed',refunded:'Refunded',reference:'Reference',transferPrompt:'Transfer {amount} to <b>+235 65 28 92 22</b>, then enter the reference you received.',referenceLabel:'Airtel Money transaction reference',referencePlaceholder:'e.g. Airtel SMS reference',sendReference:'Submit reference',enterReference:'Please enter the transaction reference.',referenceSent:'Reference submitted. Payment is awaiting verification.',amount:'Amount',confirmPayment:'Confirm payment received',noPayment:'No payments to verify.',confirmReceived:'Have you confirmed that the amount has arrived in your Airtel Money account?',paymentConfirmed:'Payment confirmed.',clientName:'Customer',dayRate:'Day rate',nightRate:'Night rate',mapPoint:'Map point',myGps:'My GPS position',
+mapFail:'The map could not be loaded. Check your Internet connection and reload the page.',sbFail:'The sign-in service could not be loaded. Check your Internet connection and reload the page.'}
 };
+/* Live tracking, notifications and Moov Money texts (these override the older Airtel-only texts). */
+Object.assign(I18N.fr, {
+  liveTitle:'Ma course en direct', stReq:'Demandée', stRoute:'En route', stArrived:'Arrivé', stRide:'En course', stDone:'Terminée',
+  liveWaiting:'En attente d’un conducteur…',
+  liveComing:'Votre conducteur arrive : environ {min} min ({km} km)', liveComingNoPos:'Votre conducteur est en route. Position en cours de mise à jour…',
+  liveArrived:'Votre conducteur est arrivé au point de départ.',
+  liveOngoing:'Course en cours : environ {min} min avant l’arrivée ({km} km)', liveOngoingNoPos:'Course en cours. Bon trajet !',
+  liveDone:'Course terminée. Merci d’avoir voyagé avec KLANDO.',
+  liveFare:'Tarif estimé', finalFare:'Coût final', call:'📞 Appeler', close:'Fermer',
+  payPaid:'Paiement reçu : {amount}. Merci !', payAwaiting:'Référence envoyée. Paiement en attente de vérification.',
+  payCash:'Payez {amount} en espèces au conducteur.', numberTba:'le numéro communiqué par KLANDO',
+  mobileInstructions:'Envoyez le montant exact à <b>{number}</b> via {method}. Après le transfert, saisissez la référence de transaction dans « Ma course en direct » ou « Mes courses ». Le paiement reste en attente jusqu’à vérification.',
+  transferPrompt:'Transférez {amount} à <b>{number}</b> via {method}, puis indiquez la référence reçue.',
+  nAcceptedT:'Conducteur trouvé 🏍️', nAcceptedB:'Un conducteur a accepté votre course et arrive vers vous.',
+  nArrivedT:'Votre conducteur est arrivé 📍', nArrivedB:'Il vous attend au point de départ.',
+  nOngoingT:'Course démarrée', nOngoingB:'Bon trajet !',
+  nDoneT:'Course terminée ✅', nDoneB:'Coût final : {amount}. Paiement : {method}.',
+  nCancelT:'Course annulée', nCancelB:'Cette course a été annulée.',
+  nPaidT:'Paiement confirmé 💚', nPaidB:'Votre paiement a bien été reçu. Merci !',
+  iArrived:'Je suis arrivé', iCash:'Espèces reçues', arrivedSent:'Arrivée signalée au client.',
+  arrivedNoFn:'Fonction « arrivée » non installée en base. Le client sera tout de même averti automatiquement quand vous serez à moins de 100 m.',
+  cashDone:'Paiement en espèces enregistré.'
+});
+Object.assign(I18N.en, {
+  liveTitle:'My ride, live', stReq:'Requested', stRoute:'On the way', stArrived:'Arrived', stRide:'Riding', stDone:'Completed',
+  liveWaiting:'Waiting for a driver…',
+  liveComing:'Your driver is coming: about {min} min away ({km} km)', liveComingNoPos:'Your driver is on the way. Updating position…',
+  liveArrived:'Your driver has arrived at the pickup point.',
+  liveOngoing:'Ride in progress: about {min} min to arrival ({km} km)', liveOngoingNoPos:'Ride in progress. Enjoy your trip!',
+  liveDone:'Ride completed. Thank you for riding with KLANDO.',
+  liveFare:'Estimated fare', finalFare:'Final cost', call:'📞 Call', close:'Close',
+  payPaid:'Payment received: {amount}. Thank you!', payAwaiting:'Reference submitted. Payment is awaiting verification.',
+  payCash:'Pay {amount} in cash to the driver.', numberTba:'the number provided by KLANDO',
+  mobileInstructions:'Send the exact amount to <b>{number}</b> via {method}. After the transfer, enter the transaction reference under “My ride, live” or “My rides”. The payment stays pending until it is verified.',
+  transferPrompt:'Transfer {amount} to <b>{number}</b> via {method}, then enter the reference you received.',
+  nAcceptedT:'Driver found 🏍️', nAcceptedB:'A driver accepted your ride and is heading to you.',
+  nArrivedT:'Your driver has arrived 📍', nArrivedB:'They are waiting at the pickup point.',
+  nOngoingT:'Ride started', nOngoingB:'Enjoy your trip!',
+  nDoneT:'Ride completed ✅', nDoneB:'Final cost: {amount}. Payment: {method}.',
+  nCancelT:'Ride cancelled', nCancelB:'This ride was cancelled.',
+  nPaidT:'Payment confirmed 💚', nPaidB:'Your payment was received. Thank you!',
+  iArrived:'I have arrived', iCash:'Cash received', arrivedSent:'Arrival sent to the customer.',
+  arrivedNoFn:'The “arrival” database function is not installed. The customer will still be alerted automatically when you are within 100 m.',
+  cashDone:'Cash payment recorded.'
+});
 let lang = (()=>{try{return localStorage.getItem('klando_lang')||'fr'}catch(e){return 'fr'}})();
+if (!I18N[lang]) lang = 'fr';
 const t = k => (I18N[lang][k] ?? I18N.fr[k] ?? k);
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => (n == null ? '—' : Number(n).toLocaleString('fr-FR') + ' FCFA');
 const pill = s => `<span class="pill ${esc(s)}">${esc(t(s))}</span>`;
 function flash(id, text, kind){ $(id).innerHTML = text ? `<div class="msg ${kind||'err'}">${esc(text)}</div>` : ''; }
+
+/* ============ STATE & CLIENT ============ */
+const configured = SUPABASE_KEY && !SUPABASE_KEY.startsWith('PASTE_');
+const sb = configured && window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+let me = { user:null, profile:null, driver:null, role:null };
+let timer = null, gpsWatch = null, gpsPushTimer = null, lastPos = null, gpsFnWarned = false, refreshing = false;
+const maps = {};
+
 function applyLang(){
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
   $('langBtn').textContent = lang === 'fr' ? 'EN' : 'FR';
   if (me.user) { renderAvail(); refresh(); }
 }
 
-/* ============ STATE & CLIENT ============ */
-const configured = SUPABASE_KEY && !SUPABASE_KEY.startsWith('PASTE_');
-const sb = configured ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-let me = { user:null, profile:null, driver:null, role:null };
-let timer = null, gpsWatch = null, gpsPushTimer = null, lastPos = null, gpsFnWarned = false;
-const maps = {};
+/* Re-render a container without losing what the user is typing (the 10 s refresh used to wipe inputs). */
+function keepInputs(container, render){
+  const vals = {};
+  container.querySelectorAll('input[id]').forEach(i => { vals[i.id] = i.value; });
+  const act = document.activeElement;
+  const actId = act && container.contains(act) ? act.id : null;
+  const selStart = actId && act.selectionStart != null ? act.selectionStart : null;
+  render();
+  Object.keys(vals).forEach(id => { const el = document.getElementById(id); if (el && vals[id]) el.value = vals[id]; });
+  if (actId) { const el = document.getElementById(actId); if (el) { el.focus(); try { if (selStart != null) el.setSelectionRange(selStart, selStart); } catch(e){} } }
+}
 
 function mkMap(id){
+  if (!window.L) {
+    const el = $(id);
+    if (el && !el.querySelector('.msg')) el.innerHTML = `<div class="msg warn">${esc(t('mapFail'))}</div>`;
+    return null;
+  }
   if (maps[id]) { setTimeout(()=>maps[id].invalidateSize(),150); return maps[id]; }
   const m = L.map(id).setView(CITY_CENTER, 13);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(m);
@@ -340,6 +431,7 @@ function show(v){
   $('publicHero').classList.toggle('hide', v !== 'vAuth');
   $('publicHome').classList.toggle('hide', v !== 'vAuth');
   $('logoutBtn').classList.toggle('hide', v === 'vAuth');
+  window.scrollTo({ top: 0 });
   if (v === 'vAuth') setTimeout(() => mkMap('mapHome'), 200);
 }
 const dist = (a,b) => {
@@ -347,30 +439,49 @@ const dist = (a,b) => {
   const h=Math.sin(dLa/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLo/2)**2;
   return 2*R*Math.asin(Math.sqrt(h));
 };
-const calcFare = km => Math.max(FARE.min, Math.round((FARE.base + FARE.perKm*km*1.3)/FARE.step)*FARE.step);
+const calcFare = km => {
+  const r = isNight() ? FARE.night : FARE.day;
+  const raw = Math.round((FARE.base + FARE.perKm*km*1.3)/FARE.step)*FARE.step;
+  return Math.min(r.max, Math.max(r.min, raw));
+};
 
 /* ============ AUTH ============ */
 $('tabLogin').onclick = () => { $('tabLogin').classList.add('on'); $('tabReg').classList.remove('on'); $('fLogin').classList.remove('hide'); $('fReg').classList.add('hide'); flash('authMsg',''); };
 $('tabReg').onclick = () => { $('tabReg').classList.add('on'); $('tabLogin').classList.remove('on'); $('fReg').classList.remove('hide'); $('fLogin').classList.add('hide'); flash('authMsg',''); };
 $('rRole').onchange = () => $('drvFields').classList.toggle('hide', $('rRole').value !== 'driver');
 $('langBtn').onclick = () => { lang = lang === 'fr' ? 'en' : 'fr'; try{localStorage.setItem('klando_lang',lang)}catch(e){} applyLang(); };
+
+function busy(btn, on){ if (btn) btn.disabled = on; }
+
 $('fLogin').onsubmit = async e => {
   e.preventDefault(); flash('authMsg','');
-  const { error } = await sb.auth.signInWithPassword({ email:$('lEmail').value.trim(), password:$('lPass').value });
-  if (error) return flash('authMsg', t('err') + error.message);
-  await start();
+  const btn = e.submitter || $('fLogin').querySelector('button[type=submit]'); busy(btn, true);
+  try {
+    const { error } = await sb.auth.signInWithPassword({ email:$('lEmail').value.trim(), password:$('lPass').value });
+    if (error) return flash('authMsg', t('err') + error.message);
+    $('lPass').value = '';
+    await start();
+  } finally { busy(btn, false); }
 };
 $('fReg').onsubmit = async e => {
   e.preventDefault(); flash('authMsg','');
-  const wantDriver = $('rRole').value === 'driver';
-  const meta = { display_name:$('rName').value.trim(), phone:$('rPhone').value.trim(), want_driver:wantDriver };
-  if (wantDriver) { meta.vehicle = $('rVeh').value.trim(); meta.vehicle_plate = $('rPlate').value.trim(); }
-  const { data, error } = await sb.auth.signUp({ email:$('rEmail').value.trim(), password:$('rPass').value, options:{ data: meta } });
-  if (error) return flash('authMsg', t('err') + error.message);
-  if (!data.session) { flash('authMsg', t('confirmMail'), 'ok'); $('tabLogin').click(); return; }
-  await start();
+  const btn = e.submitter || $('fReg').querySelector('button[type=submit]'); busy(btn, true);
+  try {
+    const wantDriver = $('rRole').value === 'driver';
+    const meta = { display_name:$('rName').value.trim(), phone:$('rPhone').value.trim(), want_driver:wantDriver };
+    if (wantDriver) { meta.vehicle = $('rVeh').value.trim(); meta.vehicle_plate = $('rPlate').value.trim(); }
+    const { data, error } = await sb.auth.signUp({ email:$('rEmail').value.trim(), password:$('rPass').value, options:{ data: meta } });
+    if (error) return flash('authMsg', t('err') + error.message);
+    if (!data.session) { $('tabLogin').click(); flash('authMsg', t('confirmMail'), 'ok'); return; }
+    await start();
+  } finally { busy(btn, false); }
 };
-$('logoutBtn').onclick = async () => { await sb.auth.signOut(); stopAll(); me = {user:null,profile:null,driver:null,role:null}; show('vAuth'); };
+function resetSession(){
+  stopAll(); lastPos = null; gpsFnWarned = false;
+  me = {user:null,profile:null,driver:null,role:null};
+  show('vAuth');
+}
+$('logoutBtn').onclick = async () => { await sb.auth.signOut(); resetSession(); };
 
 /* ============ LOADING THE USER ============ */
 async function start(){
@@ -394,391 +505,531 @@ async function start(){
   if (me.role === 'admin') { show('vAdm'); mkMap('mapA'); }
   else if (me.role === 'driver') show('vDrv');
   else { show('vCust'); initCustomer(); }
-  await refresh();
-  clearInterval(timer); timer = setInterval(refresh, REFRESH_MS);
+  applyLang();
+  scheduleRefresh();
 }
 function stopAll(){
-  clearInterval(timer); clearInterval(gpsPushTimer);
-  if (gpsWatch != null) navigator.geolocation.clearWatch(gpsWatch);
-  gpsWatch = null; gpsPushTimer = null;
+  clearTimeout(timer); clearInterval(gpsPushTimer);
+  if (gpsWatch != null && navigator.geolocation) navigator.geolocation.clearWatch(gpsWatch);
+  gpsWatch = null; gpsPushTimer = null; timer = null;
+}
+/* Adaptive polling: every 4 s while a customer has a live ride, every 10 s otherwise. */
+function scheduleRefresh(){
+  clearTimeout(timer);
+  timer = setTimeout(async () => { await refresh(); if (me.user) scheduleRefresh(); }, liveActive ? LIVE_MS : REFRESH_MS);
 }
 async function refresh(){
-  if (!me.user) return;
+  if (!me.user || refreshing) return;
+  refreshing = true;
   try {
-    if (me.role === 'customer') await loadCustomer();
+    if (me.role === 'customer') { updateFare(); await loadCustomer(); } // updateFare also flips day/night rate on time
     else if (me.role === 'driver') await loadDriver();
     else if (me.role === 'admin') await loadAdmin();
   } catch(e){ console.error(e); }
+  finally { refreshing = false; }
 }
+// Refresh immediately when the user comes back to the tab, instead of waiting for the next tick.
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
 
 /* ============ CUSTOMER ============ */
 const C = { pick:null, dest:null, mode:'p', mk:{}, ready:false, destQuery:'' };
-let destinationLookup = 0;
+let destinationLookup = 0, destPromise = null, destPromiseQ = '';
 
 function setMode(m){ C.mode = m; $('modeP').classList.toggle('on', m==='p'); $('modeD').classList.toggle('on', m==='d'); }
 $('modeP').onclick = () => setMode('p');
 $('modeD').onclick = () => setMode('d');
 
 function placeMarker(kind, ll){
-  const m = maps.mapC;
+  const m = maps.mapC; if (!m) return;
   if (C.mk[kind]) m.removeLayer(C.mk[kind]);
   C.mk[kind] = L.marker(ll).addTo(m).bindPopup(kind==='p'?t('setPickup'):t('setDest'));
   updateFare();
 }
-
 function updateFare(){
-  if (C.pick && C.dest) {
-    const km = dist(C.pick, C.dest);
-    $('fare').textContent = money(calcFare(km));
-  } else {
-    $('fare').textContent = '—';
-  }
+  $('fare').textContent = (C.pick && C.dest) ? money(calcFare(dist(C.pick, C.dest))) : '—';
+  const r = isNight() ? FARE.night : FARE.day;
+  $('fareNote').textContent = `${t(isNight() ? 'nightRate' : 'dayRate')} : ${r.min.toLocaleString('fr-FR')} – ${r.max.toLocaleString('fr-FR')} FCFA`;
 }
 
 async function geocodeDestination(query){
   const q = query.trim();
   if (!q) return false;
-
   const lookupId = ++destinationLookup;
   try {
     const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=td&q='
       + encodeURIComponent(q + ", N'Djamena");
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { 'Accept-Language': lang } });
     if (!response.ok) throw new Error('Geocoding service unavailable');
     const results = await response.json();
-
-    if (lookupId !== destinationLookup) return false;
-
+    if (lookupId !== destinationLookup) return false; // a newer search superseded this one
     if (!results.length) {
-      C.dest = null;
-      C.destQuery = '';
-      if (C.mk.d) { maps.mapC.removeLayer(C.mk.d); C.mk.d = null; }
-      updateFare();
-      flash('custMsg', t('noPos'), 'warn');
+      C.dest = null; C.destQuery = '';
+      if (C.mk.d && maps.mapC) { maps.mapC.removeLayer(C.mk.d); C.mk.d = null; }
+      updateFare(); flash('custMsg', t('noPos'), 'warn');
       return false;
     }
-
     C.dest = [parseFloat(results[0].lat), parseFloat(results[0].lon)];
     C.destQuery = q;
     placeMarker('d', C.dest);
-    maps.mapC.setView(C.dest, 14);
+    if (maps.mapC) maps.mapC.setView(C.dest, 14);
     flash('custMsg', '');
     return true;
   } catch(error) {
-    if (lookupId === destinationLookup) {
-      C.dest = null;
-      C.destQuery = '';
-      updateFare();
-      flash('custMsg', t('noPos'), 'warn');
-    }
+    if (lookupId === destinationLookup) { C.dest = null; C.destQuery = ''; updateFare(); flash('custMsg', t('noPos'), 'warn'); }
     return false;
   }
+}
+/* Single entry point: reuses a lookup already in flight, so blur + click never run two searches. */
+function ensureDestination(q){
+  if (C.dest && C.destQuery === q) return Promise.resolve(true);
+  if (destPromise && destPromiseQ === q) return destPromise;
+  destPromiseQ = q;
+  const p = geocodeDestination(q).finally(() => { if (destPromise === p) destPromise = null; });
+  destPromise = p;
+  return p;
 }
 
 function initCustomer(){
   const m = mkMap('mapC');
-  if (C.ready) return;
+  if (!m || C.ready) return;
   C.ready = true;
   m.on('click', ev => {
     const ll = [ev.latlng.lat, ev.latlng.lng];
     if (C.mode === 'p') {
       C.pick = ll; placeMarker('p', ll);
-      if (!$('cPick').value) $('cPick').value = lang==='fr'?'Point sur la carte':'Map point';
+      if (!$('cPick').value.trim()) $('cPick').value = t('mapPoint');
       setMode('d');
     } else {
       C.dest = ll;
-      C.destQuery = '';
+      // Label the map-selected destination so it is valid without a text search.
+      $('cDest').value = t('mapPoint');
+      C.destQuery = t('mapPoint');
       placeMarker('d', ll);
+      flash('custMsg','');
     }
   });
 }
 
 $('gpsBtn').onclick = () => {
   if (!navigator.geolocation) return flash('custMsg', t('gpsDenied'), 'warn');
-  navigator.geolocation.getCurrentPosition(pos => {
-    C.pick = [pos.coords.latitude,pos.coords.longitude];
-    placeMarker('p',C.pick); maps.mapC.setView(C.pick,15);
-    $('cPick').value = lang==='fr'?'Ma position actuelle':'My current location';
-  }, () => flash('custMsg',t('gpsDenied'),'warn'), {enableHighAccuracy:true,timeout:12000});
+  const btn = $('gpsBtn'); busy(btn, true);
+  navigator.geolocation.getCurrentPosition(p => {
+    busy(btn, false);
+    C.pick = [p.coords.latitude, p.coords.longitude];
+    placeMarker('p', C.pick);
+    if (maps.mapC) maps.mapC.setView(C.pick, 15);
+    if (!$('cPick').value.trim()) $('cPick').value = t('myGps');
+    setMode('d'); flash('custMsg','');
+  }, () => { busy(btn, false); flash('custMsg', t('gpsDenied'), 'warn'); }, { enableHighAccuracy:true, timeout:10000 });
 };
+
 $('searchBtn').onclick = async () => {
   const q = $('cDest').value.trim();
-  if (!q) return flash('custMsg',t('needDest'));
-  await geocodeDestination(q);
+  if (!q) return;
+  const btn = $('searchBtn'); busy(btn, true);
+  try { await ensureDestination(q); } finally { busy(btn, false); }
 };
+$('cDest').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('searchBtn').click(); } });
+$('cDest').addEventListener('blur', () => {
+  const q = $('cDest').value.trim();
+  if (q && q !== C.destQuery) ensureDestination(q);
+});
+
+function updateMethodInfo(){
+  const m = $('paymentMethod').value, box = $('airtelInstructions');
+  if (!PAY[m]) { box.classList.add('hide'); return; }
+  box.innerHTML = t('mobileInstructions').replace('{number}', esc(payNumber(m))).replace('{method}', esc(payLabel(m)));
+  box.classList.remove('hide');
+}
+$('paymentMethod').onchange = updateMethodInfo;
 
 $('reqBtn').onclick = async () => {
   flash('custMsg','');
-  if (!C.pick) return flash('custMsg',t('needPick'));
-  if (!C.dest) {
-    const q = $('cDest').value.trim();
-    if (!q || !await geocodeDestination(q)) return flash('custMsg',t('needDest'));
-  }
-  if (!C.dest) return flash('custMsg',t('needDest'));
-
-  const km = dist(C.pick,C.dest);
-  const paymentMethod = $('paymentMethod').value;
-  const payload = {
-    customer_id:me.user.id,
-    pickup_address:$('cPick').value.trim() || 'Point sur la carte',
-    destination_address:$('cDest').value.trim() || 'Point sur la carte',
-    pickup_lat:C.pick[0],
-    pickup_lng:C.pick[1],
-    destination_lat:C.dest[0],
-    destination_lng:C.dest[1],
-    distance_km:Number(km.toFixed(2)),
-    fare:calcFare(km),
-    status:'pending',
-    payment_method:paymentMethod,
-    payment_status:'unpaid'
-  };
-
-  const {error} = await sb.from('rides').insert(payload);
-  if (error) return flash('custMsg',t('err')+error.message);
-
-  flash('custMsg',t('sent'),'ok');
-  $('cDest').value='';
-  C.dest=null;
-  C.destQuery='';
-  if (C.mk.d) { maps.mapC.removeLayer(C.mk.d); C.mk.d=null; }
-  updateFare();
-  await loadCustomer();
+  if (!C.pick) return flash('custMsg', t('needPick'));
+  const dest = $('cDest').value.trim();
+  if (!dest) return flash('custMsg', t('needDest'));
+  requestNotifPermission();
+  const btn = $('reqBtn'); busy(btn, true);
+  try {
+    // A valid destination is mandatory; never submit with a guessed minimum fare.
+    if (!C.dest || C.destQuery !== dest) {
+      const ok = await ensureDestination(dest);
+      if (!ok || !C.dest || C.destQuery !== dest) return flash('custMsg', t('noPos'), 'warn');
+    }
+    const fare = calcFare(dist(C.pick, C.dest));
+    const name = (me.profile && me.profile.display_name) || (me.user.user_metadata||{}).display_name || me.user.email;
+    const { error } = await sb.from('rides').insert({
+      customer_id: me.user.id, customer_name: name,
+      pickup_address: $('cPick').value.trim() || 'GPS',
+      destination: dest,
+      pickup_lat: C.pick[0], pickup_lng: C.pick[1],
+      destination_lat: C.dest[0], destination_lng: C.dest[1],
+      estimated_fare: fare, status: 'pending', payment_method: $('paymentMethod').value, payment_status: 'unpaid'
+    });
+    if (error) return flash('custMsg', t('err') + error.message);
+    flash('custMsg', t('sent'), 'ok');
+    $('cDest').value = '';
+    $('paymentMethod').value = 'cash';
+    $('airtelInstructions').classList.add('hide');
+    if (C.mk.d && maps.mapC) { maps.mapC.removeLayer(C.mk.d); C.mk.d = null; }
+    C.dest = null; C.destQuery = '';
+    updateFare();
+    loadCustomer();
+  } finally { busy(btn, false); }
 };
 
-$('paymentMethod').onchange = () => {
-  $('airtelInstructions').classList.toggle('hide',$('paymentMethod').value!=='airtel_money');
-};
+function paymentLabel(r){
+  const method = payLabel(r.payment_method);
+  const status = ({unpaid:t('unpaid'),awaiting_verification:t('awaiting'),paid:t('paid'),failed:t('failed'),refunded:t('refunded')})[r.payment_status] || t('unpaid');
+  return `<div class="muted">${t('payment')}: ${method} · ${status}${r.payment_reference ? ' · '+t('reference')+': '+esc(r.payment_reference) : ''}</div>`;
+}
+function rideHtml(r, actions){
+  return `<div class="item"><div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
+  <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(r.estimated_fare)} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${paymentLabel(r)}${actions||''}</div>`;
+}
 
 async function loadCustomer(){
-  const {data,error} = await sb.from('rides').select('*')
-    .eq('customer_id',me.user.id).order('created_at',{ascending:false}).limit(30);
-  if (error) throw error;
-  $('custRides').innerHTML = !data.length ? `<p class="muted">${t('noRides')}</p>` : data.map(r=>`
-    <div class="item">
-      <div class="top"><b>${esc(r.pickup_address||t('from'))} → ${esc(r.destination_address||t('to'))}</b>${pill(r.status)}</div>
-      <p class="muted">${new Date(r.created_at).toLocaleString()} · ${money(r.fare)}</p>
-      <p class="muted">Paiement : ${esc(r.payment_method||'cash')} · ${esc(r.payment_status||'unpaid')}</p>
-      ${r.driver_id?`<p class="muted">Conducteur assigné</p>`:''}
-      ${r.payment_method==='airtel_money' && r.payment_status!=='paid' && !['cancelled','completed'].includes(r.status)?`
-        <label>Référence Airtel Money / Transaction reference</label>
-        <input id="ref_${esc(r.id)}" value="${esc(r.payment_reference||'')}" placeholder="Ex. AM123456789">
-        <button class="btn sm" type="button" onclick="submitAirtel('${esc(r.id)}')">Soumettre la référence</button>
-      `:''}
-    </div>`).join('');
+  const { data, error } = await sb.from('rides').select('*').eq('customer_id', me.user.id).order('created_at',{ascending:false}).limit(20);
+  if (error) return flash('custMsg', t('err') + error.message);
+  await updateLive(data||[]);
+  keepInputs($('custRides'), () => {
+    $('custRides').innerHTML = (data||[]).map(r => {
+      let actions = r.status==='pending' ? `<button class="btn red sm" data-cancel="${esc(r.id)}">${t('cancel')}</button>` : '';
+      if (PAY[r.payment_method] && ['unpaid','failed'].includes(r.payment_status) && r.status !== 'cancelled' && r.id !== liveRideId) {
+        actions += `<div class="msg warn">${transferText(r)}</div><label for="ref-${esc(r.id)}">${t('referenceLabel')}</label><input id="ref-${esc(r.id)}" maxlength="100" placeholder="${t('referencePlaceholder')}"><button class="btn alt sm" data-submit-payment="${esc(r.id)}">${t('sendReference')}</button>`;
+      }
+      return rideHtml(r, actions);
+    }).join('') || `<p class="muted">${t('noRides')}</p>`;
+  });
+  document.querySelectorAll('[data-submit-payment]').forEach(b => b.onclick = async () => {
+    const id=b.dataset.submitPayment, ref=$(`ref-${id}`).value.trim();
+    if (!ref) return flash('custMsg',t('enterReference'),'warn');
+    b.disabled=true;
+    const { error } = await submitPayment(id, ref);
+    if (error) { b.disabled=false; flash('custMsg',t('err')+error.message); }
+    else { flash('custMsg',t('referenceSent'),'ok'); loadCustomer(); }
+  });
+  document.querySelectorAll('[data-cancel]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const { error } = await sb.from('rides').update({ status:'cancelled' }).eq('id', b.dataset.cancel).eq('status','pending');
+    if (error) { b.disabled = false; flash('custMsg', t('err') + error.message); } else loadCustomer();
+  });
 }
 
-window.submitAirtel = async rideId => {
-  const input = $('ref_'+rideId);
-  const reference = input?.value.trim();
-  if (!reference) return flash('custMsg','Veuillez saisir la référence de transaction.');
-  const {error} = await sb.rpc('submit_klando_airtel_payment',{
-    p_ride_id:rideId,p_reference:reference
+/* ============ NOTIFICATIONS ============ */
+function beep(){
+  try {
+    const ac = beep.ac || (beep.ac = new (window.AudioContext || window.webkitAudioContext)());
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.connect(g); g.connect(ac.destination); o.frequency.value = 880;
+    g.gain.setValueAtTime(.001, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.25, ac.currentTime + .02);
+    g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .5);
+    o.start(); o.stop(ac.currentTime + .5);
+  } catch(e){}
+}
+function requestNotifPermission(){
+  try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch(e){}
+}
+/* In-app banner + sound + vibration; a system notification too when the tab is in the background. */
+function notify(title, body, kind){
+  const d = document.createElement('div');
+  d.className = 'toast ' + (kind || '');
+  d.innerHTML = `<b>${esc(title)}</b><span>${esc(body)}</span>`;
+  d.onclick = () => d.remove();
+  $('toasts').appendChild(d);
+  setTimeout(() => d.remove(), 12000);
+  beep();
+  try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch(e){}
+  try { if (document.hidden && 'Notification' in window && Notification.permission === 'granted') new Notification(title, { body }); } catch(e){}
+}
+
+/* ============ PAYMENTS (mobile money + cash) ============ */
+function transferText(r){
+  return t('transferPrompt').replace('{amount}', money(finalFare(r))).replace('{number}', esc(payNumber(r.payment_method))).replace('{method}', esc(payLabel(r.payment_method)));
+}
+async function submitPayment(id, ref){
+  let res = await sb.rpc('submit_klando_mobile_payment', { p_ride_id:id, p_reference:ref });
+  if (res.error && isMissingFn(res.error)) res = await sb.rpc('submit_klando_airtel_payment', { p_ride_id:id, p_reference:ref });
+  return res;
+}
+async function verifyPayment(id){
+  let res = await sb.rpc('verify_klando_mobile_payment', { p_ride_id:id });
+  if (res.error && isMissingFn(res.error)) res = await sb.rpc('verify_klando_payment', { p_ride_id:id });
+  return res;
+}
+
+/* ============ LIVE RIDE (customer) ============ */
+const seen = {}, geoArrived = {};
+const LIVE = { rideId:null, pick:null, dest:null, drv:null, fit:null, dismissed:{} };
+const ARRIVE_KM = 0.1, MOTO_KMH = 25;
+const eta = km => Math.max(1, Math.round(km / MOTO_KMH * 60));
+const ll = (a, b) => [Number(a), Number(b)];
+const hasPos = (a, b) => a != null && b != null && !isNaN(Number(a)) && !isNaN(Number(b));
+
+function pickLive(rides){
+  const act = rides.find(r => ['pending','accepted','ongoing'].includes(r.status));
+  if (act) return act;
+  return rides.find(r => r.status === 'completed' && !LIVE.dismissed[r.id] && Date.now() - new Date(r.created_at) < 12*3600*1000) || null;
+}
+async function fetchDriver(r){
+  let res = await sb.rpc('get_klando_ride_driver', { p_ride_id: r.id });
+  const d = Array.isArray(res.data) ? res.data[0] : res.data;
+  if (!res.error && d) return d;
+  if (r.driver_id) {   // fallback when the database function is not installed
+    const q = await sb.from('drivers').select('display_name,phone,vehicle,vehicle_plate,latitude,longitude').or(`id.eq.${r.driver_id},user_id.eq.${r.driver_id}`).maybeSingle();
+    if (q.data) return q.data;
+  }
+  return null;
+}
+/* Compare each ride with what we saw last time and alert on changes (the first load only sets the baseline). */
+function checkEvents(r){
+  const prev = seen[r.id], cur = { status:r.status, arrived:!!r.arrived_at, pay:r.payment_status };
+  if (prev) {
+    if (prev.status !== cur.status) {
+      if (cur.status === 'accepted') notify(t('nAcceptedT'), t('nAcceptedB'));
+      else if (cur.status === 'ongoing') notify(t('nOngoingT'), t('nOngoingB'));
+      else if (cur.status === 'completed') notify(t('nDoneT'), t('nDoneB').replace('{amount}', money(finalFare(r))).replace('{method}', payLabel(r.payment_method)), 'ok');
+      else if (cur.status === 'cancelled') notify(t('nCancelT'), t('nCancelB'), 'warn');
+    }
+    if (!prev.arrived && cur.arrived && r.status === 'accepted' && !geoArrived[r.id]) notify(t('nArrivedT'), t('nArrivedB'));
+    if (prev.pay !== cur.pay && cur.pay === 'paid') notify(t('nPaidT'), t('nPaidB'), 'ok');
+  }
+  seen[r.id] = cur;
+}
+async function updateLive(rides){
+  try {
+    const live = pickLive(rides);
+    liveRideId = live ? live.id : null;
+    liveActive = !!live && ['pending','accepted','ongoing'].includes(live.status);
+    let driver = null;
+    if (live && ['accepted','ongoing','completed'].includes(live.status)) {
+      driver = await fetchDriver(live);
+      // Automatic arrival alert when the driver is within 100 m of the pickup point.
+      if (driver && live.status === 'accepted' && !live.arrived_at && !geoArrived[live.id]
+          && hasPos(driver.latitude, driver.longitude) && hasPos(live.pickup_lat, live.pickup_lng)
+          && dist(ll(driver.latitude, driver.longitude), ll(live.pickup_lat, live.pickup_lng)) < ARRIVE_KM) {
+        geoArrived[live.id] = true;
+        if (seen[live.id]) notify(t('nArrivedT'), t('nArrivedB'));
+      }
+    }
+    rides.forEach(checkEvents);
+    renderLive(live, driver);
+  } catch(e){ console.error(e); }
+}
+const dIcon = emoji => L.divIcon({ html:`<div class="mk">${emoji}</div>`, className:'', iconSize:[36,36], iconAnchor:[18,18] });
+function updateLiveMap(m, r, dpos){
+  if (LIVE.rideId !== r.id) {
+    ['pick','dest','drv'].forEach(k => { if (LIVE[k]) { m.removeLayer(LIVE[k]); LIVE[k] = null; } });
+    LIVE.rideId = r.id; LIVE.fit = null;
+    if (hasPos(r.pickup_lat, r.pickup_lng)) LIVE.pick = L.marker(ll(r.pickup_lat, r.pickup_lng), { icon:dIcon('📍') }).addTo(m).bindPopup(esc(t('pickup')));
+    if (hasPos(r.destination_lat, r.destination_lng)) LIVE.dest = L.marker(ll(r.destination_lat, r.destination_lng), { icon:dIcon('🏁') }).addTo(m).bindPopup(esc(t('destination')));
+  }
+  if (dpos) { if (!LIVE.drv) LIVE.drv = L.marker(dpos, { icon:dIcon('🏍️'), zIndexOffset:1000 }).addTo(m); else LIVE.drv.setLatLng(dpos); }
+  else if (LIVE.drv) { m.removeLayer(LIVE.drv); LIVE.drv = null; }
+  const pts = [];
+  if (hasPos(r.pickup_lat, r.pickup_lng)) pts.push(ll(r.pickup_lat, r.pickup_lng));
+  if (hasPos(r.destination_lat, r.destination_lng)) pts.push(ll(r.destination_lat, r.destination_lng));
+  if (dpos) pts.push(dpos);
+  const key = dpos ? 'with-driver' : 'no-driver';   // re-fit once when the driver first appears, then leave the view alone
+  if (pts.length && LIVE.fit !== key) { m.fitBounds(pts, { padding:[40,40], maxZoom:16 }); LIVE.fit = key; }
+}
+function payBlock(r){
+  const id = esc(r.id), amt = money(finalFare(r)), mobile = !!PAY[r.payment_method];
+  let h = '';
+  if (r.payment_status === 'paid') h = `<div class="msg ok">✔ ${esc(t('payPaid').replace('{amount}', amt))}</div>`;
+  else if (mobile && ['unpaid','failed'].includes(r.payment_status)) h = `<div class="msg warn">${transferText(r)}</div><label for="lref-${id}">${t('referenceLabel')}</label><input id="lref-${id}" maxlength="100" placeholder="${esc(t('referencePlaceholder'))}"><button class="btn alt sm" data-live-pay="${id}">${t('sendReference')}</button>`;
+  else if (mobile && r.payment_status === 'awaiting_verification') h = `<div class="msg warn">${t('payAwaiting')}</div>`;
+  else if (!mobile && r.status === 'completed') h = `<div class="msg warn">${esc(t('payCash').replace('{amount}', amt))}</div>`;
+  else if (!mobile) h = `<div class="muted">${t('payment')}: ${t('cash')}</div>`;
+  if (r.status === 'completed') h += `<button class="btn alt sm" data-live-close="${id}">${t('close')}</button>`;
+  return h;
+}
+function renderLive(r, d){
+  const card = $('liveCard');
+  if (!r) { card.classList.add('hide'); return; }
+  const wasHidden = card.classList.contains('hide');
+  card.classList.remove('hide');
+  const arrived = !!r.arrived_at || !!geoArrived[r.id];
+  const idx = r.status === 'pending' ? 0 : r.status === 'accepted' ? (arrived ? 2 : 1) : r.status === 'ongoing' ? 3 : 4;
+  $('liveSteps').innerHTML = ['stReq','stRoute','stArrived','stRide','stDone'].map((k,i) =>
+    `<div class="step ${i < idx ? 'done' : i === idx ? 'cur' : ''}"><i>${i < idx ? '✓' : i + 1}</i><span>${t(k)}</span></div>`).join('');
+  $('livePill').innerHTML = pill(r.status);
+
+  const dpos = d && hasPos(d.latitude, d.longitude) && r.status !== 'completed' ? ll(d.latitude, d.longitude) : null;
+  let line;
+  if (r.status === 'pending') line = t('liveWaiting');
+  else if (r.status === 'accepted') {
+    if (arrived) line = t('liveArrived');
+    else if (dpos && hasPos(r.pickup_lat, r.pickup_lng)) { const km = dist(dpos, ll(r.pickup_lat, r.pickup_lng)); line = t('liveComing').replace('{min}', eta(km)).replace('{km}', km.toFixed(1)); }
+    else line = t('liveComingNoPos');
+  } else if (r.status === 'ongoing') {
+    if (dpos && hasPos(r.destination_lat, r.destination_lng)) { const km = dist(dpos, ll(r.destination_lat, r.destination_lng)); line = t('liveOngoing').replace('{min}', eta(km)).replace('{km}', km.toFixed(1)); }
+    else line = t('liveOngoingNoPos');
+  } else line = t('liveDone');
+
+  let who = '';
+  if (d && d.display_name) {
+    const tel = String(d.phone || '').replace(/[^0-9+]/g, '');
+    who = `<div class="muted"><b>${esc(d.display_name)}</b> · ${esc(d.vehicle || '')} ${esc(d.vehicle_plate || '')}</div>` + (tel ? `<a class="call" href="tel:${esc(tel)}">${t('call')}</a>` : '');
+  }
+  $('liveInfo').innerHTML = `<div class="live-line">${esc(line)}</div>${who}
+    <div class="sw" style="margin-top:8px"><span>${t(r.status === 'completed' ? 'finalFare' : 'liveFare')}</span><span class="fare">${money(finalFare(r))}</span></div>`;
+
+  const m = mkMap('mapLive');
+  if (m) { if (wasHidden) setTimeout(() => m.invalidateSize(), 200); updateLiveMap(m, r, dpos); }
+
+  keepInputs($('livePay'), () => { $('livePay').innerHTML = payBlock(r); });
+  document.querySelectorAll('[data-live-pay]').forEach(b => b.onclick = async () => {
+    const id = b.dataset.livePay, ref = ($(`lref-${id}`).value || '').trim();
+    if (!ref) return flash('liveMsg', t('enterReference'), 'warn');
+    b.disabled = true;
+    const { error } = await submitPayment(id, ref);
+    if (error) { b.disabled = false; flash('liveMsg', t('err') + error.message); }
+    else { flash('liveMsg', t('referenceSent'), 'ok'); loadCustomer(); }
   });
-  if (error) return flash('custMsg',t('err')+error.message);
-  flash('custMsg','Référence envoyée. Paiement en attente de vérification.','ok');
-  await loadCustomer();
-};
+  document.querySelectorAll('[data-live-close]').forEach(b => b.onclick = () => { LIVE.dismissed[b.dataset.liveClose] = true; flash('liveMsg', ''); loadCustomer(); });
+}
 
 /* ============ DRIVER ============ */
-async function loadDriver(){
-  const {data:driver,error} = await sb.from('drivers').select('*')
-    .eq('user_id',me.user.id).maybeSingle();
-  if (error) throw error;
-  me.driver=driver;
-
-  if (!driver) {
-    $('drvInfo').textContent=t('drvNone');
-    $('drvSwitch').classList.add('hide');
-    return;
+function renderAvail(){
+  if (!me.driver || !$('availBtn')) return;
+  const on = !!me.driver.is_available;
+  $('availBtn').textContent = on ? t('goOff') : t('goOn');
+  $('availBtn').className = 'btn sm' + (on ? ' red' : '');
+}
+$('availBtn').onclick = async () => {
+  const btn = $('availBtn'); busy(btn, true);
+  try {
+    const next = !me.driver.is_available;
+    const { error } = await sb.rpc('set_klando_driver_availability', { p_available: next });
+    if (error) return flash('drvMsg', t('err') + error.message);
+    me.driver.is_available = next; renderAvail(); manageGps(); loadDriver();
+  } finally { busy(btn, false); }
+};
+function manageGps(){
+  // Keep sending the position during an accepted/ongoing ride, even if the driver is no longer "available".
+  const need = me.driver && me.driver.approval_status === 'approved' && (me.driver.is_available || drvActive);
+  if (need && gpsWatch == null && navigator.geolocation) {
+    gpsWatch = navigator.geolocation.watchPosition(p => { lastPos = [p.coords.latitude, p.coords.longitude]; },
+      () => flash('drvMsg', t('gpsDenied'), 'warn'), { enableHighAccuracy:true, maximumAge:10000 });
+    gpsPushTimer = setInterval(pushGps, GPS_PUSH_MS); setTimeout(pushGps, 3000);
+  } else if (!need) {
+    if (gpsWatch != null && navigator.geolocation) navigator.geolocation.clearWatch(gpsWatch);
+    gpsWatch = null; clearInterval(gpsPushTimer); gpsPushTimer = null;
   }
-
-  $('drvInfo').innerHTML=`
-    <p><b>${esc(driver.display_name||me.user.email)}</b></p>
-    <p>${esc(driver.vehicle||'')} · ${esc(driver.vehicle_plate||'')}</p>
-    <p>${pill(driver.approval_status||'pending')}</p>
-    <p class="muted">${driver.approval_status==='approved'?t('drvApproved'):driver.approval_status==='rejected'?t('drvRejected'):t('drvPending')}</p>`;
-
-  const approved=driver.approval_status==='approved';
-  $('drvSwitch').classList.toggle('hide',!approved);
-  $('availBtn').textContent=driver.is_available?t('goOff'):t('goOn');
-  $('availBtn').classList.toggle('alt',!driver.is_available);
-
-  if (approved) startDriverGPS();
-  else stopDriverGPS();
-
-  const {data:mine,error:e1}=await sb.from('rides').select('*')
-    .eq('driver_id',driver.id).in('status',['accepted','ongoing'])
-    .order('created_at',{ascending:false});
-  if (e1) throw e1;
-
-  $('drvMine').innerHTML=!mine.length?`<p class="muted">${t('noRides')}</p>`:mine.map(r=>`
-    <div class="item">
-      <div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>${pill(r.status)}</div>
-      <p>${money(r.fare)}</p>
-      ${r.status==='accepted'?`<button class="btn sm" onclick="rideStatus('${esc(r.id)}','ongoing')">${t('start')}</button>`:''}
-      ${r.status==='ongoing'?`<button class="btn sm" onclick="rideStatus('${esc(r.id)}','completed')">${t('finish')}</button>`:''}
-    </div>`).join('');
-
-  const {data:pending,error:e2}=await sb.from('rides').select('*')
-    .eq('status','pending').is('driver_id',null)
-    .order('created_at',{ascending:true}).limit(30);
-  if (e2) throw e2;
-
-  $('drvPending').innerHTML=!approved?`<p class="muted">${t('drvPending')}</p>`:
-    !pending.length?`<p class="muted">${t('noReq')}</p>`:pending.map(r=>`
-      <div class="item">
-        <div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>${pill(r.status)}</div>
-        <p>${money(r.fare)} · ${esc(r.distance_km||'')} km</p>
-        <button class="btn sm" onclick="acceptRide('${esc(r.id)}')">${t('accept')}</button>
-      </div>`).join('');
 }
-
-$('availBtn').onclick=async()=>{
-  if(!me.driver)return;
-  const next=!me.driver.is_available;
-  const {error}=await sb.rpc('set_klando_driver_availability',{p_available:next});
-  if(error)return flash('drvMsg',t('err')+error.message);
-  flash('drvMsg',next?'Vous êtes disponible.':'Vous êtes indisponible.','ok');
-  await loadDriver();
-};
-
-window.acceptRide=async rideId=>{
-  const {error}=await sb.rpc('accept_klando_ride',{p_ride_id:rideId});
-  if(error)return flash('drvMsg',t('err')+error.message);
-  flash('drvMsg','Course acceptée.','ok');
-  await loadDriver();
-};
-
-window.rideStatus=async(rideId,status)=>{
-  const {error}=await sb.rpc('update_klando_ride_status',{
-    p_ride_id:rideId,p_status:status
-  });
-  if(error)return flash('drvMsg',t('err')+error.message);
-  await loadDriver();
-};
-
-function stopDriverGPS(){
-  if(gpsWatch!==null)navigator.geolocation.clearWatch(gpsWatch);
-  gpsWatch=null;
-  clearInterval(gpsPushTimer);
-  gpsPushTimer=null;
+async function pushGps(){
+  if (!lastPos) return;
+  const { error } = await sb.rpc('update_klando_driver_location', { p_lat:lastPos[0], p_lng:lastPos[1] });
+  if (error && !gpsFnWarned) { gpsFnWarned = true; console.warn(error); flash('drvMsg', t('gpsNoFn'), 'warn'); }
 }
-
-function startDriverGPS(){
-  if(!navigator.geolocation||gpsWatch!==null)return;
-  gpsWatch=navigator.geolocation.watchPosition(pos=>{
-    lastPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
-  },err=>console.warn('GPS:',err.message),{
-    enableHighAccuracy:true,maximumAge:10000,timeout:20000
-  });
-
-  gpsPushTimer=setInterval(async()=>{
-    if(!lastPos||!me.driver||!me.driver.is_available)return;
-    const {error}=await sb.rpc('update_klando_driver_location',{
-      p_lat:lastPos.lat,p_lng:lastPos.lng
-    });
-    if(error&&!gpsFnWarned){
-      gpsFnWarned=true;
-      console.warn('GPS database update:',error.message);
+async function loadDriver(){
+  const dr = await sb.from('drivers').select('*').eq('user_id', me.user.id).maybeSingle();
+  if (dr.data) me.driver = dr.data;
+  const d = me.driver;
+  if (!d) { $('drvInfo').innerHTML = `<div class="msg warn">${t('drvNone')}</div>`; $('drvSwitch').classList.add('hide'); return; }
+  const st = d.approval_status;
+  $('drvInfo').innerHTML = `<div>${pill(st)} <b>${esc(d.display_name)}</b></div><div class="muted">${esc(d.vehicle||'')} ${esc(d.vehicle_plate||'')}</div>
+    <div class="msg ${st==='approved'?'ok':st==='rejected'?'err':'warn'}">${t(st==='approved'?'drvApproved':st==='rejected'?'drvRejected':'drvPending')}</div>`;
+  $('drvSwitch').classList.toggle('hide', st !== 'approved'); renderAvail(); manageGps();
+  if (st !== 'approved') { $('drvMine').innerHTML = $('drvPending').innerHTML = `<p class="muted">${t('noReq')}</p>`; return; }
+  const mine = await sb.from('rides').select('*').or(`driver_id.eq.${d.id},driver_id.eq.${me.user.id}`).order('created_at',{ascending:false}).limit(20);
+  drvActive = (mine.data||[]).some(r => ['accepted','ongoing'].includes(r.status));
+  manageGps();
+  $('drvMine').innerHTML = (mine.data||[]).map(r => {
+    let a = '';
+    if (r.status==='accepted') {
+      if (!r.arrived_at) a += `<button class="btn alt sm" data-arrived="${esc(r.id)}">📍 ${t('iArrived')}</button>`;
+      a += `<button class="btn sm" data-adv="${esc(r.id)}|ongoing">${t('start')}</button>`;
     }
-  },GPS_PUSH_MS);
+    if (r.status==='ongoing') a = `<button class="btn sm" data-adv="${esc(r.id)}|completed">${t('finish')}</button>`;
+    if (r.status==='completed' && !PAY[r.payment_method] && r.payment_status !== 'paid') a = `<button class="btn sm" data-cash="${esc(r.id)}">💵 ${t('iCash')}</button>`;
+    return rideHtml(r, a);
+  }).join('') || `<p class="muted">${t('noRides')}</p>`;
+  // Oldest request first, so the customer who has waited longest is served first.
+  const pend = await sb.from('rides').select('*').eq('status','pending').order('created_at',{ascending:true}).limit(30);
+  $('drvPending').innerHTML = d.is_available
+    ? ((pend.data||[]).map(r => rideHtml(r, `<button class="btn sm" data-acc="${esc(r.id)}">${t('accept')}</button>`)).join('') || `<p class="muted">${t('noReq')}</p>`)
+    : `<p class="muted">${t('goOn')}</p>`;
+  document.querySelectorAll('[data-arrived]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const { error } = await sb.rpc('klando_driver_arrived', { p_ride_id: b.dataset.arrived });
+    if (error) { b.disabled = false; const miss = isMissingFn(error); flash('drvMsg', miss ? t('arrivedNoFn') : t('err') + error.message, miss ? 'warn' : 'err'); }
+    else { flash('drvMsg', t('arrivedSent'), 'ok'); loadDriver(); }
+  });
+  document.querySelectorAll('[data-cash]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const { error } = await sb.rpc('confirm_klando_cash', { p_ride_id: b.dataset.cash });
+    if (error) { b.disabled = false; flash('drvMsg', t('err') + error.message); }
+    else { flash('drvMsg', t('cashDone'), 'ok'); loadDriver(); }
+  });
+  document.querySelectorAll('[data-acc]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const { error } = await sb.rpc('accept_klando_ride', { p_ride_id: b.dataset.acc });
+    if (error) { b.disabled = false; flash('drvMsg', t('err') + error.message); } else { flash('drvMsg',''); loadDriver(); }
+  });
+  document.querySelectorAll('[data-adv]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const [id, st2] = b.dataset.adv.split('|');
+    const { error } = await sb.rpc('update_klando_ride_status', { p_ride_id: id, p_new_status: st2 });
+    if (error) { b.disabled = false; flash('drvMsg', t('err') + error.message); } else { flash('drvMsg',''); loadDriver(); }
+  });
 }
 
 /* ============ ADMIN ============ */
+let admMk = [];
 async function loadAdmin(){
-  const [driversResult,ridesResult,profilesResult]=await Promise.all([
-    sb.from('drivers').select('*').order('created_at',{ascending:false}),
-    sb.from('rides').select('*').order('created_at',{ascending:false}).limit(100),
-    sb.from('profiles').select('*')
-  ]);
-
-  if(driversResult.error)throw driversResult.error;
-  if(ridesResult.error)throw ridesResult.error;
-  if(profilesResult.error)throw profilesResult.error;
-
-  const drivers=driversResult.data||[];
-  const rides=ridesResult.data||[];
-  const profiles=profilesResult.data||[];
-
-  $('admStats').innerHTML=`
-    <div class="stat"><b>${profiles.length}</b><span>${t('sCustomers')}</span></div>
-    <div class="stat"><b>${drivers.length}</b><span>${t('sDrivers')}</span></div>
-    <div class="stat"><b>${drivers.filter(d=>d.is_available).length}</b><span>${t('sActive')}</span></div>
-    <div class="stat"><b>${rides.length}</b><span>${t('sRides')}</span></div>
-    <div class="stat"><b>${rides.filter(r=>r.status==='completed').length}</b><span>${t('sDone')}</span></div>
-    <div class="stat"><b>${rides.filter(r=>r.status==='pending').length}</b><span>${t('sPend')}</span></div>`;
-
-  $('admDrivers').innerHTML=!drivers.length?`<p class="muted">${t('noDrivers')}</p>`:drivers.map(d=>`
-    <div class="item">
-      <div class="top"><b>${esc(d.display_name||'Conducteur')}</b>${pill(d.approval_status||'pending')}</div>
-      <p class="muted">${esc(d.phone||'')} · ${esc(d.vehicle||'')} · ${esc(d.vehicle_plate||'')}</p>
-      ${d.approval_status!=='approved'?`<button class="btn sm" onclick="approveDriver('${esc(d.id)}','approved')">${t('approve')}</button>`:''}
-      ${d.approval_status!=='rejected'?`<button class="btn red sm" onclick="approveDriver('${esc(d.id)}','rejected')">${t('reject')}</button>`:''}
-    </div>`).join('');
-
-  $('admRides').innerHTML=!rides.length?`<p class="muted">${t('noRides')}</p>`:rides.map(r=>`
-    <div class="item">
-      <div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>${pill(r.status)}</div>
-      <p class="muted">${money(r.fare)} · ${new Date(r.created_at).toLocaleString()}</p>
-      <p class="muted">Paiement : ${esc(r.payment_method||'cash')} · ${esc(r.payment_status||'unpaid')}</p>
-    </div>`).join('');
-
-  const payments=rides.filter(r=>r.payment_method==='airtel_money'&&r.payment_status==='awaiting_verification');
-  $('admPayments').innerHTML=!payments.length?'<p class="muted">Aucun paiement à vérifier.</p>':payments.map(r=>`
-    <div class="item">
-      <b>${esc(r.pickup_address)} → ${esc(r.destination_address)}</b>
-      <p>${money(r.fare)}</p>
-      <p>Référence : <b>${esc(r.payment_reference||'Non fournie')}</b></p>
-      <button class="btn sm" onclick="verifyPayment('${esc(r.id)}')">Confirmer le paiement reçu</button>
-    </div>`).join('');
-
-  const map=mkMap('mapA');
-  map.eachLayer(layer=>{if(layer instanceof L.Marker)map.removeLayer(layer);});
-  drivers.filter(d=>d.is_available&&d.latitude&&d.longitude).forEach(d=>{
-    L.marker([d.latitude,d.longitude]).addTo(map)
-      .bindPopup(esc(d.display_name||'Conducteur disponible'));
+  const [d, r, c] = await Promise.all([
+    sb.from('drivers').select('*').order('created_at',{ascending:false}).limit(500),
+    sb.from('rides').select('*').order('created_at',{ascending:false}).limit(500),
+    sb.from('profiles').select('id',{count:'exact',head:true}).eq('role','customer')]);
+  if (d.error || r.error) return flash('admMsg', t('err') + (d.error||r.error).message);
+  const drivers = d.data||[], rides = r.data||[];
+  const stat = (n,l) => `<div class="stat"><b>${n}</b><span>${t(l)}</span></div>`;
+  $('admStats').innerHTML = stat(c.count ?? '—','sCustomers') + stat(drivers.filter(x=>x.approval_status==='approved').length,'sDrivers') +
+    stat(drivers.filter(x=>x.is_available && x.approval_status==='approved').length,'sActive') + stat(rides.length,'sRides') +
+    stat(rides.filter(x=>x.status==='completed').length,'sDone') + stat(drivers.filter(x=>x.approval_status==='pending').length,'sPend');
+  $('admDrivers').innerHTML = drivers.map(x => `<div class="item"><div class="top"><b>${esc(x.display_name)}</b>${pill(x.approval_status)}</div>
+    <div class="muted">${esc(x.phone||'')} · ${esc(x.vehicle||'')} ${esc(x.vehicle_plate||'')} · ${x.is_available?t('on'):t('off')}</div>
+    ${x.approval_status!=='approved' ? `<button class="btn sm" data-ap="${esc(x.id)}|approved">${t('approve')}</button>` : ''}${x.approval_status!=='rejected' ? `<button class="btn red sm" data-ap="${esc(x.id)}|rejected">${t('reject')}</button>` : ''}</div>`).join('') || `<p class="muted">${t('noDrivers')}</p>`;
+  $('admRides').innerHTML = rides.slice(0,40).map(x => rideHtml(x)).join('') || `<p class="muted">${t('noRides')}</p>`;
+  const awaiting = rides.filter(x => PAY[x.payment_method] && x.payment_status==='awaiting_verification');
+  $('admPayments').innerHTML = awaiting.map(x => `<div class="item"><b>${esc(x.customer_name || t('clientName'))}</b><div>${esc(x.pickup_address)} → ${esc(x.destination)}</div><div class="muted">${esc(payLabel(x.payment_method))} · ${t('amount')}: ${money(finalFare(x))} · ${t('reference')}: ${esc(x.payment_reference || '—')}</div><button class="btn sm" data-verify-payment="${esc(x.id)}">${t('confirmPayment')}</button></div>`).join('') || `<p class="muted">${t('noPayment')}</p>`;
+  document.querySelectorAll('[data-verify-payment]').forEach(b => b.onclick = async () => {
+    if (!confirm(t('confirmReceived'))) return;
+    b.disabled=true;
+    const { error } = await verifyPayment(b.dataset.verifyPayment);
+    if (error) { b.disabled=false; flash('admMsg',t('err')+error.message); }
+    else { flash('admMsg',t('paymentConfirmed'),'ok'); loadAdmin(); }
   });
+  document.querySelectorAll('[data-ap]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const [id, s] = b.dataset.ap.split('|');
+    const { error } = await sb.from('drivers').update({ approval_status: s }).eq('id', id);
+    if (error) { b.disabled = false; flash('admMsg', t('err') + error.message); } else { flash('admMsg',''); loadAdmin(); }
+  });
+  const m = mkMap('mapA');
+  if (!m) return;
+  admMk.forEach(x => m.removeLayer(x)); admMk = [];
+  drivers.filter(x => x.is_available && x.approval_status==='approved' && x.latitude != null && x.longitude != null)
+    .forEach(x => admMk.push(L.marker([x.latitude, x.longitude]).addTo(m).bindPopup(esc(x.display_name))));
 }
 
-window.approveDriver=async(id,status)=>{
-  const {error}=await sb.from('drivers').update({approval_status:status})
-    .eq('id',id);
-  if(error)return flash('admMsg',t('err')+error.message);
-  flash('admMsg','Statut du conducteur mis à jour.','ok');
-  await loadAdmin();
-};
-
-window.verifyPayment=async rideId=>{
-  if(!confirm('Confirmez-vous avoir effectivement reçu ce paiement Airtel Money ?'))return;
-  const {error}=await sb.rpc('verify_klando_payment',{p_ride_id:rideId});
-  if(error)return flash('admMsg',t('err')+error.message);
-  flash('admMsg','Paiement confirmé.','ok');
-  await loadAdmin();
-};
-
-/* ============ INITIALIZATION ============ */
-async function boot(){
+/* ============ BOOT ============ */
+(async function boot(){
   applyLang();
-  if(!configured){
-    $('cfgWarn').textContent=t('cfgMissing');
-    $('cfgWarn').classList.remove('hide');
-    show('vAuth');
+  if (!configured) { $('cfgWarn').textContent = t('cfgMissing'); $('cfgWarn').classList.remove('hide'); show('vAuth'); return; }
+  if (!sb) {
+    $('cfgWarn').textContent = t('sbFail'); $('cfgWarn').classList.remove('hide'); show('vAuth');
+    $('fLogin').querySelector('button[type=submit]').disabled = true;
+    $('fReg').querySelector('button[type=submit]').disabled = true;
     return;
   }
-  const {data:{session}}=await sb.auth.getSession();
-  if(session)await start();
-  else show('vAuth');
-
-  sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session&&!me.user)await start();
-    if(event==='SIGNED_OUT'){
-      stopAll();
-      me={user:null,profile:null,driver:null,role:null};
-      show('vAuth');
-    }
-  });
-}
-boot();
+  sb.auth.onAuthStateChange(ev => { if (ev === 'SIGNED_OUT' && me.user) resetSession(); });
+  try { await start(); } catch(e){ console.error(e); show('vAuth'); }
+})();
+});
 </script>
 </body>
 </html>
