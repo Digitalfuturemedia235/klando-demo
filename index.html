@@ -9,6 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="E&Bz Mobility">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151515'/%3E%3Ctext x='32' y='48' font-size='44' font-weight='900' text-anchor='middle' fill='%23ff8a00' font-family='Georgia,serif'%3EE%3C/text%3E%3C/svg%3E">
 <title>E&Bz Mobility</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
@@ -175,6 +177,9 @@ button.btn.sm{min-height:44px}
   #toasts{top:70px}
   .paypick button{font-size:12px}
 }
+#installBtn{display:inline-block;background:transparent;color:#fff;border:1px solid var(--klando-orange);border-radius:12px;padding:12px 18px;font-size:14px;font-weight:750;margin-top:14px;cursor:pointer}
+#installBtn:hover{background:rgba(255,138,0,.15)}
+#iosHint{font-size:13px;color:#ddd;margin-top:10px}
 </style>
 </head>
 <body>
@@ -194,6 +199,8 @@ button.btn.sm{min-height:44px}
       <a class="ghost" href="#publicHome" data-i18n="heroMore"></a>
     </div>
     <div class="hero-feats"><span data-i18n="feat1"></span><span data-i18n="feat2"></span><span data-i18n="feat3"></span></div>
+    <button id="installBtn" type="button" class="hide" data-i18n="install"></button>
+    <p id="iosHint" class="hide" data-i18n="iosHint"></p>
   </section>
   <section id="publicHome">
     <div class="home-heading">
@@ -376,7 +383,7 @@ const isMissingFn = e => !!e && (e.code === 'PGRST202' || e.code === '42883' || 
 
 /* ============ TRANSLATIONS ============ */
 const I18N = {
-fr:{tagline:'Transporter les personnes. Relier les opportunités.',logout:'Quitter',login:'Connexion',register:'Inscription',email:'E-mail',password:'Mot de passe',
+fr:{install:'📲 Installer l’application',iosHint:'Sur iPhone : touchez le bouton Partager, puis « Sur l’écran d’accueil ».',tagline:'Transporter les personnes. Relier les opportunités.',logout:'Quitter',login:'Connexion',register:'Inscription',email:'E-mail',password:'Mot de passe',
 iam:'Je suis',customer:'Client',driver:'Conducteur',fullname:'Nom complet',phone:'Téléphone',vehicle:'Moto (marque/modèle)',plate:'Plaque d’immatriculation',
 createAccount:'Créer mon compte',requestRide:'Demander une moto-taxi',setPickup:'Départ (carte)',setDest:'Arrivée (carte)',useGps:'📍 Ma position',
 pickup:'Adresse de départ',destination:'Destination',pickupPh:'Ex. Marché de Dembé',destPh:'Ex. Gounou Gaya',search:'Chercher',
@@ -396,7 +403,7 @@ gpsDenied:'Position GPS indisponible ou refusée.',gpsNoFn:'Suivi GPS conducteur
 cfgMissing:'Configuration manquante : collez la clé publique Supabase (SUPABASE_KEY) dans index.html.',
 err:'Erreur : ',from:'De',to:'Vers',customerL:'Client',noPos:'Position non trouvée.',km:'km',heroLabel:'E&Bz MOBILITY · MOBILITÉ URBAINE',heroTitleHtml:'Vos déplacements.<br><span>En toute simplicité.</span>',heroText:'Commandez votre moto-taxi en quelques secondes. Retrouvez des conducteurs disponibles et déplacez-vous librement dans N’Djaména.',cityLabel:'📍 N’DJAMÉNA, TCHAD',cityTitle:'Votre ville, à portée de main.',cityText:'Repérez votre quartier et préparez votre prochain déplacement.',bookingTitle:'Où souhaitez-vous aller ?',bookingText:'Connectez-vous pour commander votre moto-taxi.',bookingBtn:'Commander une moto →',paymentMethod:'Mode de paiement',cash:'Espèces',airtelInstructions:'Envoyez le montant exact au <b>+235 65 28 92 22</b> via Airtel Money. Après le transfert, saisissez la référence de transaction dans « Mes courses ». Le paiement reste en attente jusqu’à vérification.',adminPayments:'Paiements à vérifier',footerTagline:'Moving People. Connecting Opportunities.',initiative:'Une initiative E&Bz Afrika',copyright:'© 2026 E&Bz Mobility · N’Djaména, République du Tchad 🇹🇩',vehiclePh:'Honda, Yamaha…',payment:'Paiement',unpaid:'Non payé',awaiting:'À vérifier',paid:'Payé',failed:'Échec',refunded:'Remboursé',reference:'Référence',transferPrompt:'Transférez {amount} au <b>+235 65 28 92 22</b>, puis indiquez la référence reçue.',referenceLabel:'Référence de transaction Airtel Money',referencePlaceholder:'Ex. référence SMS Airtel',sendReference:'Envoyer la référence',enterReference:'Veuillez saisir la référence de transaction.',referenceSent:'Référence envoyée. Paiement en attente de vérification.',amount:'Montant',confirmPayment:'Confirmer la réception du paiement',noPayment:'Aucun paiement à vérifier.',confirmReceived:'Avez-vous vérifié que le montant est bien arrivé sur votre compte Airtel Money ?',paymentConfirmed:'Paiement confirmé.',clientName:'Client',dayRate:'Tarif de jour',nightRate:'Tarif de nuit',mapPoint:'Point sur la carte',myGps:'Ma position GPS',
 mapFail:'La carte ne peut pas être chargée. Vérifiez votre connexion Internet puis rechargez la page.',sbFail:'Le service de connexion ne peut pas être chargé. Vérifiez votre connexion Internet puis rechargez la page.'},
-en:{tagline:'Moving People. Connecting Opportunities.',logout:'Log out',login:'Log in',register:'Sign up',email:'Email',password:'Password',
+en:{install:'📲 Install the app',iosHint:'On iPhone: tap the Share button, then “Add to Home Screen”.',tagline:'Moving People. Connecting Opportunities.',logout:'Log out',login:'Log in',register:'Sign up',email:'Email',password:'Password',
 iam:'I am a',customer:'Customer',driver:'Driver',fullname:'Full name',phone:'Phone',vehicle:'Motorcycle (make/model)',plate:'License plate',
 createAccount:'Create my account',requestRide:'Request a moto-taxi',setPickup:'Pickup (map)',setDest:'Destination (map)',useGps:'📍 My location',
 pickup:'Pickup address',destination:'Destination',pickupPh:'e.g. Dembé market',destPh:'e.g. Gounou Gaya',search:'Search',
@@ -1134,6 +1141,28 @@ async function loadAdmin(){
   try { await start(); } catch(e){ console.error(e); show('vAuth'); }
 })();
 });
+</script>
+<script>
+(function(){
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  }
+  var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
+  if (standalone) return;
+  var btn = document.getElementById('installBtn'), hint = document.getElementById('iosHint'), deferred = null;
+  if (!btn) return;
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred = e; btn.classList.remove('hide'); });
+  window.addEventListener('appinstalled', function(){ deferred = null; btn.classList.add('hide'); hint.classList.add('hide'); });
+  if (/iphone|ipad|ipod/i.test(navigator.userAgent)) btn.classList.remove('hide');
+  btn.addEventListener('click', function(){
+    if (deferred) {
+      deferred.prompt();
+      deferred.userChoice.then(function(){ deferred = null; btn.classList.add('hide'); });
+    } else {
+      hint.classList.remove('hide');
+    }
+  });
+})();
 </script>
 </body>
 </html>
