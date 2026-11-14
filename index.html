@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="E&Bz Mobility">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151515'/%3E%3Ctext x='32' y='41' font-size='24' font-weight='900' text-anchor='middle' fill='%23ff8a00' font-family='Arial'%3EEB%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151515'/%3E%3Ctext x='32' y='48' font-size='44' font-weight='900' text-anchor='middle' fill='%23ff8a00' font-family='Arial'%3EK%3C/text%3E%3C/svg%3E">
 <title>E&Bz Mobility</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
 <style>
@@ -128,7 +128,8 @@ button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
 /* ---- Premium polish ---- */
 header{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right));padding-top:max(14px,env(safe-area-inset-top))}
 .brand{display:flex;align-items:center;gap:12px}
-.brand .logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#ffa329,#ff7a00);font-size:22px;box-shadow:0 4px 12px rgba(255,138,0,.35);flex:none}
+.brand .logo{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#ffa329,#ff7a00);box-shadow:0 4px 12px rgba(255,138,0,.35);flex:none}
+.brand .logo svg{width:32px;height:32px}
 .brand .word{display:block;line-height:1.1;min-width:0}
 #langBtn{background:transparent;color:#fff;border:1px solid #4a4a4a}
 #langBtn::before{content:"🌐 "}
@@ -168,7 +169,8 @@ button.btn.sm{min-height:44px}
 .social:empty{display:none}
 .footer{padding-bottom:max(32px,env(safe-area-inset-bottom))}
 @media (max-width:600px){
-  .brand .logo{width:38px;height:38px;font-size:19px}
+  .brand .logo{width:40px;height:40px}
+  .brand .logo svg{width:28px;height:28px}
   .hero-cta .btn,.hero-cta .ghost{width:100%;text-align:center}
   #toasts{top:70px}
   .paypick button{font-size:12px}
@@ -177,7 +179,7 @@ button.btn.sm{min-height:44px}
 </head>
 <body>
 <header>
-  <h1 class="brand"><span class="logo" aria-hidden="true">🏍️</span><span class="word">E&amp;Bz <span class="brand-accent">Mobility</span><small data-i18n="tagline"></small></span></h1>
+  <h1 class="brand"><span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="#151515" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 9 V39"/><path d="M34 9 L17 25"/><path d="M22 22 L35 39"/></svg></span><span class="word">E&amp;Bz <span class="brand-accent">Mobility</span><small data-i18n="tagline"></small></span></h1>
   <button id="langBtn" type="button">EN</button>
   <button id="logoutBtn" type="button" class="hide" data-i18n="logout"></button>
 </header>
