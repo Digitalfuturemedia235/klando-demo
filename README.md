@@ -1,2 +1,2 @@
-# klando-demo
-KLANDO Motocycle Taxi Platform
+# E&Bz Mobility
+E&Bz Mobility Platform
