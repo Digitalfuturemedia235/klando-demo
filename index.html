@@ -269,6 +269,14 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
   .toast,.pin-drv::after{animation:none}
   button{transition:none}
 }
+
+.service-choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.service-option{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:15px;border:2px solid #e7e7e7;border-radius:16px;background:#fff;color:#151515;cursor:pointer;text-align:left;min-height:112px}
+.service-option.on{border-color:#ff8a00;background:#fff6eb;box-shadow:0 0 0 2px rgba(255,138,0,.10)}
+.service-icon{font-size:27px}.service-option small{color:#666;font-size:12px}
+#vehicleClassWrap{margin:10px 0 16px}
+@media(max-width:420px){.service-option{padding:12px;min-height:105px}}
+
 </style>
 </head>
 <body>
@@ -344,6 +352,8 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
           <label for="rEmail" data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
           <label for="rPass" data-i18n="password"></label><input id="rPass" type="password" minlength="6" required autocomplete="new-password">
           <div id="drvFields" class="hide">
+            <label for="rServiceType" data-i18n="driverServiceLabel">Service proposé</label>
+            <select id="rServiceType"><option value="moto" data-i18n="serviceMoto">Moto</option><option value="vehicle" data-i18n="serviceVehicle">Véhicule</option></select>
             <label for="rVeh" data-i18n="vehicle"></label><input id="rVeh" data-i18n-ph="vehiclePh">
             <label for="rPlate" data-i18n="plate"></label><input id="rPlate">
           </div>
@@ -394,6 +404,10 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
     </div>
     <div class="card">
       <h2 data-i18n="requestRide"></h2>
+      <div class="service-choice" aria-label="Type de transport">
+        <button type="button" class="service-option on" data-service="moto" aria-pressed="true"><span class="service-icon">🏍️</span><b data-i18n="serviceMoto">Moto</b><small data-i18n="serviceMotoSub">Rapide et économique</small></button>
+        <button type="button" class="service-option" data-service="vehicle" aria-pressed="false"><span class="service-icon">🚗</span><b data-i18n="serviceVehicle">Véhicule</b><small data-i18n="serviceVehicleSub">Confort en voiture</small></button>
+      </div>
       <div class="tabs">
         <button id="modeP" class="on" type="button" data-i18n="setPickup"></button>
         <button id="modeD" type="button" data-i18n="setDest"></button>
@@ -489,6 +503,8 @@ const FARE = {
   base: 300, perKm: 100, step: 50,
   day:   { min: 500,  max: 1500 },
   night: { min: 1000, max: 2000 },
+  car: { day: 3500, night: 5000 },   // car (vehicle) rides: fixed price within N'Djaména
+  commissionPct: 10,                 // E&Bz commission on car rides (calculated by the database)
   nightStart: 20, nightEnd: 5   // night = 20:00 to 04:59
 };
 function isNight(){
@@ -531,16 +547,16 @@ const ic = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`
 /* ============ TRANSLATIONS ============ */
 const I18N = {
 fr:{
-  tagline:'Transporter les personnes. Relier les opportunités.', logout:'Quitter', login:'Connexion', register:'Inscription',
-  email:'E-mail', password:'Mot de passe', authTitle:'Bienvenue', authSub:'Connectez-vous ou créez un compte pour commander votre moto-taxi.',
-  iam:'Je suis', customer:'Client', driver:'Conducteur', fullname:'Nom complet', phone:'Téléphone', vehicle:'Moto (marque/modèle)', vehiclePh:'Honda, Yamaha…', plate:'Plaque d’immatriculation',
+  tagline:'Transporter les personnes. Relier les opportunités.', serviceMoto:'Moto', serviceVehicle:'Véhicule', serviceMotoSub:'Rapide et économique', serviceVehicleSub:'Confort en voiture', driverServiceLabel:'Service proposé', vehicleClassLabel:'Catégorie du véhicule', classStandard:'Standard · Berline', classComfort:'Confort', classSuv:'SUV / 4x4', classXl:'XL · Grand véhicule', logout:'Quitter', login:'Connexion', register:'Inscription',
+  email:'E-mail', password:'Mot de passe', authTitle:'Bienvenue', authSub:'Connectez-vous ou créez un compte pour réserver un trajet en moto ou en voiture.',
+  iam:'Je suis', customer:'Client', driver:'Conducteur', fullname:'Nom complet', phone:'Téléphone', vehicle:'Marque et modèle', vehiclePh:'Toyota Corolla, Honda, Yamaha…', plate:'Plaque d’immatriculation',
   createAccount:'Créer mon compte', confirmMail:'Compte créé. Vérifiez votre e-mail pour confirmer, puis connectez-vous.',
   install:'Installer l’application', iosHint:'Sur iPhone : touchez le bouton Partager, puis « Sur l’écran d’accueil ».',
   heroLabel:'E&Bz MOBILITY · MOBILITÉ URBAINE', heroTitleHtml:'Vos déplacements.<br><span>En toute simplicité.</span>',
-  heroText:'Commandez votre moto-taxi en quelques secondes. Retrouvez des conducteurs disponibles et déplacez-vous librement dans N’Djaména.',
+  heroText:'Choisissez une moto ou une voiture, comparez le tarif estimé et réservez votre trajet à N’Djaména.',
   heroMore:'Découvrir', feat1:'Moto-taxi en quelques secondes', feat2:'Suivi en direct', feat3:'Mobile money ou espèces',
   cityLabel:'N’DJAMÉNA, TCHAD', cityTitle:'Votre ville, à portée de main.', cityText:'Repérez votre quartier et préparez votre prochain déplacement.',
-  bookingTitle:'Où souhaitez-vous aller ?', bookingText:'Connectez-vous pour commander votre moto-taxi.', bookingBtn:'Commander une moto',
+  bookingTitle:'Où souhaitez-vous aller ?', bookingText:'Connectez-vous pour commander votre moto-taxi.', bookingBtn:'Commander une course',
   howTitle:'Comment ça marche', how1T:'Choisissez votre trajet', how1B:'Placez le départ et l’arrivée sur la carte : le tarif s’affiche tout de suite.',
   how2T:'Un conducteur accepte', how2B:'Suivez-le en direct jusqu’à votre point de départ et appelez-le si besoin.',
   how3T:'Roulez et payez', how3B:'Réglez en espèces ou par mobile money, au tarif annoncé.',
@@ -548,7 +564,7 @@ fr:{
   requestRide:'Demander une moto-taxi', setPickup:'Départ (carte)', setDest:'Arrivée (carte)', useGps:'Ma position',
   pickup:'Adresse de départ', destination:'Destination', pickupPh:'Ex. Marché de Dembé', destPh:'Ex. Gounou Gaya', search:'Chercher',
   mapHint:'Touchez la carte pour placer le départ ou l’arrivée.', estFare:'Tarif estimé', requestBtn:'Commander', myRides:'Mes courses',
-  mapPoint:'Point sur la carte', myGps:'Ma position GPS', dayRate:'Tarif de jour', nightRate:'Tarif de nuit',
+  mapPoint:'Point sur la carte', myGps:'Ma position GPS', dayRate:'Tarif de jour', fixedFare:'prix fixe dans N’Djaména', nightRate:'Tarif de nuit',
   needPick:'Placez le départ sur la carte ou utilisez votre position.', needDest:'Indiquez une destination.',
   sent:'Course demandée. Un conducteur va l’accepter.', noPos:'Position non trouvée.', customerL:'Client', clientName:'Client',
   myStatus:'Mon statut conducteur', available:'Disponible', activeRides:'Mes courses en cours', availableRequests:'Demandes disponibles',
@@ -594,16 +610,16 @@ fr:{
   initiative:'Une initiative E&Bz Afrika', copyright:'© 2026 E&Bz Mobility · N’Djaména, République du Tchad'
 },
 en:{
-  tagline:'Moving People. Connecting Opportunities.', logout:'Log out', login:'Log in', register:'Sign up',
-  email:'Email', password:'Password', authTitle:'Welcome', authSub:'Log in or create an account to book your moto-taxi.',
-  iam:'I am a', customer:'Customer', driver:'Driver', fullname:'Full name', phone:'Phone', vehicle:'Motorcycle (make/model)', vehiclePh:'Honda, Yamaha…', plate:'License plate',
+  tagline:'Moving People. Connecting Opportunities.', serviceMoto:'Motorcycle', serviceVehicle:'Car', serviceMotoSub:'Fast and affordable', serviceVehicleSub:'Comfort by car', driverServiceLabel:'Service offered', vehicleClassLabel:'Vehicle category', classStandard:'Standard · Sedan', classComfort:'Comfort', classSuv:'SUV / 4x4', classXl:'XL · Large vehicle', logout:'Log out', login:'Log in', register:'Sign up',
+  email:'Email', password:'Password', authTitle:'Welcome', authSub:'Log in or create an account to book a motorcycle or car ride.',
+  iam:'I am a', customer:'Customer', driver:'Driver', fullname:'Full name', phone:'Phone', vehicle:'Vehicle make and model', vehiclePh:'Toyota Corolla, Honda, Yamaha…', plate:'License plate',
   createAccount:'Create my account', confirmMail:'Account created. Check your email to confirm, then log in.',
   install:'Install the app', iosHint:'On iPhone: tap the Share button, then “Add to Home Screen”.',
   heroLabel:'E&Bz MOBILITY · URBAN MOBILITY', heroTitleHtml:'Your journeys.<br><span>Made simple.</span>',
-  heroText:'Book a motorcycle taxi in seconds. Find available drivers and move freely around N’Djamena.',
+  heroText:'Choose a motorcycle or car, see your estimated fare and book a ride in N’Djamena. Find available drivers and move freely around N’Djamena.',
   heroMore:'Learn more', feat1:'A moto-taxi in seconds', feat2:'Live tracking', feat3:'Mobile money or cash',
   cityLabel:'N’DJAMENA, CHAD', cityTitle:'Your city, within reach.', cityText:'Find your neighbourhood and get ready for your next trip.',
-  bookingTitle:'Where would you like to go?', bookingText:'Log in to book your motorcycle taxi.', bookingBtn:'Book a motorcycle',
+  bookingTitle:'Where would you like to go?', bookingText:'Log in to book your motorcycle taxi.', bookingBtn:'Book a ride',
   howTitle:'How it works', how1T:'Pick your trip', how1B:'Place the pickup and destination on the map: the fare shows instantly.',
   how2T:'A driver accepts', how2B:'Follow them live to your pickup point and call them if needed.',
   how3T:'Ride and pay', how3B:'Pay in cash or by mobile money, at the quoted fare.',
@@ -611,7 +627,7 @@ en:{
   requestRide:'Request a moto-taxi', setPickup:'Pickup (map)', setDest:'Destination (map)', useGps:'My location',
   pickup:'Pickup address', destination:'Destination', pickupPh:'e.g. Dembé market', destPh:'e.g. Gounou Gaya', search:'Search',
   mapHint:'Tap the map to place the pickup or destination.', estFare:'Estimated fare', requestBtn:'Request ride', myRides:'My rides',
-  mapPoint:'Map point', myGps:'My GPS position', dayRate:'Day rate', nightRate:'Night rate',
+  mapPoint:'Map point', myGps:'My GPS position', dayRate:'Day rate', fixedFare:'fixed price within N’Djamena', nightRate:'Night rate',
   needPick:'Place the pickup on the map or use your location.', needDest:'Enter a destination.',
   sent:'Ride requested. A driver will accept it.', noPos:'Location not found.', customerL:'Customer', clientName:'Customer',
   myStatus:'My driver status', available:'Available', activeRides:'My active rides', availableRequests:'Available requests',
@@ -732,18 +748,23 @@ const dist = (a,b) => {
   const h=Math.sin(dLa/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLo/2)**2;
   return 2*R*Math.asin(Math.sqrt(h));
 };
+let selectedService = 'moto';
+function fareConfig(){
+  return {base:FARE.base,perKm:FARE.perKm,step:FARE.step,range:isNight()?FARE.night:FARE.day};
+}
 const calcFare = km => {
-  const r = isNight() ? FARE.night : FARE.day;
-  const raw = Math.round((FARE.base + FARE.perKm*km*1.3)/FARE.step)*FARE.step;
-  return Math.min(r.max, Math.max(r.min, raw));
+  if (selectedService === 'vehicle') return isNight() ? FARE.car.night : FARE.car.day;
+  const f = fareConfig(), raw = Math.round((f.base + f.perKm*km*1.3)/f.step)*f.step;
+  return Math.min(f.range.max, Math.max(f.range.min, raw));
 };
 
 /* ============ AUTH ============ */
 $('tabLogin').onclick = () => { $('tabLogin').classList.add('on'); $('tabReg').classList.remove('on'); $('fLogin').classList.remove('hide'); $('fReg').classList.add('hide'); flash('authMsg',''); };
 $('tabReg').onclick = () => { $('tabReg').classList.add('on'); $('tabLogin').classList.remove('on'); $('fReg').classList.remove('hide'); $('fLogin').classList.add('hide'); flash('authMsg',''); };
 $('rRole').onchange = () => $('drvFields').classList.toggle('hide', $('rRole').value !== 'driver');
+$('rServiceType').addEventListener('change', () => { const car=$('rServiceType').value==='vehicle'; $('rVeh').placeholder=car?'Toyota Corolla, Hyundai…':'Honda, Yamaha…'; });
 $('langBtn').onclick = () => { lang = lang === 'fr' ? 'en' : 'fr'; try{localStorage.setItem('klando_lang',lang)}catch(e){} applyLang(); };
-/* "Book a motorcycle" buttons scroll to the sign-in card; the driver banner opens the sign-up form as a driver. */
+/* "Book a ride" buttons scroll to the sign-in card; the driver banner opens the sign-up form as a driver. */
 document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => $(b.dataset.go).scrollIntoView({ behavior:'smooth', block:'start' }));
 $('drvCta').onclick = () => {
   $('tabReg').click(); $('rRole').value = 'driver'; $('rRole').onchange();
@@ -767,8 +788,9 @@ $('fReg').onsubmit = async e => {
   const btn = e.submitter || $('fReg').querySelector('button[type=submit]'); busy(btn, true);
   try {
     const wantDriver = $('rRole').value === 'driver';
+    if (wantDriver && (!$('rVeh').value.trim() || !$('rPlate').value.trim())) return flash('authMsg', lang==='fr'?'Veuillez renseigner le véhicule et sa plaque.':'Please enter the vehicle and its plate number.');
     const meta = { display_name:$('rName').value.trim(), phone:$('rPhone').value.trim(), want_driver:wantDriver };
-    if (wantDriver) { meta.vehicle = $('rVeh').value.trim(); meta.vehicle_plate = $('rPlate').value.trim(); }
+    if (wantDriver) { meta.vehicle = $('rVeh').value.trim(); meta.vehicle_plate = $('rPlate').value.trim(); meta.service_type = $('rServiceType').value; }
     const { data, error } = await sb.auth.signUp({ email:$('rEmail').value.trim(), password:$('rPass').value, options:{ data: meta } });
     if (error) return flash('authMsg', t('err') + error.message);
     if (!data.session) { $('tabLogin').click(); flash('authMsg', t('confirmMail'), 'ok'); return; }
@@ -795,7 +817,7 @@ async function start(){
   if (!me.driver && md.want_driver && (!me.profile || me.profile.role !== 'admin')) {
     const ins = await sb.from('drivers').insert({
       user_id: me.user.id, display_name: md.display_name || me.user.email, phone: md.phone || null,
-      vehicle: md.vehicle || null, vehicle_plate: md.vehicle_plate || null,
+      vehicle: md.vehicle || null, vehicle_plate: md.vehicle_plate || null, service_type: md.service_type || 'moto',
       approval_status: 'pending', is_available: false }).select().maybeSingle();
     if (ins.error) flash('globalMsg', t('err') + ins.error.message); else me.driver = ins.data;
   }
@@ -832,6 +854,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) refr
 
 /* ============ CUSTOMER ============ */
 const C = { pick:null, dest:null, mode:'p', mk:{}, ready:false, destQuery:'' };
+document.querySelectorAll('[data-service]').forEach(b => b.addEventListener('click', () => { selectedService=b.dataset.service; document.querySelectorAll('[data-service]').forEach(x=>{const on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');}); updateFare(); }));
 let destinationLookup = 0, destPromise = null, destPromiseQ = '';
 
 function setMode(m){ C.mode = m; $('modeP').classList.toggle('on', m==='p'); $('modeD').classList.toggle('on', m==='d'); }
@@ -846,7 +869,8 @@ function placeMarker(kind, ll){
 }
 function updateFare(){
   $('fare').textContent = (C.pick && C.dest) ? money(calcFare(dist(C.pick, C.dest))) : '—';
-  const r = isNight() ? FARE.night : FARE.day;
+  if (selectedService === 'vehicle') { $('fare').textContent = money(calcFare(0)); $('fareNote').textContent = `${t('serviceVehicle')} · ${t(isNight() ? 'nightRate' : 'dayRate')} : ${t('fixedFare')}`; return; }
+  const f = fareConfig(), r = f.range;
   $('fareNote').textContent = `${t(isNight() ? 'nightRate' : 'dayRate')} : ${r.min.toLocaleString('fr-FR')} – ${r.max.toLocaleString('fr-FR')} FCFA`;
 }
 
@@ -980,7 +1004,7 @@ $('reqBtn').onclick = async () => {
       destination: dest,
       pickup_lat: C.pick[0], pickup_lng: C.pick[1],
       destination_lat: C.dest[0], destination_lng: C.dest[1],
-      estimated_fare: fare, status: 'pending', payment_method: $('paymentMethod').value, payment_status: 'unpaid'
+      estimated_fare: fare, service_type:selectedService, status: 'pending', payment_method: $('paymentMethod').value, payment_status: 'unpaid'
     });
     if (error) return flash('custMsg', t('err') + error.message);
     flash('custMsg', t('sent'), 'ok');
@@ -999,7 +1023,7 @@ function paymentLabel(r){
   return `<div class="muted">${t('payment')}: ${method} · ${status}${r.payment_reference ? ' · '+t('reference')+': '+esc(r.payment_reference) : ''}</div>`;
 }
 function rideHtml(r, actions){
-  return `<div class="item"><div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
+  return `<div class="item"><div class="top"><b>${r.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
   <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(finalFare(r))} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${paymentLabel(r)}${actions||''}</div>`;
 }
 
@@ -1244,7 +1268,7 @@ async function loadDriver(){
   const d = me.driver;
   if (!d) { $('drvInfo').innerHTML = `<div class="msg warn">${t('drvNone')}</div>`; $('drvSwitch').classList.add('hide'); return; }
   const st = d.approval_status;
-  $('drvInfo').innerHTML = `<div>${pill(st)} <b>${esc(d.display_name)}</b></div><div class="muted">${esc(d.vehicle||'')} ${esc(d.vehicle_plate||'')}</div>
+  $('drvInfo').innerHTML = `<div>${pill(st)} <b>${esc(d.display_name)}</b></div><div class="muted">${d.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(d.vehicle||'')} ${esc(d.vehicle_plate||'')}</div>
     <div class="msg ${st==='approved'?'ok':st==='rejected'?'err':'warn'}">${t(st==='approved'?'drvApproved':st==='rejected'?'drvRejected':'drvPending')}</div>`;
   $('drvSwitch').classList.toggle('hide', st !== 'approved'); renderAvail(); manageGps();
   if (st !== 'approved') { $('drvMine').innerHTML = $('drvPending').innerHTML = `<p class="muted">${t('noReq')}</p>`; return; }
@@ -1262,7 +1286,7 @@ async function loadDriver(){
     return rideHtml(r, a);
   }).join('') || `<p class="muted">${t('noRides')}</p>`;
   // Oldest request first, so the customer who has waited longest is served first.
-  const pend = await sb.from('rides').select('*').eq('status','pending').order('created_at',{ascending:true}).limit(30);
+  const pend = await sb.from('rides').select('*').eq('status','pending').eq('service_type',d.service_type||'moto').order('created_at',{ascending:true}).limit(30);
   $('drvPending').innerHTML = d.is_available
     ? ((pend.data||[]).map(r => rideHtml(r, `<button class="btn sm" data-acc="${esc(r.id)}">${t('accept')}</button>`)).join('') || `<p class="muted">${t('noReq')}</p>`)
     : `<p class="muted">${t('goOn')}</p>`;
@@ -1305,7 +1329,7 @@ async function loadAdmin(){
     stat(drivers.filter(x=>x.is_available && x.approval_status==='approved').length,'sActive') + stat(rides.length,'sRides') +
     stat(rides.filter(x=>x.status==='completed').length,'sDone') + stat(drivers.filter(x=>x.approval_status==='pending').length,'sPend');
   $('admDrivers').innerHTML = drivers.map(x => `<div class="item"><div class="top"><b>${esc(x.display_name)}</b>${pill(x.approval_status)}</div>
-    <div class="muted">${esc(x.phone||'')} · ${esc(x.vehicle||'')} ${esc(x.vehicle_plate||'')} · ${x.is_available?t('on'):t('off')}</div>
+    <div class="muted">${esc(x.phone||'')} · ${x.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(x.vehicle||'')} ${esc(x.vehicle_plate||'')} · ${x.is_available?t('on'):t('off')}</div>
     ${x.approval_status!=='approved' ? `<button class="btn sm" data-ap="${esc(x.id)}|approved">${t('approve')}</button>` : ''}${x.approval_status!=='rejected' ? `<button class="btn red sm" data-ap="${esc(x.id)}|rejected">${t('reject')}</button>` : ''}</div>`).join('') || `<p class="muted">${t('noDrivers')}</p>`;
   $('admRides').innerHTML = rides.slice(0,40).map(x => rideHtml(x)).join('') || `<p class="muted">${t('noRides')}</p>`;
   const awaiting = rides.filter(x => PAY[x.payment_method] && x.payment_status==='awaiting_verification');
