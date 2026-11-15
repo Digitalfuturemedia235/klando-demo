@@ -277,6 +277,33 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
 #vehicleClassWrap{margin:10px 0 16px}
 @media(max-width:420px){.service-option{padding:12px;min-height:105px}}
 
+
+textarea{width:100%;min-height:84px;padding:13px 15px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--field);color:var(--ink);font:inherit;resize:vertical}
+textarea:focus{outline:none;background:#fff;border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,138,0,.16)}
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(10,10,12,.66);display:flex;align-items:flex-end;justify-content:center}
+.modal .sheet{background:#fff;width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:22px 20px 26px;max-height:94vh;overflow:auto;box-shadow:0 -12px 40px rgba(0,0,0,.35)}
+@media(min-width:600px){.modal{align-items:center}.modal .sheet{border-radius:24px}}
+.modal h3{margin:0 0 6px;font-size:20px;font-weight:800;letter-spacing:-.2px}
+.offer-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.offer-fare{font-size:34px;font-weight:900;color:var(--orange-deep);letter-spacing:-.5px;line-height:1.1}
+.offer-route{margin:12px 0;padding:12px 14px;border-radius:14px;background:var(--field);border:1px solid var(--line);font-size:15px}
+.offer-route div+div{margin-top:8px}
+.offer-route small{display:block;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.cdown{height:8px;border-radius:8px;background:var(--line);overflow:hidden;margin:6px 0 14px}
+.cdown i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--orange-2),var(--orange));transition:width .25s linear}
+.btnrow{display:flex;gap:10px}.btnrow .btn{margin:0}
+button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.stars{display:flex;gap:4px;margin:6px 0 10px}
+.stars button{font-size:36px;line-height:1;background:none;border:0;padding:2px 4px;cursor:pointer;filter:grayscale(1);opacity:.35}
+.stars button.on{filter:none;opacity:1}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#eee;color:#555}
+.badge.top{background:#fff0bf;color:#7a5200}.badge.trusted{background:#dcf5e5;color:#13633a}.badge.watch{background:var(--err-bg);color:var(--err)}
+.kv{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.kv span{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:8px 11px;font-size:13px}
+.kv b{display:block;font-size:17px}
+.pin{display:inline-block;letter-spacing:6px;font-size:26px;font-weight:900;background:var(--orange-soft);border:1px dashed var(--orange);border-radius:12px;padding:6px 14px;margin:6px 0}
+.sub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.sub-actions a.btn,.sub-actions button.btn{width:auto;margin:0;min-height:40px;padding:8px 14px;font-size:13px;text-decoration:none}
 </style>
 </head>
 <body>
@@ -347,6 +374,11 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
         <form id="fReg" class="hide">
           <label for="rRole" data-i18n="iam"></label>
           <select id="rRole"><option value="customer" data-i18n="customer"></option><option value="driver" data-i18n="driver"></option></select>
+          <div id="custFields">
+            <label for="rAcct" data-i18n="acctLabel"></label>
+            <select id="rAcct"></select>
+            <div id="bizFields" class="hide"><label for="rBiz" data-i18n="bizName"></label><input id="rBiz" autocomplete="organization"></div>
+          </div>
           <label for="rName" data-i18n="fullname"></label><input id="rName" required autocomplete="name">
           <label for="rPhone" data-i18n="phone"></label><input id="rPhone" type="tel" required autocomplete="tel" placeholder="+235 ...">
           <label for="rEmail" data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
@@ -398,12 +430,17 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
       <div class="sw"><h2 data-i18n="liveTitle" style="margin:0"></h2><span id="livePill"></span></div>
       <div id="liveSteps" class="steps"></div>
       <div id="liveInfo"></div>
+      <div id="liveExtra"></div>
       <div id="mapLive" class="map"></div>
       <div id="livePay"></div>
       <div id="liveMsg"></div>
     </div>
     <div class="card">
-      <h2 data-i18n="requestRide"></h2>
+      <h2 id="reqTitle" data-i18n="requestRide"></h2>
+      <div class="tabs" id="kindTabs">
+        <button type="button" class="on" data-kind="ride" data-i18n="kindRide"></button>
+        <button type="button" data-kind="delivery" data-i18n="kindDelivery"></button>
+      </div>
       <div class="service-choice" aria-label="Type de transport">
         <button type="button" class="service-option on" data-service="moto" aria-pressed="true"><span class="service-icon">🏍️</span><b data-i18n="serviceMoto">Moto</b><small data-i18n="serviceMotoSub">Rapide et économique</small></button>
         <button type="button" class="service-option" data-service="vehicle" aria-pressed="false"><span class="service-icon">🚗</span><b data-i18n="serviceVehicle">Véhicule</b><small data-i18n="serviceVehicleSub">Confort en voiture</small></button>
@@ -418,6 +455,14 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
       <label for="cDest" data-i18n="destination"></label>
       <div class="row"><input id="cDest" data-i18n-ph="destPh" style="flex:3"><button id="searchBtn" class="btn alt" type="button" style="flex:1;margin-top:0" data-i18n="search"></button></div>
       <p class="muted" data-i18n="mapHint"></p>
+      <div id="delivFields" class="hide">
+        <label for="dItem" data-i18n="itemType"></label><select id="dItem"></select>
+        <label for="dSize" data-i18n="pkgSize"></label><select id="dSize"></select>
+        <p id="sizeNote" class="muted hide" data-i18n="sizeNote"></p>
+        <label for="dRName" data-i18n="recName"></label><input id="dRName" autocomplete="off">
+        <label for="dRPhone" data-i18n="recPhone"></label><input id="dRPhone" type="tel" placeholder="+235 ...">
+        <label for="dNotes" data-i18n="delivNotes"></label><input id="dNotes" maxlength="200">
+      </div>
       <div class="farebox">
         <div class="sw"><span data-i18n="estFare"></span><span id="fare" class="fare">—</span></div>
         <div id="fareNote" class="muted" style="text-align:right"></div>
@@ -431,10 +476,17 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
       <p id="moovNote" class="muted" style="margin:8px 2px 0" data-i18n="moovUnavailable"></p>
       <select id="paymentMethod" class="sr" tabindex="-1" aria-hidden="true"><option value="cash" data-i18n="cash"></option><option value="airtel_money">Airtel Money</option><option value="moov_money">Moov Money</option></select>
       <div id="airtelInstructions" class="msg warn hide"></div>
-      <button id="reqBtn" class="btn" type="button"><svg class="ic"><use href="#i-moto"/></svg><span data-i18n="requestBtn"></span></button>
+      <button id="reqBtn" class="btn" type="button"><svg class="ic"><use href="#i-moto"/></svg><span id="reqBtnTxt" data-i18n="requestBtn"></span></button>
       <div id="custMsg"></div>
     </div>
     <div class="card"><h2 data-i18n="myRides"></h2><div id="custRides"></div></div>
+    <div class="card" id="acctCard">
+      <h2 data-i18n="myAccount"></h2>
+      <label for="acctType" data-i18n="acctLabel"></label><select id="acctType"></select>
+      <div id="acctBizWrap" class="hide"><label for="acctBiz" data-i18n="bizName"></label><input id="acctBiz"></div>
+      <button id="acctSave" class="btn alt sm" type="button" data-i18n="save"></button>
+      <div id="acctMsg"></div>
+    </div>
   </section>
 
   <section id="vDrv" class="hide">
@@ -443,6 +495,7 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
       <div id="drvSwitch" class="sw hide" style="margin-top:12px"><span data-i18n="available"></span><button id="availBtn" class="btn sm" type="button" style="margin:0"></button></div>
       <div id="drvMsg"></div>
     </div>
+    <div class="card" id="drvStatsCard"><h2 data-i18n="myPerf"></h2><div id="drvStats"></div></div>
     <div class="card"><h2 data-i18n="activeRides"></h2><div id="drvMine"></div></div>
     <div class="card"><h2 data-i18n="availableRequests"></h2><div id="drvPending"></div></div>
   </section>
@@ -451,11 +504,76 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
     <div class="card"><h2 data-i18n="overview"></h2><div id="admStats" class="stats"></div></div>
     <div class="card"><h2 data-i18n="driversMap"></h2><div id="mapA" class="map"></div></div>
     <div class="card"><h2 data-i18n="drivers"></h2><div id="admDrivers"></div></div>
+    <div class="card"><h2 data-i18n="complaints"></h2><div id="admComplaints"></div></div>
     <div class="card"><h2 data-i18n="allRides"></h2><div id="admRides"></div></div>
     <div class="card"><h2 data-i18n="adminPayments"></h2><div id="admPayments"></div></div>
     <div id="admMsg"></div>
   </section>
 </main>
+
+<div id="offerModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="offerTitle">
+  <div class="sheet">
+    <div class="offer-top"><h3 id="offerTitle" data-i18n="newRequest"></h3><span id="offerKind" class="pill pending"></span></div>
+    <div class="cdown"><i id="offerBar"></i></div>
+    <div class="offer-fare" id="offerFare"></div>
+    <div class="muted" id="offerSub"></div>
+    <div class="offer-route">
+      <div><small data-i18n="pickup"></small><span id="offerPick"></span></div>
+      <div><small data-i18n="destination"></small><span id="offerDest"></span></div>
+    </div>
+    <div id="offerMsg"></div>
+    <div class="btnrow">
+      <button id="offerDecline" class="btn ghost2" type="button" data-i18n="decline"></button>
+      <button id="offerAccept" class="btn" type="button" data-i18n="accept"></button>
+    </div>
+  </div>
+</div>
+
+<div id="cancelModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="cancelTitle">
+  <div class="sheet">
+    <h3 id="cancelTitle" data-i18n="cancelTitle"></h3>
+    <p class="muted" id="cancelHelp"></p>
+    <label for="cancelReason" data-i18n="cancelReason"></label>
+    <select id="cancelReason"></select>
+    <label for="cancelNote" data-i18n="cancelNote"></label>
+    <textarea id="cancelNote" maxlength="300"></textarea>
+    <div id="cancelMsg"></div>
+    <div class="btnrow">
+      <button id="cancelClose" class="btn ghost2" type="button" data-i18n="back"></button>
+      <button id="cancelConfirm" class="btn red" type="button" data-i18n="confirmCancel"></button>
+    </div>
+  </div>
+</div>
+
+<div id="rateModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
+  <div class="sheet">
+    <h3 id="rateTitle" data-i18n="rateTitle"></h3>
+    <p class="muted" data-i18n="rateHelp"></p>
+    <div id="rateStars" class="stars" role="radiogroup" aria-label="Note"></div>
+    <label for="rateComment" data-i18n="rateComment"></label>
+    <textarea id="rateComment" maxlength="600"></textarea>
+    <label style="display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:700"><input id="rateComplaint" type="checkbox" style="width:22px;min-height:22px;margin:0"><span data-i18n="reportProblem"></span></label>
+    <div id="rateCatWrap" class="hide"><label for="rateCat" data-i18n="complaintType"></label><select id="rateCat"></select></div>
+    <div id="rateMsg"></div>
+    <div class="btnrow">
+      <button id="rateClose" class="btn ghost2" type="button" data-i18n="later"></button>
+      <button id="rateSend" class="btn" type="button" data-i18n="send"></button>
+    </div>
+  </div>
+</div>
+
+<div id="pinModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="pinTitle">
+  <div class="sheet">
+    <h3 id="pinTitle" data-i18n="pinTitle"></h3>
+    <p class="muted" data-i18n="pinHelp"></p>
+    <input id="pinInput" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••" style="font-size:28px;letter-spacing:8px;text-align:center">
+    <div id="pinMsg"></div>
+    <div class="btnrow">
+      <button id="pinClose" class="btn ghost2" type="button" data-i18n="back"></button>
+      <button id="pinConfirm" class="btn" type="button" data-i18n="confirmDelivery"></button>
+    </div>
+  </div>
+</div>
 
 <footer class="footer">
   <div class="brand-row"><span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="#0e0e10"><path transform="translate(11.34 38.0) scale(0.04 -0.04)" d="M390 241Q390 283 377.0 302.0Q364 321 341.5 325.5Q319 330 292 329L266 328V164Q266 137 265.0 113.0Q264 89 262 76H396Q426 76 454.0 89.5Q482 103 500.0 134.5Q518 166 518 220H583L578 0H50V66Q73 67 88.5 72.0Q104 77 112.5 95.0Q121 113 121 153V536Q121 563 122.5 588.0Q124 613 125 626Q109 625 85.0 624.5Q61 624 50 623V700H550L556 506H490Q490 561 471.0 589.0Q452 617 424.0 626.5Q396 636 369 635L333 634Q312 634 297.0 628.5Q282 623 274.0 604.5Q266 586 266 547V397H383L379 484H456V241Z"/></svg></span><span>E&amp;Bz <span class="brand-accent">Mobility</span></span></div>
@@ -525,6 +643,8 @@ const PAY = {
 /* Social links shown in the footer. Leave a value empty to hide it. Use full https:// addresses;
    whatsapp takes a phone number with country code, digits only (e.g. '23565289222'). */
 const SOCIAL = { facebook:'', instagram:'', tiktok:'', x:'', youtube:'', whatsapp:'' };
+/* Support: full WhatsApp number with country code, digits only (e.g. '23565289222'). Leave empty to hide the help button. */
+const SUPPORT = { whatsapp:'' };
 const SOCIAL_LABEL = { facebook:'Facebook', instagram:'Instagram', tiktok:'TikTok', x:'X', youtube:'YouTube', whatsapp:'WhatsApp' };
 function renderSocial(){
   const box = $('social'); if (!box) return;
@@ -673,6 +793,68 @@ en:{
   initiative:'An E&Bz Afrika initiative', copyright:'© 2026 E&Bz Mobility · N’Djamena, Republic of Chad'
 }
 };
+Object.assign(I18N.fr, {
+  requestRide:'Demander une course', requestDeliv:'Demander une livraison', requestBtnD:'Demander une livraison →',
+  kindRide:'🏍️ Course', kindDelivery:'📦 Livraison', pickupD:'Adresse de collecte', destinationD:'Adresse de livraison',
+  acctLabel:'Je suis', bizName:'Nom de l’établissement', myAccount:'Mon compte', save:'Enregistrer', saved:'Enregistré.',
+  acct_rider:'Particulier (je me déplace)', acct_restaurant:'Restaurant / traiteur', acct_shop:'Commerce / boutique', acct_business:'Entreprise (envoi de colis)', acct_other:'Autre',
+  itemType:'Que livrer ?', item_food:'🍲 Repas / nourriture', item_parcel:'📦 Colis', item_documents:'📄 Documents', item_groceries:'🛒 Courses / marchandises', item_other:'Autre',
+  pkgSize:'Taille', size_small:'Petit (sac, boîte repas)', size_medium:'Moyen (carton)', size_large:'Grand / lourd', sizeNote:'Pour un grand colis, choisissez « Véhicule ».',
+  recName:'Nom du destinataire', recPhone:'Téléphone du destinataire', delivNotes:'Instructions (étage, repère…)', needRecipient:'Indiquez le nom et le téléphone du destinataire.',
+  newRequest:'Nouvelle demande', decline:'Refuser', back:'Retour', later:'Plus tard', send:'Envoyer',
+  offerKmAway:'{km} km de vous', offerExpired:'Cette demande n’est plus disponible.',
+  waitingOffers:'Vous êtes en ligne. Gardez cet écran ouvert : les demandes proches de vous s’afficheront ici.', busyHint:'Course en cours. Terminez-la pour recevoir de nouvelles demandes.',
+  cancelTitle:'Annuler la course', cancelHelpC:'Dites-nous pourquoi, cela nous aide à améliorer le service.', cancelHelpD:'Les annulations fréquentes réduisent votre priorité sur les demandes.',
+  cancelReason:'Motif d’annulation', cancelNote:'Précisions (facultatif)', confirmCancel:'Confirmer l’annulation', cancelChoose:'Choisissez un motif.', cancelDone:'Course annulée.', cancelRequeued:'Course annulée. Elle est proposée à d’autres conducteurs.', cancelShown:'Motif',
+  cr_changed_mind:'J’ai changé d’avis', cr_wait_too_long:'L’attente est trop longue', cr_wrong_address:'Mauvaise adresse saisie', cr_other_transport:'J’ai trouvé un autre transport', cr_price:'Le prix est trop élevé', cr_driver_asked:'Le conducteur m’a demandé d’annuler', cr_other:'Autre motif',
+  dr_customer_no_show:'Client absent ou injoignable', dr_customer_asked:'Le client a demandé d’annuler', dr_wrong_address:'Adresse incorrecte ou introuvable', dr_too_far:'Client trop loin', dr_vehicle_issue:'Panne ou problème du véhicule', dr_unsafe:'Situation dangereuse', dr_other:'Autre motif',
+  rateTitle:'Notez votre conducteur', rateHelp:'Votre avis aide à récompenser les meilleurs conducteurs.', rateComment:'Commentaire (facultatif)', reportProblem:'Signaler un problème avec cette course', complaintType:'Type de problème',
+  cc_rude:'Comportement impoli ou irrespectueux', cc_unsafe_driving:'Conduite dangereuse', cc_overcharged:'Prix demandé trop élevé', cc_late:'Retard important ou absence', cc_vehicle:'État du véhicule', cc_item:'Colis abîmé ou manquant', cc_other:'Autre problème',
+  rateBtn:'⭐ Noter le conducteur', rateThanks:'Merci pour votre avis !', rateComplaintSent:'Merci. Votre signalement a été transmis à E&Bz Mobility.',
+  myPerf:'Ma performance', badge_top:'⭐ Top conducteur', badge_trusted:'✅ Fiable', badge_new:'🆕 Nouveau', badge_watch:'⚠️ À améliorer',
+  statRating:'Note', statDone:'Courses', statCancel:'Annulations', statAccept:'Acceptation', todayRides:'Courses aujourd’hui', todayGross:'Encaissé', todayComm:'Commission E&Bz', todayNet:'Votre gain net',
+  perfTip:'Restez fiable : peu d’annulations et de bonnes notes vous donnent les demandes en priorité. Les meilleurs conducteurs reçoivent le badge ⭐ Top.',
+  ratingLine:'{avg}/5 ({n} avis)', ratingNone:'Pas encore de note',
+  iPickedUp:'📦 Colis récupéré', iDelivered:'✅ Livré (code)', pinTitle:'Code de remise', pinHelp:'Demandez au destinataire le code à 4 chiffres, puis saisissez-le.', confirmDelivery:'Confirmer la livraison', pinNeed:'Saisissez le code à 4 chiffres.',
+  delivCode:'Code de remise', delivCodeHelp:'Donnez ce code au destinataire. Il le communique au conducteur à la livraison.', sendCodeWa:'Envoyer le code au destinataire', shareTrip:'Partager mon trajet', helpBtn:'Besoin d’aide ?',
+  recipientL:'Destinataire', notesL:'Instructions', stRideD:'Livraison',
+  liveSearching:'Recherche du conducteur le plus proche…', liveOffering:'Nous contactons le conducteur le plus proche…', liveNoDriver:'Aucun conducteur disponible pour le moment. Nous continuons la recherche.',
+  nRequeueT:'Votre conducteur a annulé', nRequeueB:'Nous cherchons un autre conducteur pour vous.',
+  complaints:'Plaintes et signalements', noComplaints:'Aucune plainte.', resolve:'Marquer comme traitée', resolveNote:'Note interne (facultatif)', scoreLine:'Note {avg} · {done} courses · annulations {cr}% · acceptation {ar}%',
+  shareText:'Je suis en route avec E&Bz Mobility. Conducteur : {name}, {vehicle} {plate}. Destination : {dest}.',
+  codeText:'Votre livraison E&Bz Mobility arrive. Code de remise : {pin}. Donnez ce code au livreur.'
+});
+Object.assign(I18N.en, {
+  requestRide:'Request a ride', requestDeliv:'Request a delivery', requestBtnD:'Request a delivery →',
+  kindRide:'🏍️ Ride', kindDelivery:'📦 Delivery', pickupD:'Pickup address', destinationD:'Delivery address',
+  acctLabel:'I am', bizName:'Business name', myAccount:'My account', save:'Save', saved:'Saved.',
+  acct_rider:'Individual (I travel)', acct_restaurant:'Restaurant / caterer', acct_shop:'Shop / store', acct_business:'Business (shipping parcels)', acct_other:'Other',
+  itemType:'What to deliver?', item_food:'🍲 Meal / food', item_parcel:'📦 Parcel', item_documents:'📄 Documents', item_groceries:'🛒 Groceries / goods', item_other:'Other',
+  pkgSize:'Size', size_small:'Small (bag, meal box)', size_medium:'Medium (carton)', size_large:'Large / heavy', sizeNote:'For a large parcel, choose “Car”.',
+  recName:'Recipient name', recPhone:'Recipient phone', delivNotes:'Instructions (floor, landmark…)', needRecipient:'Enter the recipient’s name and phone.',
+  newRequest:'New request', decline:'Decline', back:'Back', later:'Later', send:'Send',
+  offerKmAway:'{km} km from you', offerExpired:'This request is no longer available.',
+  waitingOffers:'You are online. Keep this screen open: requests near you will appear here.', busyHint:'Ride in progress. Finish it to receive new requests.',
+  cancelTitle:'Cancel the ride', cancelHelpC:'Tell us why. It helps us improve the service.', cancelHelpD:'Frequent cancellations lower your priority for new requests.',
+  cancelReason:'Cancellation reason', cancelNote:'Details (optional)', confirmCancel:'Confirm cancellation', cancelChoose:'Please choose a reason.', cancelDone:'Ride cancelled.', cancelRequeued:'Ride cancelled. It is being offered to other drivers.', cancelShown:'Reason',
+  cr_changed_mind:'I changed my mind', cr_wait_too_long:'The wait is too long', cr_wrong_address:'Wrong address entered', cr_other_transport:'I found other transport', cr_price:'The price is too high', cr_driver_asked:'The driver asked me to cancel', cr_other:'Other reason',
+  dr_customer_no_show:'Customer absent or unreachable', dr_customer_asked:'Customer asked to cancel', dr_wrong_address:'Wrong or unfindable address', dr_too_far:'Customer too far', dr_vehicle_issue:'Breakdown or vehicle problem', dr_unsafe:'Unsafe situation', dr_other:'Other reason',
+  rateTitle:'Rate your driver', rateHelp:'Your feedback helps reward the best drivers.', rateComment:'Comment (optional)', reportProblem:'Report a problem with this ride', complaintType:'Type of problem',
+  cc_rude:'Rude or disrespectful behaviour', cc_unsafe_driving:'Unsafe driving', cc_overcharged:'Asked for a higher price', cc_late:'Major delay or no-show', cc_vehicle:'Vehicle condition', cc_item:'Damaged or missing item', cc_other:'Other problem',
+  rateBtn:'⭐ Rate the driver', rateThanks:'Thank you for your feedback!', rateComplaintSent:'Thank you. Your report was sent to E&Bz Mobility.',
+  myPerf:'My performance', badge_top:'⭐ Top driver', badge_trusted:'✅ Trusted', badge_new:'🆕 New', badge_watch:'⚠️ Needs improvement',
+  statRating:'Rating', statDone:'Rides', statCancel:'Cancellations', statAccept:'Acceptance', todayRides:'Rides today', todayGross:'Collected', todayComm:'E&Bz commission', todayNet:'Your net earnings',
+  perfTip:'Stay reliable: few cancellations and good ratings give you requests first. The best drivers earn the ⭐ Top badge.',
+  ratingLine:'{avg}/5 ({n} reviews)', ratingNone:'No rating yet',
+  iPickedUp:'📦 Parcel picked up', iDelivered:'✅ Delivered (code)', pinTitle:'Delivery code', pinHelp:'Ask the recipient for the 4-digit code, then enter it.', confirmDelivery:'Confirm delivery', pinNeed:'Enter the 4-digit code.',
+  delivCode:'Delivery code', delivCodeHelp:'Give this code to the recipient. They tell it to the driver on delivery.', sendCodeWa:'Send the code to the recipient', shareTrip:'Share my trip', helpBtn:'Need help?',
+  recipientL:'Recipient', notesL:'Instructions', stRideD:'Delivery',
+  liveSearching:'Looking for the nearest driver…', liveOffering:'We are contacting the nearest driver…', liveNoDriver:'No driver available right now. We keep searching.',
+  nRequeueT:'Your driver cancelled', nRequeueB:'We are finding another driver for you.',
+  complaints:'Complaints and reports', noComplaints:'No complaints.', resolve:'Mark as handled', resolveNote:'Internal note (optional)', scoreLine:'Rating {avg} · {done} rides · cancellations {cr}% · acceptance {ar}%',
+  shareText:'I am on my way with E&Bz Mobility. Driver: {name}, {vehicle} {plate}. Destination: {dest}.',
+  codeText:'Your E&Bz Mobility delivery is on its way. Delivery code: {pin}. Give this code to the courier.'
+});
 let lang = (()=>{try{return localStorage.getItem('klando_lang')||'fr'}catch(e){return 'fr'}})();
 if (!I18N[lang]) lang = 'fr';
 const t = k => (I18N[lang][k] ?? I18N.fr[k] ?? k);
@@ -691,6 +873,7 @@ const maps = {};
 
 function applyLang(){
   document.documentElement.lang = lang;
+  buildLists();
   document.querySelectorAll('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll('[data-i18n-html]').forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
@@ -761,7 +944,8 @@ const calcFare = km => {
 /* ============ AUTH ============ */
 $('tabLogin').onclick = () => { $('tabLogin').classList.add('on'); $('tabReg').classList.remove('on'); $('fLogin').classList.remove('hide'); $('fReg').classList.add('hide'); flash('authMsg',''); };
 $('tabReg').onclick = () => { $('tabReg').classList.add('on'); $('tabLogin').classList.remove('on'); $('fReg').classList.remove('hide'); $('fLogin').classList.add('hide'); flash('authMsg',''); };
-$('rRole').onchange = () => $('drvFields').classList.toggle('hide', $('rRole').value !== 'driver');
+$('rRole').onchange = () => { const d = $('rRole').value === 'driver'; $('drvFields').classList.toggle('hide', !d); $('custFields').classList.toggle('hide', d); };
+$('rAcct').onchange = () => $('bizFields').classList.toggle('hide', $('rAcct').value === 'rider');
 $('rServiceType').addEventListener('change', () => { const car=$('rServiceType').value==='vehicle'; $('rVeh').placeholder=car?'Toyota Corolla, Hyundai…':'Honda, Yamaha…'; });
 $('langBtn').onclick = () => { lang = lang === 'fr' ? 'en' : 'fr'; try{localStorage.setItem('klando_lang',lang)}catch(e){} applyLang(); };
 /* "Book a ride" buttons scroll to the sign-in card; the driver banner opens the sign-up form as a driver. */
@@ -790,6 +974,7 @@ $('fReg').onsubmit = async e => {
     const wantDriver = $('rRole').value === 'driver';
     if (wantDriver && (!$('rVeh').value.trim() || !$('rPlate').value.trim())) return flash('authMsg', lang==='fr'?'Veuillez renseigner le véhicule et sa plaque.':'Please enter the vehicle and its plate number.');
     const meta = { display_name:$('rName').value.trim(), phone:$('rPhone').value.trim(), want_driver:wantDriver };
+    if (!wantDriver) { meta.account_type = $('rAcct').value; meta.business_name = $('rBiz').value.trim(); }
     if (wantDriver) { meta.vehicle = $('rVeh').value.trim(); meta.vehicle_plate = $('rPlate').value.trim(); meta.service_type = $('rServiceType').value; }
     const { data, error } = await sb.auth.signUp({ email:$('rEmail').value.trim(), password:$('rPass').value, options:{ data: meta } });
     if (error) return flash('authMsg', t('err') + error.message);
@@ -825,11 +1010,12 @@ async function start(){
   me.role = pRole === 'admin' ? 'admin' : (me.driver || pRole === 'driver') ? 'driver' : 'customer';
   if (me.role === 'admin') { show('vAdm'); mkMap('mapA'); }
   else if (me.role === 'driver') show('vDrv');
-  else { show('vCust'); initCustomer(); }
+  else { show('vCust'); initCustomer(); loadAccount(); }
   applyLang();
   scheduleRefresh();
 }
 function stopAll(){
+  clearTimeout(pollTimer); pollTimer = null; hideOffer();
   clearTimeout(timer); clearInterval(gpsPushTimer);
   if (gpsWatch != null && navigator.geolocation) navigator.geolocation.clearWatch(gpsWatch);
   gpsWatch = null; gpsPushTimer = null; timer = null;
@@ -868,6 +1054,7 @@ function placeMarker(kind, ll){
   updateFare();
 }
 function updateFare(){
+  try { updateSizeNote(); } catch(e){}
   $('fare').textContent = (C.pick && C.dest) ? money(calcFare(dist(C.pick, C.dest))) : '—';
   if (selectedService === 'vehicle') { $('fare').textContent = money(calcFare(0)); $('fareNote').textContent = `${t('serviceVehicle')} · ${t(isNight() ? 'nightRate' : 'dayRate')} : ${t('fixedFare')}`; return; }
   const f = fareConfig(), r = f.range;
@@ -988,6 +1175,7 @@ $('reqBtn').onclick = async () => {
   if (!C.pick) return flash('custMsg', t('needPick'));
   const dest = $('cDest').value.trim();
   if (!dest) return flash('custMsg', t('needDest'));
+  if (kind === 'delivery' && (!$('dRName').value.trim() || !$('dRPhone').value.trim())) return flash('custMsg', t('needRecipient'), 'warn');
   requestNotifPermission();
   const btn = $('reqBtn'); busy(btn, true);
   try {
@@ -1004,11 +1192,11 @@ $('reqBtn').onclick = async () => {
       destination: dest,
       pickup_lat: C.pick[0], pickup_lng: C.pick[1],
       destination_lat: C.dest[0], destination_lng: C.dest[1],
-      estimated_fare: fare, service_type:selectedService, status: 'pending', payment_method: $('paymentMethod').value, payment_status: 'unpaid'
+      estimated_fare: fare, service_type:selectedService, ...deliveryPayload(), status: 'pending', payment_method: $('paymentMethod').value, payment_status: 'unpaid'
     });
     if (error) return flash('custMsg', t('err') + error.message);
     flash('custMsg', t('sent'), 'ok');
-    $('cDest').value = '';
+    $('cDest').value = ''; ['dRName','dRPhone','dNotes'].forEach(i => { $(i).value = ''; });
     $('paymentMethod').value = 'cash'; syncPay();
     if (C.mk.d && maps.mapC) { maps.mapC.removeLayer(C.mk.d); C.mk.d = null; }
     C.dest = null; C.destQuery = '';
@@ -1023,17 +1211,20 @@ function paymentLabel(r){
   return `<div class="muted">${t('payment')}: ${method} · ${status}${r.payment_reference ? ' · '+t('reference')+': '+esc(r.payment_reference) : ''}</div>`;
 }
 function rideHtml(r, actions){
-  return `<div class="item"><div class="top"><b>${r.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
-  <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(finalFare(r))} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${paymentLabel(r)}${actions||''}</div>`;
+  return `<div class="item"><div class="top"><b>${r.kind==='delivery'?'📦 ':''}${r.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
+  <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(finalFare(r))} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${paymentLabel(r)}${extraLines(r)}${actions||''}</div>`;
 }
 
 async function loadCustomer(){
   const { data, error } = await sb.from('rides').select('*').eq('customer_id', me.user.id).order('created_at',{ascending:false}).limit(20);
   if (error) return flash('custMsg', t('err') + error.message);
+  if ((data||[]).some(r => r.status === 'pending')) sb.rpc('ebz_dispatch_tick').then(() => {}, () => {});
+  await loadReviewed(data || []);
   await updateLive(data||[]);
   keepInputs($('custRides'), () => {
     $('custRides').innerHTML = (data||[]).map(r => {
-      let actions = r.status==='pending' ? `<button class="btn red sm" data-cancel="${esc(r.id)}">${t('cancel')}</button>` : '';
+      let actions = ['pending','accepted'].includes(r.status) ? `<button class="btn red sm" data-cancel-open="${esc(r.id)}|customer">${t('cancel')}</button>` : '';
+      if (r.status === 'completed' && REVIEW_READY && !REVIEWED.has(String(r.id))) actions += `<button class="btn alt sm" data-rate="${esc(r.id)}">${t('rateBtn')}</button>`;
       if (PAY[r.payment_method] && ['unpaid','failed'].includes(r.payment_status) && r.status !== 'cancelled' && r.id !== liveRideId) {
         actions += `<div class="msg warn">${transferText(r)}</div><label for="ref-${esc(r.id)}">${t('referenceLabel')}</label><input id="ref-${esc(r.id)}" maxlength="100" placeholder="${esc(t('referencePlaceholder'))}"><button class="btn alt sm" data-submit-payment="${esc(r.id)}">${t('sendReference')}</button>`;
       }
@@ -1047,11 +1238,6 @@ async function loadCustomer(){
     const { error } = await submitPayment(id, ref);
     if (error) { b.disabled=false; flash('custMsg',t('err')+error.message); }
     else { flash('custMsg',t('referenceSent'),'ok'); loadCustomer(); }
-  });
-  document.querySelectorAll('[data-cancel]').forEach(b => b.onclick = async () => {
-    b.disabled = true;
-    const { error } = await sb.from('rides').update({ status:'cancelled' }).eq('id', b.dataset.cancel).eq('status','pending');
-    if (error) { b.disabled = false; flash('custMsg', t('err') + error.message); } else loadCustomer();
   });
 }
 
@@ -1126,7 +1312,8 @@ function checkEvents(r){
   const prev = seen[r.id], cur = { status:r.status, arrived:!!r.arrived_at, pay:r.payment_status };
   if (prev) {
     if (prev.status !== cur.status) {
-      if (cur.status === 'accepted') notify(t('nAcceptedT'), t('nAcceptedB'));
+      if (prev.status === 'accepted' && cur.status === 'pending') notify(t('nRequeueT'), t('nRequeueB'), 'warn');
+      else if (cur.status === 'accepted') notify(t('nAcceptedT'), t('nAcceptedB'));
       else if (cur.status === 'ongoing') notify(t('nOngoingT'), t('nOngoingB'));
       else if (cur.status === 'completed') notify(t('nDoneT'), t('nDoneB').replace('{amount}', money(finalFare(r))).replace('{method}', payLabel(r.payment_method)), 'ok');
       else if (cur.status === 'cancelled') notify(t('nCancelT'), t('nCancelB'), 'warn');
@@ -1144,6 +1331,10 @@ async function updateLive(rides){
     let driver = null;
     if (live && ['accepted','ongoing','completed'].includes(live.status)) {
       driver = await fetchDriver(live);
+      if (driver && live.driver_id) {
+        const ri = await sb.rpc('ebz_ride_driver_info', { p_ride_id: String(live.id) });
+        if (!ri.error && ri.data) driver = Object.assign({}, driver, { _info: ri.data });
+      }
       // Automatic arrival alert when the driver is within 100 m of the pickup point.
       if (driver && live.status === 'accepted' && !live.arrived_at && !geoArrived[live.id]
           && hasPos(driver.latitude, driver.longitude) && hasPos(live.pickup_lat, live.pickup_lng)
@@ -1190,13 +1381,13 @@ function renderLive(r, d){
   card.classList.remove('hide');
   const arrived = !!r.arrived_at || !!geoArrived[r.id];
   const idx = r.status === 'pending' ? 0 : r.status === 'accepted' ? (arrived ? 2 : 1) : r.status === 'ongoing' ? 3 : 4;
-  $('liveSteps').innerHTML = ['stReq','stRoute','stArrived','stRide','stDone'].map((k,i) =>
+  $('liveSteps').innerHTML = ['stReq','stRoute','stArrived', r.kind === 'delivery' ? 'stRideD' : 'stRide','stDone'].map((k,i) =>
     `<div class="step ${i < idx ? 'done' : i === idx ? 'cur' : ''}"><i>${i < idx ? ic('check') : i + 1}</i><span>${t(k)}</span></div>`).join('');
   $('livePill').innerHTML = pill(r.status);
 
   const dpos = d && hasPos(d.latitude, d.longitude) && r.status !== 'completed' ? ll(d.latitude, d.longitude) : null;
   let line;
-  if (r.status === 'pending') line = t('liveWaiting');
+  if (r.status === 'pending') line = t(r.dispatch_state === 'no_driver' ? 'liveNoDriver' : r.dispatch_state === 'offering' ? 'liveOffering' : r.dispatch_state === 'searching' ? 'liveSearching' : 'liveWaiting');
   else if (r.status === 'accepted') {
     if (arrived) line = t('liveArrived');
     else if (dpos && hasPos(r.pickup_lat, r.pickup_lng)) { const km = dist(dpos, ll(r.pickup_lat, r.pickup_lng)); line = t('liveComing').replace('{min}', eta(km)).replace('{km}', km.toFixed(1)); }
@@ -1211,9 +1402,11 @@ function renderLive(r, d){
     const tel = String(d.phone || '').replace(/[^0-9+]/g, '');
     who = `<div class="drv"><span class="av">${esc(String(d.display_name).trim().charAt(0).toUpperCase())}</span><div><b>${esc(d.display_name)}</b><div class="muted">${esc(d.vehicle || '')} ${esc(d.vehicle_plate || '')}</div></div></div>` + (tel ? `<a class="call" href="tel:${esc(tel)}">${ic('call')}${t('call')}</a>` : '');
   }
+  if (who && d && d._info) who += `<div class="muted" style="margin:2px 0 6px">${ratingLine(d._info)}</div>`;
   $('liveInfo').innerHTML = `<div class="live-line">${esc(line)}</div>${who}
     <div class="sw" style="margin-top:8px"><span>${t(r.status === 'completed' ? 'finalFare' : 'liveFare')}</span><span class="fare">${money(finalFare(r))}</span></div>`;
 
+  renderLiveExtra(r, d);
   const m = mkMap('mapLive');
   if (m) { if (wasHidden) setTimeout(() => m.invalidateSize(), 200); updateLiveMap(m, r, dpos); }
 
@@ -1242,7 +1435,7 @@ $('availBtn').onclick = async () => {
     const next = !me.driver.is_available;
     const { error } = await sb.rpc('set_klando_driver_availability', { p_available: next });
     if (error) return flash('drvMsg', t('err') + error.message);
-    me.driver.is_available = next; renderAvail(); manageGps(); loadDriver();
+    me.driver.is_available = next; renderAvail(); manageGps(); managePoll(); loadDriver();
   } finally { busy(btn, false); }
 };
 function manageGps(){
@@ -1277,19 +1470,27 @@ async function loadDriver(){
   manageGps();
   $('drvMine').innerHTML = (mine.data||[]).map(r => {
     let a = '';
+    const isD = r.kind === 'delivery';
+    if (isD && ['accepted','ongoing'].includes(r.status)) a += deliveryInfo(r);
     if (r.status==='accepted') {
       if (!r.arrived_at) a += `<button class="btn alt sm" data-arrived="${esc(r.id)}">${ic('pin')}${t('iArrived')}</button>`;
-      a += `<button class="btn sm" data-adv="${esc(r.id)}|ongoing">${t('start')}</button>`;
+      a += isD ? `<button class="btn sm" data-pickup="${esc(r.id)}">${t('iPickedUp')}</button>` : `<button class="btn sm" data-adv="${esc(r.id)}|ongoing">${t('start')}</button>`;
+      if (!dispatchMissing) a += `<button class="btn red sm" data-cancel-open="${esc(r.id)}|driver">${t('cancel')}</button>`;
     }
-    if (r.status==='ongoing') a = `<button class="btn sm" data-adv="${esc(r.id)}|completed">${t('finish')}</button>`;
+    if (r.status==='ongoing') a += isD ? `<button class="btn sm" data-deliver="${esc(r.id)}">${t('iDelivered')}</button>` : `<button class="btn sm" data-adv="${esc(r.id)}|completed">${t('finish')}</button>`;
     if (r.status==='completed' && !PAY[r.payment_method] && r.payment_status !== 'paid') a = `<button class="btn sm" data-cash="${esc(r.id)}">${ic('cash')}${t('iCash')}</button>`;
     return rideHtml(r, a);
   }).join('') || `<p class="muted">${t('noRides')}</p>`;
   // Oldest request first, so the customer who has waited longest is served first.
-  const pend = await sb.from('rides').select('*').eq('status','pending').eq('service_type',d.service_type||'moto').order('created_at',{ascending:true}).limit(30);
-  $('drvPending').innerHTML = d.is_available
-    ? ((pend.data||[]).map(r => rideHtml(r, `<button class="btn sm" data-acc="${esc(r.id)}">${t('accept')}</button>`)).join('') || `<p class="muted">${t('noReq')}</p>`)
-    : `<p class="muted">${t('goOn')}</p>`;
+  if (dispatchMissing) {   // database update not installed yet: old open list
+    const pend = await sb.from('rides').select('*').eq('status','pending').eq('service_type',d.service_type||'moto').order('created_at',{ascending:true}).limit(30);
+    $('drvPending').innerHTML = d.is_available
+      ? ((pend.data||[]).map(r => rideHtml(r, `<button class="btn sm" data-acc="${esc(r.id)}">${t('accept')}</button>`)).join('') || `<p class="muted">${t('noReq')}</p>`)
+      : `<p class="muted">${t('goOn')}</p>`;
+  } else {
+    $('drvPending').innerHTML = d.is_available ? `<div class="msg ok">${ic('pin')} ${esc(t(drvActive ? 'busyHint' : 'waitingOffers'))}</div>` : `<p class="muted">${t('goOn')}</p>`;
+  }
+  loadDriverStats(); managePoll();
   document.querySelectorAll('[data-arrived]').forEach(b => b.onclick = async () => {
     b.disabled = true;
     const { error } = await sb.rpc('klando_driver_arrived', { p_ride_id: b.dataset.arrived });
@@ -1324,12 +1525,15 @@ async function loadAdmin(){
     sb.from('profiles').select('id',{count:'exact',head:true}).eq('role','customer')]);
   if (d.error || r.error) return flash('admMsg', t('err') + (d.error||r.error).message);
   const drivers = d.data||[], rides = r.data||[];
+  const [mx, cx] = await Promise.all([sb.rpc('ebz_admin_driver_metrics'), sb.rpc('ebz_admin_complaints')]);
+  const MX = {}; (mx.data||[]).forEach(m => { MX[String(m.driver_id)] = m; });
+  renderComplaints(cx.error ? null : (cx.data||[]));
   const stat = (n,l) => `<div class="stat"><b>${n}</b><span>${t(l)}</span></div>`;
   $('admStats').innerHTML = stat(c.count ?? '—','sCustomers') + stat(drivers.filter(x=>x.approval_status==='approved').length,'sDrivers') +
     stat(drivers.filter(x=>x.is_available && x.approval_status==='approved').length,'sActive') + stat(rides.length,'sRides') +
     stat(rides.filter(x=>x.status==='completed').length,'sDone') + stat(drivers.filter(x=>x.approval_status==='pending').length,'sPend');
   $('admDrivers').innerHTML = drivers.map(x => `<div class="item"><div class="top"><b>${esc(x.display_name)}</b>${pill(x.approval_status)}</div>
-    <div class="muted">${esc(x.phone||'')} · ${x.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(x.vehicle||'')} ${esc(x.vehicle_plate||'')} · ${x.is_available?t('on'):t('off')}</div>
+    <div class="muted">${esc(x.phone||'')} · ${x.service_type==='vehicle'?'🚗 '+t('serviceVehicle'):'🏍️ '+t('serviceMoto')} · ${esc(x.vehicle||'')} ${esc(x.vehicle_plate||'')} · ${x.is_available?t('on'):t('off')}</div>${scoreHtml(MX[String(x.id)])}
     ${x.approval_status!=='approved' ? `<button class="btn sm" data-ap="${esc(x.id)}|approved">${t('approve')}</button>` : ''}${x.approval_status!=='rejected' ? `<button class="btn red sm" data-ap="${esc(x.id)}|rejected">${t('reject')}</button>` : ''}</div>`).join('') || `<p class="muted">${t('noDrivers')}</p>`;
   $('admRides').innerHTML = rides.slice(0,40).map(x => rideHtml(x)).join('') || `<p class="muted">${t('noRides')}</p>`;
   const awaiting = rides.filter(x => PAY[x.payment_method] && x.payment_status==='awaiting_verification');
@@ -1352,6 +1556,301 @@ async function loadAdmin(){
   admMk.forEach(x => m.removeLayer(x)); admMk = [];
   drivers.filter(x => x.is_available && x.approval_status==='approved' && x.latitude != null && x.longitude != null)
     .forEach(x => admMk.push(L.marker([x.latitude, x.longitude], { icon:dIcon('drv') }).addTo(m).bindPopup(esc(x.display_name))));
+}
+
+/* ============ E&Bz EXTENSIONS: dispatch offers, cancellations, ratings, badges, delivery ============ */
+Object.assign(I18N.fr, { starsNeed:'Choisissez une note de 1 à 5 étoiles.' });
+Object.assign(I18N.en, { starsNeed:'Choose a rating from 1 to 5 stars.' });
+var kind = 'ride', ACCT = null, acctDefaulted = false, REVIEWED = new Set(), REVIEW_READY = false, PINS = {};
+var pollTimer = null, polling = false, dispatchMissing = false, drvBusy = false;
+var offerRide = null, offerExpiry = 0, offerTick = null, ringTimer = null;
+var POLL_MS = 3000, OFFER_TOTAL_MS = 20000;
+const CUSTOMER_CANCEL = ['changed_mind','wait_too_long','wrong_address','other_transport','price','driver_asked','other'];
+const DRIVER_CANCEL = ['customer_no_show','customer_asked','wrong_address','too_far','vehicle_issue','unsafe','other'];
+const ACCOUNT_TYPES = ['rider','restaurant','shop','business','other'];
+const ITEM_TYPES = ['food','parcel','documents','groceries','other'];
+const SIZES = ['small','medium','large'];
+const COMPLAINT_CATS = ['rude','unsafe_driving','overcharged','late','vehicle','item','other'];
+const reasonLabel = (code, by) => t((by === 'driver' ? 'dr_' : 'cr_') + code);
+const itemLabel = c => c ? t('item_' + c) : '';
+function fillSelect(id, codes, prefix){
+  const el = $(id); if (!el) return;
+  const cur = el.value;
+  el.innerHTML = codes.map(c => `<option value="${c}">${esc(t(prefix + c))}</option>`).join('');
+  if (cur && codes.includes(cur)) el.value = cur;
+}
+function buildLists(){
+  fillSelect('rAcct', ACCOUNT_TYPES, 'acct_'); fillSelect('acctType', ACCOUNT_TYPES, 'acct_');
+  fillSelect('dItem', ITEM_TYPES, 'item_'); fillSelect('dSize', SIZES, 'size_'); fillSelect('rateCat', COMPLAINT_CATS, 'cc_');
+}
+const badgeHtml = b => `<span class="badge ${esc(b || 'new')}">${esc(t('badge_' + (b || 'new')))}</span>`;
+const pct = x => Math.round(Number(x || 0) * 100);
+function ratingLine(i){
+  const r = i.rating_count > 0 ? '⭐ ' + t('ratingLine').replace('{avg}', Number(i.rating_avg).toFixed(1)).replace('{n}', i.rating_count) : t('ratingNone');
+  return `${r} · ${badgeHtml(i.badge)}`;
+}
+function scoreHtml(m){
+  if (!m) return '';
+  const line = t('scoreLine').replace('{avg}', m.rating_avg != null ? Number(m.rating_avg).toFixed(1) : '—').replace('{done}', m.completed)
+    .replace('{cr}', pct(m.cancel_rate)).replace('{ar}', m.acceptance_rate != null ? pct(m.acceptance_rate) : '—');
+  return `<div class="muted" style="margin-top:4px">${badgeHtml(m.badge)} ${esc(line)}</div>`;
+}
+
+/* ---- ride type: ride or delivery ---- */
+function setKind(k){
+  kind = k;
+  document.querySelectorAll('#kindTabs button').forEach(b => b.classList.toggle('on', b.dataset.kind === k));
+  $('delivFields').classList.toggle('hide', k !== 'delivery');
+  const set = (sel, key) => { const el = document.querySelector(sel); if (el) { el.dataset.i18n = key; el.textContent = t(key); } };
+  set('label[for=cPick]', k === 'delivery' ? 'pickupD' : 'pickup');
+  set('label[for=cDest]', k === 'delivery' ? 'destinationD' : 'destination');
+  set('#reqTitle', k === 'delivery' ? 'requestDeliv' : 'requestRide');
+  set('#reqBtnTxt', k === 'delivery' ? 'requestBtnD' : 'requestBtn');
+  updateSizeNote();
+}
+document.querySelectorAll('#kindTabs button').forEach(b => b.onclick = () => setKind(b.dataset.kind));
+function updateSizeNote(){ $('sizeNote').classList.toggle('hide', !(kind === 'delivery' && $('dSize').value === 'large' && selectedService === 'moto')); }
+$('dSize').onchange = updateSizeNote;
+function deliveryPayload(){
+  if (kind !== 'delivery') return { kind:'ride' };
+  return { kind:'delivery', item_type:$('dItem').value, package_size:$('dSize').value,
+    recipient_name:$('dRName').value.trim(), recipient_phone:$('dRPhone').value.trim(), delivery_notes:$('dNotes').value.trim() || null };
+}
+
+/* ---- customer account type (rider, restaurant, shop, business) ---- */
+async function loadAccount(){
+  const md = me.user.user_metadata || {};
+  let r = await sb.from('ebz_business_accounts').select('*').eq('user_id', me.user.id).maybeSingle();
+  if (r.error) return;   // database update not installed yet
+  if (!r.data && md.account_type) {
+    const up = await sb.from('ebz_business_accounts').upsert({ user_id: me.user.id, account_type: md.account_type, business_name: md.business_name || null, phone: md.phone || null });
+    if (!up.error) r = await sb.from('ebz_business_accounts').select('*').eq('user_id', me.user.id).maybeSingle();
+  }
+  ACCT = r.data || null;
+  if (ACCT) { $('acctType').value = ACCT.account_type; $('acctBiz').value = ACCT.business_name || ''; }
+  $('acctBizWrap').classList.toggle('hide', $('acctType').value === 'rider');
+  if (!acctDefaulted && ACCT && ['restaurant','shop','business'].includes(ACCT.account_type)) { acctDefaulted = true; setKind('delivery'); }
+}
+$('acctType').onchange = () => $('acctBizWrap').classList.toggle('hide', $('acctType').value === 'rider');
+$('acctSave').onclick = async () => {
+  const md = me.user.user_metadata || {};
+  const row = { user_id: me.user.id, account_type: $('acctType').value, business_name: $('acctBiz').value.trim() || null, phone: md.phone || null };
+  const { error } = await sb.from('ebz_business_accounts').upsert(row);
+  if (error) return flash('acctMsg', t('err') + error.message);
+  ACCT = row; flash('acctMsg', t('saved'), 'ok');
+  if (row.account_type !== 'rider') setKind('delivery');
+};
+
+/* ---- lines added to ride cards ---- */
+function extraLines(r){
+  let h = '';
+  if (r.kind === 'delivery') h += `<div class="muted">📦 ${esc(itemLabel(r.item_type))}${r.package_size ? ' · ' + esc(t('size_' + r.package_size)) : ''} · ${t('recipientL')}: ${esc(r.recipient_name || '')} ${esc(r.recipient_phone || '')}</div>`;
+  if (r.status === 'cancelled' && r.cancel_reason) h += `<div class="muted">${t('cancelShown')}: ${esc(reasonLabel(r.cancel_reason, r.cancelled_by))}</div>`;
+  return h;
+}
+function deliveryInfo(r){
+  const tel = String(r.recipient_phone || '').replace(/[^0-9+]/g, '');
+  return `<div class="msg warn">📦 ${esc(itemLabel(r.item_type))}${r.package_size ? ' · ' + esc(t('size_' + r.package_size)) : ''}<br>${t('recipientL')}: <b>${esc(r.recipient_name || '')}</b> ${tel ? `<a class="call" href="tel:${esc(tel)}">${esc(r.recipient_phone)}</a>` : ''}${r.delivery_notes ? `<br>${t('notesL')}: ${esc(r.delivery_notes)}` : ''}</div>`;
+}
+async function loadReviewed(rides){
+  const ids = rides.filter(r => r.status === 'completed').map(r => String(r.id));
+  const rv = ids.length ? await sb.from('ride_reviews').select('ride_id').in('ride_id', ids) : { data: [], error: null };
+  if (rv.error) { REVIEW_READY = false; return; }
+  REVIEW_READY = true;
+  (rv.data || []).forEach(x => REVIEWED.add(String(x.ride_id)));
+}
+
+/* ---- live card extras: delivery code, share, cancel, rate, help ---- */
+function renderLiveExtra(r, d){
+  const box = $('liveExtra'); if (!box) return;
+  let h = '', acts = '';
+  if (r.kind === 'delivery' && ['pending','accepted','ongoing'].includes(r.status)) {
+    if (PINS[r.id] === undefined) {
+      PINS[r.id] = null;
+      sb.from('ebz_delivery_secrets').select('pin').eq('ride_id', String(r.id)).maybeSingle()
+        .then(x => { if (x.data) { PINS[r.id] = x.data.pin; renderLiveExtra(r, d); } }, () => {});
+    }
+    if (PINS[r.id]) {
+      const phone = String(r.recipient_phone || '').replace(/\D/g, '');
+      const txt = encodeURIComponent(t('codeText').replace('{pin}', PINS[r.id]));
+      h += `<div class="msg warn"><b>${t('delivCode')}</b><br><span class="pin">${esc(PINS[r.id])}</span><div class="muted">${t('delivCodeHelp')}</div>` +
+           `<div class="sub-actions"><a class="call" target="_blank" rel="noopener" href="https://wa.me/${phone}?text=${txt}">${t('sendCodeWa')}</a></div></div>`;
+    }
+  }
+  if (['accepted','ongoing'].includes(r.status) && d && d.display_name && r.kind !== 'delivery') {
+    const txt = encodeURIComponent(t('shareText').replace('{name}', d.display_name).replace('{vehicle}', d.vehicle || '').replace('{plate}', d.vehicle_plate || '').replace('{dest}', r.destination || ''));
+    acts += `<a class="call" target="_blank" rel="noopener" href="https://wa.me/?text=${txt}">${t('shareTrip')}</a>`;
+  }
+  if (['pending','accepted'].includes(r.status)) acts += `<button class="btn red sm" type="button" data-cancel-open="${esc(r.id)}|customer" style="margin:6px 8px 6px 0">${t('cancel')}</button>`;
+  if (r.status === 'completed' && REVIEW_READY && !REVIEWED.has(String(r.id))) acts += `<button class="btn sm" type="button" data-rate="${esc(r.id)}" style="margin:6px 8px 6px 0">${t('rateBtn')}</button>`;
+  if (SUPPORT.whatsapp && r.status !== 'completed') acts += `<a class="call" target="_blank" rel="noopener" href="https://wa.me/${esc(String(SUPPORT.whatsapp).replace(/\D/g, ''))}">${t('helpBtn')}</a>`;
+  box.innerHTML = h + (acts ? `<div class="sub-actions">${acts}</div>` : '');
+}
+
+/* ---- pop-ups (kept outside the refreshed lists so nothing is lost while typing) ---- */
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-cancel-open]');
+  if (c) { const [id, who] = c.dataset.cancelOpen.split('|'); return openCancel(id, who); }
+  const r = e.target.closest('[data-rate]'); if (r) return openRate(r.dataset.rate);
+  const dl = e.target.closest('[data-deliver]'); if (dl) return openPin(dl.dataset.deliver);
+  const pk = e.target.closest('[data-pickup]'); if (pk) return doPickup(pk);
+});
+
+var CANCEL = { id:null, who:null };
+function openCancel(id, who){
+  CANCEL = { id, who };
+  const codes = who === 'driver' ? DRIVER_CANCEL : CUSTOMER_CANCEL;
+  $('cancelReason').innerHTML = `<option value="">—</option>` + codes.map(c => `<option value="${c}">${esc(reasonLabel(c, who))}</option>`).join('');
+  $('cancelNote').value = ''; $('cancelMsg').innerHTML = '';
+  $('cancelHelp').textContent = t(who === 'driver' ? 'cancelHelpD' : 'cancelHelpC');
+  $('cancelModal').classList.remove('hide');
+}
+$('cancelClose').onclick = () => $('cancelModal').classList.add('hide');
+$('cancelConfirm').onclick = async () => {
+  const reason = $('cancelReason').value;
+  if (!reason) return flash('cancelMsg', t('cancelChoose'), 'warn');
+  const btn = $('cancelConfirm'); busy(btn, true);
+  try {
+    const { data, error } = await sb.rpc('ebz_cancel_ride', { p_ride_id: String(CANCEL.id), p_reason: reason, p_note: $('cancelNote').value.trim() || null });
+    if (error) return flash('cancelMsg', t('err') + error.message);
+    $('cancelModal').classList.add('hide');
+    if (CANCEL.who === 'driver') { flash('drvMsg', t(data === 'requeued' ? 'cancelRequeued' : 'cancelDone'), 'ok'); loadDriver(); }
+    else { flash('custMsg', t('cancelDone'), 'ok'); loadCustomer(); }
+  } finally { busy(btn, false); }
+};
+
+var RATE = { id:null, stars:0 };
+function renderStars(){
+  $('rateStars').innerHTML = [1,2,3,4,5].map(n => `<button type="button" role="radio" aria-checked="${RATE.stars === n}" data-star="${n}" class="${n <= RATE.stars ? 'on' : ''}" aria-label="${n}">⭐</button>`).join('');
+}
+function openRate(id){
+  RATE = { id, stars:0 }; renderStars();
+  $('rateComment').value = ''; $('rateComplaint').checked = false; $('rateCatWrap').classList.add('hide'); $('rateMsg').innerHTML = '';
+  $('rateModal').classList.remove('hide');
+}
+$('rateStars').addEventListener('click', e => { const b = e.target.closest('[data-star]'); if (!b) return; RATE.stars = +b.dataset.star; renderStars(); });
+$('rateComplaint').onchange = () => $('rateCatWrap').classList.toggle('hide', !$('rateComplaint').checked);
+$('rateClose').onclick = () => $('rateModal').classList.add('hide');
+$('rateSend').onclick = async () => {
+  if (!RATE.stars) return flash('rateMsg', t('starsNeed'), 'warn');
+  const complaint = $('rateComplaint').checked, btn = $('rateSend'); busy(btn, true);
+  try {
+    const { error } = await sb.rpc('ebz_submit_review', { p_ride_id: String(RATE.id), p_rating: RATE.stars,
+      p_comment: $('rateComment').value.trim() || null, p_complaint: complaint, p_category: complaint ? $('rateCat').value : null });
+    if (error) return flash('rateMsg', t('err') + error.message);
+    REVIEWED.add(String(RATE.id)); $('rateModal').classList.add('hide');
+    notify(t(complaint ? 'rateComplaintSent' : 'rateThanks'), '', 'ok'); loadCustomer();
+  } finally { busy(btn, false); }
+};
+
+var PIN_RIDE = null;
+function openPin(id){ PIN_RIDE = id; $('pinInput').value = ''; $('pinMsg').innerHTML = ''; $('pinModal').classList.remove('hide'); setTimeout(() => $('pinInput').focus(), 100); }
+$('pinClose').onclick = () => $('pinModal').classList.add('hide');
+$('pinConfirm').onclick = async () => {
+  const pin = $('pinInput').value.trim();
+  if (!/^\d{4}$/.test(pin)) return flash('pinMsg', t('pinNeed'), 'warn');
+  const btn = $('pinConfirm'); busy(btn, true);
+  try {
+    const { error } = await sb.rpc('ebz_complete_delivery', { p_ride_id: String(PIN_RIDE), p_pin: pin });
+    if (error) return flash('pinMsg', t('err') + error.message);
+    $('pinModal').classList.add('hide'); flash('drvMsg', ''); loadDriver();
+  } finally { busy(btn, false); }
+};
+async function doPickup(b){
+  b.disabled = true;
+  const { error } = await sb.rpc('ebz_driver_picked_up', { p_ride_id: String(b.dataset.pickup) });
+  if (error) { b.disabled = false; flash('drvMsg', t('err') + error.message); } else { flash('drvMsg', ''); loadDriver(); }
+}
+
+/* ---- driver: incoming request pop-up (nearest driver first, 20 s to answer) ---- */
+function showOffer(o){
+  offerExpiry = Date.now() + (Number(o.seconds_left) || 0) * 1000;
+  if (offerRide === o.ride_id) return;
+  offerRide = o.ride_id;
+  $('offerKind').textContent = o.kind === 'delivery' ? '📦 ' + t('kindDelivery') : (o.service_type === 'vehicle' ? '🚗 ' + t('serviceVehicle') : '🏍️ ' + t('serviceMoto'));
+  $('offerFare').textContent = money(o.fare);
+  const km = o.distance_km != null ? t('offerKmAway').replace('{km}', Number(o.distance_km).toFixed(1)) : '';
+  $('offerSub').textContent = [km, o.kind === 'delivery' ? itemLabel(o.item_type) : '', payLabel(o.payment_method)].filter(Boolean).join(' · ');
+  $('offerPick').textContent = o.pickup_address || '—'; $('offerDest').textContent = o.destination || '—';
+  $('offerMsg').innerHTML = ''; $('offerAccept').disabled = false; $('offerDecline').disabled = false;
+  $('offerModal').classList.remove('hide');
+  notify(t('newRequest'), money(o.fare) + ' · ' + (o.destination || ''));
+  clearInterval(ringTimer); ringTimer = setInterval(() => { beep(); try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch(e){} }, 2500);
+  clearInterval(offerTick);
+  offerTick = setInterval(() => {
+    const left = offerExpiry - Date.now();
+    $('offerBar').style.width = Math.max(0, Math.min(100, left / OFFER_TOTAL_MS * 100)) + '%';
+    if (left <= -1500) hideOffer();
+  }, 250);
+}
+function hideOffer(){
+  offerRide = null; clearInterval(offerTick); clearInterval(ringTimer); offerTick = null; ringTimer = null;
+  const m = $('offerModal'); if (m) m.classList.add('hide');
+}
+$('offerAccept').onclick = async () => {
+  const id = offerRide; if (!id) return;
+  $('offerAccept').disabled = true; $('offerDecline').disabled = true;
+  const { error } = await sb.rpc('ebz_accept_offer', { p_ride_id: String(id) });
+  if (error) { flash('offerMsg', t('offerExpired')); setTimeout(hideOffer, 2200); return; }
+  hideOffer(); flash('drvMsg', ''); loadDriver();
+};
+$('offerDecline').onclick = async () => {
+  const id = offerRide; hideOffer();
+  if (id) await sb.rpc('ebz_decline_offer', { p_ride_id: String(id) });
+};
+function managePoll(){
+  const d = me.driver, need = me.role === 'driver' && d && d.approval_status === 'approved' && d.is_available && !dispatchMissing;
+  if (need) { if (!pollTimer && !polling) pollTimer = setTimeout(pollOnce, 200); }
+  else { clearTimeout(pollTimer); pollTimer = null; hideOffer(); }
+}
+async function pollOnce(){
+  pollTimer = null;
+  if (polling || !me.user || me.role !== 'driver') return;
+  polling = true;
+  try {
+    const { data, error } = await sb.rpc('ebz_driver_poll');
+    if (error) { if (isMissingFn(error)) { dispatchMissing = true; loadDriver(); } }
+    else { drvBusy = !!(data && data.busy); if (data && data.offer) showOffer(data.offer); else hideOffer(); }
+  } catch(e){ console.warn(e); }
+  finally { polling = false; }
+  const d = me.driver;
+  if (me.role === 'driver' && d && d.approval_status === 'approved' && d.is_available && !dispatchMissing) pollTimer = setTimeout(pollOnce, POLL_MS);
+}
+async function loadDriverStats(){
+  const box = $('drvStats'); if (!box) return;
+  const r = await sb.rpc('ebz_my_driver_stats');
+  if (r.error || !r.data) { $('drvStatsCard').classList.add('hide'); if (r.error && isMissingFn(r.error)) dispatchMissing = true; return; }
+  const x = r.data; $('drvStatsCard').classList.remove('hide');
+  box.innerHTML = `<div>${badgeHtml(x.badge)}</div>
+    <div class="kv">
+      <span>${t('statRating')}<b>${x.rating_count > 0 ? '⭐ ' + Number(x.rating_avg).toFixed(1) : '—'}</b></span>
+      <span>${t('statDone')}<b>${x.completed}</b></span>
+      <span>${t('statCancel')}<b>${pct(x.cancel_rate)}%</b></span>
+      <span>${t('statAccept')}<b>${x.acceptance_rate != null ? pct(x.acceptance_rate) + '%' : '—'}</b></span>
+    </div>
+    <div class="kv">
+      <span>${t('todayRides')}<b>${x.today_rides}</b></span>
+      <span>${t('todayGross')}<b>${money(x.today_gross)}</b></span>
+      <span>${t('todayComm')}<b>${money(x.today_commission)}</b></span>
+      <span>${t('todayNet')}<b>${money(x.today_net)}</b></span>
+    </div>
+    <p class="muted">${t('perfTip')}</p>`;
+}
+
+/* ---- admin: complaints ---- */
+function renderComplaints(list){
+  const box = $('admComplaints'); if (!box) return;
+  if (list === null) { box.innerHTML = ''; return; }
+  box.innerHTML = list.map(c => `<div class="item"><div class="top"><b>${'⭐'.repeat(c.rating)} · ${esc(t('cc_' + (c.category || 'other')))}</b><span class="pill ${c.status === 'open' ? 'pending' : 'completed'}">${esc(c.status === 'open' ? t('pending') : t('completed'))}</span></div>
+    <div class="muted">${esc(c.customer_name || '')} → ${esc(c.driver_name || '')} · ${new Date(c.created_at).toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-GB')}</div>
+    ${c.comment ? `<div>${esc(c.comment)}</div>` : ''}${c.admin_note ? `<div class="muted">${esc(c.admin_note)}</div>` : ''}
+    ${c.status === 'open' ? `<button class="btn sm" data-resolve="${esc(c.id)}">${t('resolve')}</button>` : ''}</div>`).join('') || `<p class="muted">${t('noComplaints')}</p>`;
+  box.querySelectorAll('[data-resolve]').forEach(b => b.onclick = async () => {
+    const note = prompt(t('resolveNote'), ''); if (note === null) return;
+    b.disabled = true;
+    const { error } = await sb.rpc('ebz_admin_resolve_complaint', { p_id: Number(b.dataset.resolve), p_note: note || null });
+    if (error) { b.disabled = false; flash('admMsg', t('err') + error.message); } else loadAdmin();
+  });
 }
 
 /* ============ BOOT ============ */
