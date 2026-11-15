@@ -4,207 +4,359 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="E&Bz Mobility – Commandez votre moto-taxi à N'Djaména. Moving People. Connecting Opportunities.">
-<meta name="theme-color" content="#151515">
+<meta name="theme-color" content="#0e0e10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="E&Bz Mobility">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151515'/%3E%3Ctext x='32' y='48' font-size='44' font-weight='900' text-anchor='middle' fill='%23ff8a00' font-family='Georgia,serif'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230e0e10'/%3E%3Ctext x='32' y='47' font-size='42' font-weight='900' text-anchor='middle' fill='%23ff8a00' font-family='Georgia,serif'%3EE%3C/text%3E%3C/svg%3E">
 <title>E&Bz Mobility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
 <style>
+/* =====================================================================
+   E&Bz MOBILITY — design system
+   Palette: ink (near-black) + signal orange. One radius scale, one shadow
+   scale, one icon style (stroke 2px), one font (Plus Jakarta Sans).
+   ===================================================================== */
 :root{
-  --g:#ff8a00; --g2:#fff1df; --y:#ff8a00; --r:#c0392b;
-  --t:#151515; --m:#626262; --b:#e7e7e7; --bg:#f7f7f7;
-  --klando-orange:#ff8a00; --klando-black:#151515;
+  --ink:#0e0e10; --ink-2:#17171a; --ink-3:#26262b;
+  --orange:#ff8a00; --orange-2:#ffa329; --orange-deep:#d96f00; --orange-soft:#fff1df;
+  --bg:#f2f2ef; --card:#ffffff; --line:#e7e6e1; --field:#f7f7f4; --muted:#6b6b72;
+  --ok:#1f7a45; --ok-bg:#e8f6ed; --warn:#7a5b00; --warn-bg:#fff5d9; --err:#9b2316; --err-bg:#fdebe8; --red:#c0392b;
+  --r-sm:12px; --r-md:16px; --r-lg:22px;
+  --sh-1:0 1px 2px rgba(14,14,16,.05),0 8px 24px rgba(14,14,16,.06);
+  --sh-2:0 2px 4px rgba(14,14,16,.06),0 18px 44px rgba(14,14,16,.14);
+  --font:"Plus Jakarta Sans",Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
-header{background:#151515;color:#fff;padding:14px 22px;min-height:68px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:1000;border-bottom:3px solid var(--klando-orange);box-shadow:0 4px 18px rgba(0,0,0,.12)}
-header h1{margin:0;font-size:23px;letter-spacing:.7px;flex:1;color:#fff;font-weight:900;min-width:0}
-header h1 small{display:block;font-size:11px;font-weight:500;letter-spacing:.5px;color:#ccc;margin-top:2px}
-.brand-accent{color:var(--klando-orange)}
-header button{background:var(--klando-orange);color:#151515;border:1px solid var(--klando-orange);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
-header button:hover{background:#ffa329}
-#langBtn{min-width:46px;font-weight:900}
-main{max-width:1100px;margin:24px auto;padding:16px}
-.card{background:#fff;border:1px solid #e8e8e8;border-radius:20px;padding:22px;margin-bottom:20px;box-shadow:0 8px 26px rgba(0,0,0,.05)}
-.card h2{margin:0 0 16px;font-size:19px;font-weight:800;color:#151515}
-label{display:block;font-size:13px;font-weight:650;color:#555;margin:15px 0 4px}
-input,select{width:100%;padding:14px;border:1px solid #dcdcdc;border-radius:12px;font-size:16px;background:#fcfcfc;transition:border-color .2s,box-shadow .2s;font-family:inherit}
-input:focus,select:focus{outline:none;border-color:var(--klando-orange);box-shadow:0 0 0 3px rgba(255,138,0,.16)}
-button{cursor:pointer;font-family:inherit;transition:transform .18s,box-shadow .18s,background .18s}
-button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
-button.btn{background:var(--klando-orange);color:#151515;border:0;border-radius:12px;padding:14px 18px;font-size:15px;font-weight:750;width:100%;margin-top:14px;box-shadow:0 5px 12px rgba(255,138,0,.18)}
-button.btn:hover:not(:disabled){background:#ffa329;transform:translateY(-1px);box-shadow:0 8px 18px rgba(255,138,0,.24)}
-button.btn.alt{background:#151515;color:#fff;border:1px solid #151515;box-shadow:none}
-button.btn.alt:hover:not(:disabled){background:#333}
-button.btn.red{background:var(--r);color:#fff}
-button.btn.sm{width:auto;padding:9px 13px;font-size:13px;margin:6px 6px 0 0}
-.row{display:flex;gap:8px}.row>*{flex:1}
-.tabs{display:flex;gap:9px;margin-bottom:10px}
-.tabs button{flex:1;padding:12px;border:1px solid var(--b);background:#fff;border-radius:12px;font-size:14px;font-weight:650}
-.tabs button.on{background:var(--klando-orange);color:#151515;border-color:var(--klando-orange)}
-.map{height:330px;border-radius:16px;border:1px solid #dce7df;overflow:hidden;margin:8px 0}
-.msg{padding:13px;border-radius:12px;margin:8px 0;font-size:14px}
-.msg.err{background:#fdecea;color:#8a1f13}.msg.ok{background:#edf7ef;color:#205b31}.msg.warn{background:#fff6dd;color:#7a5b00}
-.pill{display:inline-block;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700;background:#eee;color:#444;white-space:nowrap}
-.pill.pending{background:#fff1df;color:#8a4b00}.pill.accepted,.pill.approved{background:#dcefff;color:#0a4a82}
-.pill.ongoing{background:#e8dcff;color:#4a2a8a}.pill.completed{background:#edf7ef;color:#205b31}
-.pill.cancelled,.pill.rejected{background:#fdecea;color:#8a1f13}
-.item{border-top:1px solid #edf1ee;padding:15px 2px;font-size:14px}.item:first-child{border-top:0}
-.item .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
-.muted{color:var(--m);font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:var(--g2);border:1px solid #ffd5a3;border-radius:15px;padding:16px 8px;text-align:center}
-.stat b{display:block;font-size:25px;color:#151515}.stat span{font-size:11px;color:var(--m)}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 .hide{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:3px solid rgba(255,138,0,.55);outline-offset:2px}
+
+/* ---------- Header ---------- */
+header{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:10px;min-height:68px;
+  padding:12px max(20px,env(safe-area-inset-right)) 12px max(20px,env(safe-area-inset-left));padding-top:max(12px,env(safe-area-inset-top));
+  background:rgba(14,14,16,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--orange),rgba(255,138,0,0) 70%)}
+header h1{margin:0;flex:1;min-width:0;font-size:21px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:12px}
+.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;flex:none;background:linear-gradient(145deg,var(--orange-2),#ff7a00);box-shadow:0 6px 16px rgba(255,138,0,.35)}
+.logo svg{width:30px;height:30px}
+.word{display:block;line-height:1.1;min-width:0}
+.brand-accent{color:var(--orange)}
+header h1 small{display:block;margin-top:3px;font-size:11px;font-weight:500;letter-spacing:.2px;color:#a9a9b0}
+.hbtn{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s,color .2s}
+.hbtn:hover{border-color:var(--orange);color:var(--orange)}
+.hbtn.solid{background:var(--orange);border-color:var(--orange);color:var(--ink)}
+.hbtn.solid:hover{background:var(--orange-2);color:var(--ink)}
+
+main{max-width:1120px;margin:0 auto;padding:22px 16px 8px}
+
+/* ---------- Buttons ---------- */
+button{font-family:inherit;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s,border-color .18s}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+button.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:14px;min-height:50px;padding:13px 20px;border:0;border-radius:var(--r-md);
+  background:linear-gradient(180deg,var(--orange-2),var(--orange));color:var(--ink);font-size:15px;font-weight:800;box-shadow:0 8px 20px rgba(255,138,0,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+button.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 26px rgba(255,138,0,.36),inset 0 1px 0 rgba(255,255,255,.35)}
+button.btn:active:not(:disabled){transform:translateY(0)}
+button.btn.alt{background:var(--ink);color:#fff;box-shadow:none}
+button.btn.alt:hover:not(:disabled){background:var(--ink-3);box-shadow:0 8px 20px rgba(14,14,16,.2)}
+button.btn.red{background:var(--red);color:#fff;box-shadow:none}
+button.btn.sm{width:auto;min-height:42px;padding:9px 15px;margin:8px 8px 0 0;font-size:13px;border-radius:var(--r-sm)}
+
+/* ---------- Cards, forms ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;margin-bottom:20px;box-shadow:var(--sh-1)}
+.card h2{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:18px;font-weight:800;letter-spacing:-.2px}
+.card h2::before{content:"";width:4px;height:20px;border-radius:4px;background:var(--orange);flex:none}
+label{display:block;margin:15px 0 6px;font-size:12.5px;font-weight:700;color:#4b4b52;letter-spacing:.1px}
+input,select{width:100%;min-height:50px;padding:13px 15px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--field);color:var(--ink);font:inherit;font-size:16px;transition:border-color .2s,box-shadow .2s,background .2s}
+input::placeholder{color:#a3a3aa}
+input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,138,0,.16)}
+.row{display:flex;gap:8px;align-items:stretch}.row>*{flex:1}
+.muted{color:var(--muted);font-size:13px}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.fare{font-size:27px;font-weight:850;color:#e87900}
-#vAuth .card{max-width:520px;margin:35px auto}
-#vAuth .tabs{margin-bottom:22px}
-.hero{background:linear-gradient(125deg,#111 0%,#242424 100%);color:#fff;padding:32px 28px;border-radius:22px;margin-bottom:25px;box-shadow:0 12px 28px rgba(0,0,0,.16)}
-.hero-label{color:var(--klando-orange);font-weight:800;font-size:11px;letter-spacing:2px}
-.hero h2{color:#fff;font-size:clamp(27px,5vw,40px);line-height:1.15;margin:15px 0}
-.hero h2 span{color:var(--klando-orange)}
-.hero p{max-width:580px;color:rgba(255,255,255,.85);line-height:1.7;margin:0}
-.home-heading{padding:12px 4px 18px}
-.home-heading span{color:#e87900;font-size:11px;font-weight:800;letter-spacing:2px}
-.home-heading h2{font-size:clamp(25px,5vw,36px);margin:10px 0 5px;color:#151515}
-.home-heading p{color:var(--m);margin:0}
-.home-map{height:55vh;min-height:340px;border-radius:20px;border:1px solid #dce7df;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.10)}
-.booking-panel{position:relative;background:#fff;border-radius:20px;padding:22px;margin:-25px 12px 0;z-index:500;box-shadow:0 8px 25px rgba(0,0,0,.12);border-top:4px solid var(--klando-orange)}
-.booking-panel h3{margin-top:0;color:#151515}
-.booking-panel p{color:var(--m)}
-.footer{background:#151515;color:#fff;text-align:center;padding:32px 15px;margin-top:40px;border-top:4px solid var(--klando-orange)}
-.footer h2{letter-spacing:3px;font-size:25px;color:var(--klando-orange);margin:0 0 8px}
-.footer p{color:#e5e5e5;margin:0}
-.footer div{color:var(--klando-orange);font-weight:700;margin:12px}
-.footer small{color:#bbb}
-/* Maps form their own stacking context so Leaflet panes/controls never overlap the header or the booking panel */
-.map,.home-map{position:relative;z-index:0;isolation:isolate}
-.leaflet-control-attribution{max-width:calc(100% - 12px);font-size:10px}
-@media (min-width:850px){
+.tabs{display:flex;gap:4px;padding:4px;margin-bottom:12px;background:#ecebe7;border-radius:var(--r-md)}
+.tabs button{flex:1;min-height:42px;padding:9px 10px;border:0;border-radius:12px;background:transparent;color:#55555c;font-size:14px;font-weight:700}
+.tabs button.on{background:var(--ink);color:#fff;box-shadow:0 4px 12px rgba(14,14,16,.2)}
+.msg{display:block;margin:10px 0;padding:12px 14px;border-radius:var(--r-sm);font-size:14px;line-height:1.45;border:1px solid transparent}
+.msg.err{background:var(--err-bg);color:var(--err);border-color:#f6cfc9}
+.msg.ok{background:var(--ok-bg);color:var(--ok);border-color:#c9e8d4}
+.msg.warn{background:var(--warn-bg);color:var(--warn);border-color:#f5e3a8}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:800;background:#eee;color:#444;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.pending{background:var(--orange-soft);color:#8a4b00}
+.pill.accepted,.pill.approved{background:#dcefff;color:#0a4a82}
+.pill.ongoing{background:#e8dcff;color:#4a2a8a}
+.pill.completed{background:var(--ok-bg);color:var(--ok)}
+.pill.cancelled,.pill.rejected{background:var(--err-bg);color:var(--err)}
+.item{padding:15px 4px;border-top:1px solid var(--line);font-size:14px;border-radius:12px;transition:background .15s}
+.item:first-child{border-top:0}
+.item:hover{background:#fafaf8}
+.item .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* ---------- Landing (hero + auth) ---------- */
+.landing{display:grid;gap:20px;align-items:start;margin-bottom:6px}
+.hero{position:relative;overflow:hidden;padding:36px 30px 30px;border-radius:26px;color:#fff;box-shadow:var(--sh-2);
+  background:radial-gradient(120% 90% at 100% 0%,rgba(255,138,0,.28),transparent 55%),
+             linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/44px 44px,
+             linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/44px 44px,
+             linear-gradient(135deg,#0e0e10,#1d1d21)}
+.hero>*{position:relative;z-index:1}
+.hero-art{position:absolute!important;right:-30px;bottom:-10px;width:min(78%,430px);opacity:.9;z-index:0!important;pointer-events:none}
+.hero-label{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,138,0,.14);border:1px solid rgba(255,138,0,.35);color:var(--orange-2);font-size:11px;font-weight:800;letter-spacing:1.6px}
+.hero h2{margin:18px 0 12px;font-size:clamp(30px,5.4vw,46px);line-height:1.08;font-weight:800;letter-spacing:-1.2px;color:#fff}
+.hero h2 span{color:var(--orange)}
+.hero p{max-width:470px;margin:0;color:rgba(255,255,255,.78);line-height:1.7;font-size:16px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
+.hero-cta .btn{width:auto;margin:0;padding:14px 26px}
+.ghost{display:inline-flex;align-items:center;gap:8px;min-height:50px;padding:13px 20px;border-radius:var(--r-md);border:1px solid rgba(255,255,255,.28);color:#fff;text-decoration:none;font-weight:700;font-size:15px;transition:border-color .2s,color .2s,background .2s}
+.ghost:hover{border-color:var(--orange);color:var(--orange);background:rgba(255,138,0,.08)}
+.hero-feats{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 0;padding:0;list-style:none}
+.hero-feats li{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600}
+.hero-feats .ic{color:var(--orange)}
+#installBtn{margin-top:16px;border-color:rgba(255,138,0,.6);color:var(--orange-2)}
+#iosHint{margin:10px 0 0;font-size:13px;color:#cfcfd4}
+#vAuth .card{margin:0;padding:26px;box-shadow:var(--sh-2)}
+#vAuth .card::before{content:"";display:block;height:4px;margin:-26px -26px 22px;border-radius:var(--r-lg) var(--r-lg) 0 0;background:linear-gradient(90deg,var(--orange),var(--orange-2) 50%,var(--ink))}
+.auth-title{margin:0;font-size:22px;font-weight:800;letter-spacing:-.4px}
+.auth-sub{margin:4px 0 18px;color:var(--muted);font-size:14px}
+
+/* ---------- Public home ---------- */
+#publicHome{margin-top:34px}
+.home-heading{padding:6px 4px 18px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;color:var(--orange-deep);font-size:11px;font-weight:800;letter-spacing:1.8px}
+.home-heading h2{margin:8px 0 4px;font-size:clamp(25px,4.6vw,36px);font-weight:800;letter-spacing:-.9px}
+.home-heading p{margin:0;color:var(--muted)}
+.map,.home-map{position:relative;z-index:0;isolation:isolate;overflow:hidden;border:1px solid var(--line);background:#e9e8e3}
+.map{height:330px;margin:8px 0;border-radius:var(--r-md)}
+.home-map{height:52vh;min-height:330px;border-radius:var(--r-lg);box-shadow:var(--sh-2)}
+.leaflet-tile-pane{filter:saturate(.7) contrast(1.03)}
+.leaflet-control-attribution{max-width:calc(100% - 12px);font-size:10px;border-radius:8px 0 0 0}
+.leaflet-bar{border:0!important;box-shadow:var(--sh-1)!important;border-radius:12px!important;overflow:hidden}
+.leaflet-bar a{color:var(--ink)!important}
+.leaflet-popup-content-wrapper{border-radius:14px;font-family:var(--font);font-weight:600}
+.booking-panel{position:relative;z-index:500;margin:-30px 14px 0;padding:22px;border-radius:var(--r-lg);background:#fff;border:1px solid var(--line);border-top:4px solid var(--orange);box-shadow:var(--sh-2)}
+.booking-panel h3{margin:0 0 4px;font-size:20px;font-weight:800;letter-spacing:-.3px}
+.booking-panel p{margin:0;color:var(--muted)}
+.booking-panel .btn{width:auto;padding:13px 24px}
+.section-title{margin:44px 4px 16px;font-size:clamp(22px,4vw,30px);font-weight:800;letter-spacing:-.7px;scroll-margin-top:90px}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.how-card{position:relative;padding:22px;border-radius:var(--r-lg);background:#fff;border:1px solid var(--line);box-shadow:var(--sh-1)}
+.how-num{display:grid;place-items:center;width:42px;height:42px;margin-bottom:14px;border-radius:14px;background:var(--ink);color:var(--orange);font-weight:800;font-size:18px}
+.how-card h3{margin:0 0 6px;font-size:17px;font-weight:800}
+.how-card p{margin:0;color:var(--muted);font-size:14.5px}
+.cta-band{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:26px;padding:26px 28px;border-radius:var(--r-lg);color:#fff;
+  background:radial-gradient(90% 140% at 100% 0%,rgba(255,138,0,.3),transparent 60%),linear-gradient(135deg,#0e0e10,#1d1d21);box-shadow:var(--sh-2)}
+.cta-band h3{margin:0 0 4px;font-size:21px;font-weight:800;letter-spacing:-.3px}
+.cta-band p{margin:0;color:rgba(255,255,255,.75);max-width:480px}
+.cta-band .btn{width:auto;margin:0;flex:none}
+
+/* ---------- Customer ---------- */
+.fare{font-size:28px;font-weight:800;letter-spacing:-.6px;color:var(--orange-deep);font-variant-numeric:tabular-nums}
+.farebox{margin:16px 0 4px;padding:16px 18px;border-radius:var(--r-md);color:#fff;background:linear-gradient(135deg,var(--ink),var(--ink-3))}
+.farebox .fare{color:var(--orange)}
+.farebox .muted{color:#b4b4bb}
+.paypick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.paypick button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:78px;padding:10px 6px;border:2px solid var(--line);border-radius:var(--r-md);background:#fff;color:var(--ink);font-size:13px;font-weight:700;line-height:1.2}
+.paypick button .ic{width:24px;height:24px;color:#55555c}
+.paypick button:hover:not(:disabled){border-color:#cfcfc9}
+.paypick button.on{border-color:var(--orange);background:#fff8ee;box-shadow:0 0 0 4px rgba(255,138,0,.14)}
+.paypick button.on .ic{color:var(--orange-deep)}
+.paypick button.on::after{content:"";position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--orange)}
+#liveCard{grid-column:1/-1;border-top:4px solid var(--orange)}
+.steps{display:flex;margin:14px 0 16px}
+.step{position:relative;flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--muted);line-height:1.25}
+.step:not(:first-child)::before{content:"";position:absolute;top:14px;left:-50%;right:50%;height:3px;border-radius:3px;background:#e4e3de}
+.step.done::before,.step.cur::before{background:var(--ink)}
+.step i{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin:0 auto 6px;border-radius:50%;background:#e4e3de;color:#55555c;font-style:normal;font-weight:800;font-size:12px}
+.step.done i{background:var(--ink);color:#fff}
+.step.cur i{background:var(--orange);color:var(--ink);box-shadow:0 0 0 5px rgba(255,138,0,.25)}
+.step.cur span{color:var(--ink);font-weight:800}
+.live-line{margin:6px 0 4px;font-size:18px;font-weight:800;letter-spacing:-.3px}
+.drv{display:flex;align-items:center;gap:12px;margin:10px 0}
+.drv .av{display:grid;place-items:center;flex:none;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--orange);font-weight:800;font-size:20px}
+.call{display:inline-flex;align-items:center;gap:8px;margin:6px 8px 6px 0;padding:10px 16px;border-radius:var(--r-sm);background:var(--ink);color:#fff;text-decoration:none;font-weight:700;font-size:14px}
+.call:hover{background:var(--ink-3)}
+
+/* ---------- Map pins (same look everywhere) ---------- */
+.mk{display:grid;place-items:center;width:44px;height:44px}
+.pin{display:block}
+.pin-pick{width:20px;height:20px;border-radius:50%;background:var(--ink);border:5px solid #fff;box-shadow:0 0 0 3px rgba(14,14,16,.2),0 4px 10px rgba(0,0,0,.35)}
+.pin-dest{position:relative;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--orange);border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.pin-dest::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--ink)}
+.pin-drv{position:relative;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--orange);border:3px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,.4)}
+.pin-drv .ic{width:21px;height:21px}
+.pin-drv::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--orange);opacity:0;animation:ping 2s ease-out infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.25);opacity:0}}
+
+/* ---------- Admin ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:16px 10px;border-radius:var(--r-md);background:var(--orange-soft);border:1px solid #ffd9aa;text-align:center}
+.stat b{display:block;font-size:28px;font-weight:800;letter-spacing:-.8px}
+.stat span{font-size:11.5px;font-weight:600;color:var(--muted)}
+#drvSwitch{padding:12px 16px;border-radius:var(--r-md);background:var(--field);border:1px solid var(--line);font-weight:700}
+
+/* ---------- Toasts ---------- */
+#toasts{position:fixed;top:82px;left:50%;transform:translateX(-50%);z-index:3000;display:flex;flex-direction:column;gap:8px;width:min(92vw,420px);pointer-events:none}
+.toast{pointer-events:auto;display:flex;flex-direction:column;gap:2px;padding:13px 16px;border-radius:var(--r-md);background:var(--ink);color:#fff;border-left:5px solid var(--orange);box-shadow:var(--sh-2);font-size:14px;animation:tin .25s ease}
+.toast b{color:var(--orange-2);font-size:15px}
+.toast.ok{border-left-color:#2ecc71}.toast.ok b{color:#6fe3a0}
+.toast.warn{border-left-color:#f1c40f}
+@keyframes tin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+/* ---------- Footer ---------- */
+.footer{margin-top:44px;padding:34px 16px max(30px,env(safe-area-inset-bottom));text-align:center;background:var(--ink);color:#fff;position:relative}
+.footer::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+.footer .brand-row{display:flex;align-items:center;justify-content:center;gap:12px;font-size:22px;font-weight:800;letter-spacing:-.3px}
+.footer .tag{margin:8px 0 0;color:#b4b4bb;font-size:14px}
+.social{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
+.social:empty{display:none}
+.social a{padding:8px 15px;border-radius:999px;border:1px solid #3a3a40;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.social a:hover{border-color:var(--orange);color:var(--orange)}
+.footer .init{margin:14px 0 4px;color:var(--orange);font-weight:700;font-size:14px}
+.footer small{color:#8f8f97}
+
+/* ---------- Layout breakpoints ---------- */
+@media (min-width:900px){
+  .landing{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}
+  .hero{min-height:560px;display:flex;flex-direction:column;justify-content:center;padding:44px 40px}
+  #vAuth{position:sticky;top:90px}
   #vCust{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
+  #vCust>.card{margin-bottom:0}
   #vDrv{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
   #vDrv>.card:first-child{grid-column:1/-1}
   #vAdm{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
   #vAdm>.card{margin-bottom:0}
   #vAdm>#admMsg{grid-column:1/-1}
 }
+@media (max-width:899px){
+  .hero{padding:28px 22px 24px}
+  .hero-art{opacity:.45;width:70%}
+}
+@media (max-width:700px){
+  .how{grid-template-columns:1fr}
+  .cta-band{flex-direction:column;align-items:stretch;text-align:left}
+  .cta-band .btn{width:100%}
+}
 @media (max-width:600px){
-  header{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:11px 14px;min-height:64px}
-  header h1{font-size:19px;line-height:1.15;letter-spacing:.3px}
-  header h1 small{font-size:10px;line-height:1.25;white-space:normal}
-  header button{padding:8px 10px;font-size:12px;border-radius:10px}
-  main{padding:12px;margin:12px auto}
-  .card{padding:17px;border-radius:17px}
+  header{gap:8px;padding-left:14px;padding-right:14px;min-height:64px}
+  header h1{font-size:18px;gap:10px}
+  header h1 small{font-size:10px;line-height:1.25}
+  .logo{width:40px;height:40px;border-radius:12px}.logo svg{width:27px;height:27px}
+  .hbtn{padding:8px 12px;font-size:12px}
+  main{padding:14px 12px 6px}
+  .card{padding:18px;border-radius:18px}
+  #vAuth .card{padding:20px}#vAuth .card::before{margin:-20px -20px 18px}
   .map{height:270px}
-  .home-map{height:52vh;min-height:300px}
+  .home-map{height:48vh;min-height:300px}
+  .booking-panel{margin:-26px 8px 0}
+  .booking-panel .btn{width:100%}
   .stats{grid-template-columns:repeat(2,1fr)}
   .row{gap:6px}
-  .hero{padding:24px 20px}
-  .leaflet-control-attribution{font-size:9px;line-height:1.2}
-}
-/* ---- Live ride tracking, steps, toasts ---- */
-#liveCard{grid-column:1/-1}
-.steps{display:flex;gap:6px;margin:10px 0 14px}
-.step{flex:1;text-align:center;font-size:11px;color:var(--m);line-height:1.25}
-.step i{display:flex;width:28px;height:28px;margin:0 auto 5px;border-radius:50%;background:#eee;color:#555;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:12px}
-.step.done i{background:#151515;color:#fff}
-.step.cur i{background:var(--klando-orange);color:#151515;box-shadow:0 0 0 4px rgba(255,138,0,.25)}
-.step.cur span{color:#151515;font-weight:700}
-.live-line{font-size:17px;font-weight:700;margin:6px 0 4px}
-.call{display:inline-block;margin:6px 8px 6px 0;padding:9px 14px;border-radius:12px;background:#151515;color:#fff;text-decoration:none;font-weight:700;font-size:14px}
-.mk{font-size:26px;line-height:36px;text-align:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
-#toasts{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:3000;display:flex;flex-direction:column;gap:8px;width:min(92vw,420px);pointer-events:none}
-.toast{pointer-events:auto;background:#151515;color:#fff;border-left:5px solid var(--klando-orange);border-radius:12px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:2px;font-size:14px;animation:tin .25s ease}
-.toast b{color:var(--klando-orange);font-size:15px}
-.toast.ok{border-left-color:#2ecc71}.toast.warn{border-left-color:#f1c40f}
-@keyframes tin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.toast{animation:none}html{scroll-behavior:auto}}
-
-/* ---- Premium polish ---- */
-header{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right));padding-top:max(14px,env(safe-area-inset-top))}
-.brand{display:flex;align-items:center;gap:12px}
-.brand .logo{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#ffa329,#ff7a00);box-shadow:0 4px 12px rgba(255,138,0,.35);flex:none}
-.brand .logo svg{width:32px;height:32px}
-.brand .word{display:block;line-height:1.1;min-width:0}
-#langBtn{background:transparent;color:#fff;border:1px solid #4a4a4a}
-#langBtn::before{content:"🌐 "}
-#langBtn:hover{border-color:var(--klando-orange);background:transparent;color:var(--klando-orange)}
-.card{border-radius:20px}
-.card h2{display:flex;align-items:center;gap:10px}
-.card h2::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--klando-orange);flex:none}
-input,select{min-height:48px}
-button.btn.sm{min-height:44px}
-.tabs button{min-height:46px}
-.hero{position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,0,.35),transparent 70%);pointer-events:none}
-.hero>*{position:relative;z-index:1}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;align-items:center}
-.hero-cta .btn{width:auto;margin:0;padding:15px 26px}
-.hero-cta .ghost{color:#fff;text-decoration:none;font-weight:700;padding:14px 18px;border:1px solid rgba(255,255,255,.3);border-radius:12px}
-.hero-cta .ghost:hover{border-color:var(--klando-orange);color:var(--klando-orange)}
-.hero-feats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.hero-feats span{font-size:13px;padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14)}
-.farebox{background:linear-gradient(135deg,#151515,#2b2b2b);color:#fff;border-radius:16px;padding:14px 16px;margin:14px 0 4px}
-.farebox .fare{color:var(--klando-orange)}
-.farebox .muted{color:#bbb}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.paypick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
-.paypick button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;border:2px solid #e3e3e3;background:#fff;border-radius:14px;font-weight:700;font-size:13px;color:#151515;min-height:70px;line-height:1.2}
-.paypick button i{font-style:normal;font-size:20px}
-.paypick button.on{border-color:var(--klando-orange);background:#fff6ea;box-shadow:0 0 0 3px rgba(255,138,0,.15)}
-#liveCard{border-top:4px solid var(--klando-orange)}
-.drv{display:flex;align-items:center;gap:12px;margin:8px 0}
-.drv .av{width:46px;height:46px;border-radius:50%;background:var(--klando-orange);color:#151515;display:grid;place-items:center;font-weight:900;font-size:19px;flex:none}
-#drvSwitch{background:#fafafa;border:1px solid #eee;border-radius:14px;padding:10px 14px}
-.stat b{font-size:28px}
-.item:hover{background:#fcfcfc}
-.social{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}
-.social a{color:#fff;text-decoration:none;border:1px solid #444;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:700}
-.social a:hover{border-color:var(--klando-orange);color:var(--klando-orange)}
-.social:empty{display:none}
-.footer{padding-bottom:max(32px,env(safe-area-inset-bottom))}
-@media (max-width:600px){
-  .brand .logo{width:40px;height:40px}
-  .brand .logo svg{width:28px;height:28px}
-  .hero-cta .btn,.hero-cta .ghost{width:100%;text-align:center}
-  #toasts{top:70px}
+  .hero-cta .btn,.hero-cta .ghost{width:100%;justify-content:center}
   .paypick button{font-size:12px}
+  #toasts{top:72px}
 }
-#installBtn{display:inline-block;background:transparent;color:#fff;border:1px solid var(--klando-orange);border-radius:12px;padding:12px 18px;font-size:14px;font-weight:750;margin-top:14px;cursor:pointer}
-#installBtn:hover{background:rgba(255,138,0,.15)}
-#iosHint{font-size:13px;color:#ddd;margin-top:10px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .toast,.pin-drv::after{animation:none}
+  button{transition:none}
+}
 </style>
 </head>
 <body>
+<!-- Icon sprite: one icon family (2px stroke) reused everywhere -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></symbol>
+  <symbol id="i-moto" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17L9 9h4l3 5.5M13 9l-1.5-3H9M15 6h3l.5 2.5"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h8.5a3.5 3.5 0 000-7h-11a3.5 3.5 0 010-7H15"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+</svg>
+
 <header>
-  <h1 class="brand"><span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="#151515"><path transform="translate(11.34 38.0) scale(0.04 -0.04)" d="M390 241Q390 283 377.0 302.0Q364 321 341.5 325.5Q319 330 292 329L266 328V164Q266 137 265.0 113.0Q264 89 262 76H396Q426 76 454.0 89.5Q482 103 500.0 134.5Q518 166 518 220H583L578 0H50V66Q73 67 88.5 72.0Q104 77 112.5 95.0Q121 113 121 153V536Q121 563 122.5 588.0Q124 613 125 626Q109 625 85.0 624.5Q61 624 50 623V700H550L556 506H490Q490 561 471.0 589.0Q452 617 424.0 626.5Q396 636 369 635L333 634Q312 634 297.0 628.5Q282 623 274.0 604.5Q266 586 266 547V397H383L379 484H456V241Z"/></svg></span><span class="word">E&amp;Bz <span class="brand-accent">Mobility</span><small data-i18n="tagline"></small></span></h1>
-  <button id="langBtn" type="button">EN</button>
-  <button id="logoutBtn" type="button" class="hide" data-i18n="logout"></button>
+  <h1 class="brand"><span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="#0e0e10"><path transform="translate(11.34 38.0) scale(0.04 -0.04)" d="M390 241Q390 283 377.0 302.0Q364 321 341.5 325.5Q319 330 292 329L266 328V164Q266 137 265.0 113.0Q264 89 262 76H396Q426 76 454.0 89.5Q482 103 500.0 134.5Q518 166 518 220H583L578 0H50V66Q73 67 88.5 72.0Q104 77 112.5 95.0Q121 113 121 153V536Q121 563 122.5 588.0Q124 613 125 626Q109 625 85.0 624.5Q61 624 50 623V700H550L556 506H490Q490 561 471.0 589.0Q452 617 424.0 626.5Q396 636 369 635L333 634Q312 634 297.0 628.5Q282 623 274.0 604.5Q266 586 266 547V397H383L379 484H456V241Z"/></svg></span><span class="word">E&amp;Bz <span class="brand-accent">Mobility</span><small data-i18n="tagline"></small></span></h1>
+  <button id="langBtn" class="hbtn" type="button" aria-label="Language / Langue"><svg class="ic"><use href="#i-globe"/></svg><span id="langTxt">EN</span></button>
+  <button id="logoutBtn" type="button" class="hbtn solid hide"><span data-i18n="logout"></span></button>
 </header>
 <div id="toasts" role="status" aria-live="polite"></div>
 <main>
-  <section id="publicHero" class="hero">
-    <div class="hero-label" data-i18n="heroLabel"></div>
-    <h2 data-i18n-html="heroTitleHtml"></h2>
-    <p data-i18n="heroText"></p>
-    <div class="hero-cta">
-      <button class="btn" type="button" onclick="document.getElementById('vAuth').scrollIntoView({behavior:'smooth'})" data-i18n="bookingBtn"></button>
-      <a class="ghost" href="#publicHome" data-i18n="heroMore"></a>
-    </div>
-    <div class="hero-feats"><span data-i18n="feat1"></span><span data-i18n="feat2"></span><span data-i18n="feat3"></span></div>
-    <button id="installBtn" type="button" class="hide" data-i18n="install"></button>
-    <p id="iosHint" class="hide" data-i18n="iosHint"></p>
-  </section>
+  <div class="landing">
+    <section id="publicHero" class="hero">
+      <svg class="hero-art" viewBox="0 0 440 260" fill="none" aria-hidden="true">
+        <path d="M20 230C90 230 90 150 170 150S250 215 300 175 360 70 410 40" stroke="#ff8a00" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12" opacity=".75"/>
+        <circle cx="20" cy="230" r="9" fill="#0e0e10" stroke="#fff" stroke-width="4"/>
+        <path d="M410 14c-14 0-24 11-24 24 0 18 24 40 24 40s24-22 24-40c0-13-10-24-24-24z" fill="#ff8a00"/>
+        <circle cx="410" cy="38" r="8" fill="#0e0e10"/>
+        <rect x="140" y="104" width="120" height="44" rx="14" fill="#fff" fill-opacity=".08" stroke="#fff" stroke-opacity=".18"/>
+        <circle cx="160" cy="126" r="9" fill="#ff8a00"/>
+        <rect x="178" y="116" width="62" height="7" rx="3.5" fill="#fff" fill-opacity=".5"/>
+        <rect x="178" y="129" width="40" height="7" rx="3.5" fill="#fff" fill-opacity=".25"/>
+      </svg>
+      <div class="hero-label"><svg class="ic"><use href="#i-pin"/></svg><span data-i18n="heroLabel"></span></div>
+      <h2 data-i18n-html="heroTitleHtml"></h2>
+      <p data-i18n="heroText"></p>
+      <div class="hero-cta">
+        <button class="btn" type="button" data-go="vAuth"><span data-i18n="bookingBtn"></span><svg class="ic"><use href="#i-arrow"/></svg></button>
+        <a class="ghost" href="#how"><span data-i18n="heroMore"></span></a>
+      </div>
+      <ul class="hero-feats">
+        <li><svg class="ic"><use href="#i-bolt"/></svg><span data-i18n="feat1"></span></li>
+        <li><svg class="ic"><use href="#i-route"/></svg><span data-i18n="feat2"></span></li>
+        <li><svg class="ic"><use href="#i-cash"/></svg><span data-i18n="feat3"></span></li>
+      </ul>
+      <button id="installBtn" type="button" class="hbtn hide"><svg class="ic"><use href="#i-download"/></svg><span data-i18n="install"></span></button>
+      <p id="iosHint" class="hide" data-i18n="iosHint"></p>
+    </section>
+
+    <section id="vAuth" class="hide">
+      <div class="card">
+        <h2 class="auth-title" style="display:block;margin:0"><span data-i18n="authTitle"></span></h2>
+        <p class="auth-sub" data-i18n="authSub"></p>
+        <div class="tabs">
+          <button id="tabLogin" class="on" type="button" data-i18n="login"></button>
+          <button id="tabReg" type="button" data-i18n="register"></button>
+        </div>
+        <form id="fLogin">
+          <label for="lEmail" data-i18n="email"></label><input id="lEmail" type="email" required autocomplete="email">
+          <label for="lPass" data-i18n="password"></label><input id="lPass" type="password" required autocomplete="current-password">
+          <button class="btn" type="submit"><span data-i18n="login"></span></button>
+        </form>
+        <form id="fReg" class="hide">
+          <label for="rRole" data-i18n="iam"></label>
+          <select id="rRole"><option value="customer" data-i18n="customer"></option><option value="driver" data-i18n="driver"></option></select>
+          <label for="rName" data-i18n="fullname"></label><input id="rName" required autocomplete="name">
+          <label for="rPhone" data-i18n="phone"></label><input id="rPhone" type="tel" required autocomplete="tel" placeholder="+235 ...">
+          <label for="rEmail" data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
+          <label for="rPass" data-i18n="password"></label><input id="rPass" type="password" minlength="6" required autocomplete="new-password">
+          <div id="drvFields" class="hide">
+            <label for="rVeh" data-i18n="vehicle"></label><input id="rVeh" data-i18n-ph="vehiclePh">
+            <label for="rPlate" data-i18n="plate"></label><input id="rPlate">
+          </div>
+          <button class="btn" type="submit"><span data-i18n="createAccount"></span></button>
+        </form>
+        <div id="authMsg"></div>
+      </div>
+    </section>
+  </div>
+
   <section id="publicHome">
     <div class="home-heading">
-      <span data-i18n="cityLabel"></span>
+      <span class="eyebrow"><svg class="ic"><use href="#i-pin"/></svg><span data-i18n="cityLabel"></span></span>
       <h2 data-i18n="cityTitle"></h2>
       <p data-i18n="cityText"></p>
     </div>
@@ -212,38 +364,25 @@ button.btn.sm{min-height:44px}
     <div class="booking-panel">
       <h3 data-i18n="bookingTitle"></h3>
       <p data-i18n="bookingText"></p>
-      <button class="btn" type="button" onclick="document.getElementById('vAuth').scrollIntoView({behavior:'smooth'})" data-i18n="bookingBtn"></button>
+      <button class="btn" type="button" data-go="vAuth"><span data-i18n="bookingBtn"></span><svg class="ic"><use href="#i-arrow"/></svg></button>
+    </div>
+
+    <h2 id="how" class="section-title" data-i18n="howTitle"></h2>
+    <div class="how">
+      <div class="how-card"><div class="how-num">1</div><h3 data-i18n="how1T"></h3><p data-i18n="how1B"></p></div>
+      <div class="how-card"><div class="how-num">2</div><h3 data-i18n="how2T"></h3><p data-i18n="how2B"></p></div>
+      <div class="how-card"><div class="how-num">3</div><h3 data-i18n="how3T"></h3><p data-i18n="how3B"></p></div>
+    </div>
+
+    <div class="cta-band">
+      <div><h3 data-i18n="drvCtaT"></h3><p data-i18n="drvCtaB"></p></div>
+      <button id="drvCta" class="btn" type="button"><svg class="ic"><use href="#i-moto"/></svg><span data-i18n="drvCtaBtn"></span></button>
     </div>
   </section>
+
   <div id="cfgWarn" class="msg err hide"></div>
   <div id="globalMsg"></div>
-  <section id="vAuth" class="hide">
-    <div class="card">
-      <div class="tabs">
-        <button id="tabLogin" class="on" type="button" data-i18n="login"></button>
-        <button id="tabReg" type="button" data-i18n="register"></button>
-      </div>
-      <form id="fLogin">
-        <label for="lEmail" data-i18n="email"></label><input id="lEmail" type="email" required autocomplete="email">
-        <label for="lPass" data-i18n="password"></label><input id="lPass" type="password" required autocomplete="current-password">
-        <button class="btn" type="submit" data-i18n="login"></button>
-      </form>
-      <form id="fReg" class="hide">
-        <label for="rRole" data-i18n="iam"></label>
-        <select id="rRole"><option value="customer" data-i18n="customer"></option><option value="driver" data-i18n="driver"></option></select>
-        <label for="rName" data-i18n="fullname"></label><input id="rName" required autocomplete="name">
-        <label for="rPhone" data-i18n="phone"></label><input id="rPhone" type="tel" required autocomplete="tel" placeholder="+235 ...">
-        <label for="rEmail" data-i18n="email"></label><input id="rEmail" type="email" required autocomplete="email">
-        <label for="rPass" data-i18n="password"></label><input id="rPass" type="password" minlength="6" required autocomplete="new-password">
-        <div id="drvFields" class="hide">
-          <label for="rVeh" data-i18n="vehicle"></label><input id="rVeh" data-i18n-ph="vehiclePh">
-          <label for="rPlate" data-i18n="plate"></label><input id="rPlate">
-        </div>
-        <button class="btn" type="submit" data-i18n="createAccount"></button>
-      </form>
-      <div id="authMsg"></div>
-    </div>
-  </section>
+
   <section id="vCust" class="hide">
     <div id="liveCard" class="card hide">
       <div class="sw"><h2 data-i18n="liveTitle" style="margin:0"></h2><span id="livePill"></span></div>
@@ -260,7 +399,7 @@ button.btn.sm{min-height:44px}
         <button id="modeD" type="button" data-i18n="setDest"></button>
       </div>
       <div id="mapC" class="map"></div>
-      <button id="gpsBtn" class="btn alt sm" type="button" data-i18n="useGps"></button>
+      <button id="gpsBtn" class="btn alt sm" type="button"><svg class="ic"><use href="#i-target"/></svg><span data-i18n="useGps"></span></button>
       <label for="cPick" data-i18n="pickup"></label><input id="cPick" data-i18n-ph="pickupPh">
       <label for="cDest" data-i18n="destination"></label>
       <div class="row"><input id="cDest" data-i18n-ph="destPh" style="flex:3"><button id="searchBtn" class="btn alt" type="button" style="flex:1;margin-top:0" data-i18n="search"></button></div>
@@ -271,27 +410,29 @@ button.btn.sm{min-height:44px}
       </div>
       <label id="payLbl" for="paymentMethod" data-i18n="paymentMethod"></label>
       <div id="payPick" class="paypick" role="radiogroup" aria-labelledby="payLbl">
-        <button type="button" role="radio" data-pay="cash" class="on" aria-checked="true"><i>💵</i><span data-i18n="cash"></span></button>
-        <button type="button" role="radio" data-pay="airtel_money" aria-checked="false"><i>📱</i><span>Airtel Money</span></button>
-        <button type="button" role="radio" data-pay="moov_money" aria-checked="false"><i>📲</i><span>Moov Money</span></button>
+        <button type="button" role="radio" data-pay="cash" class="on" aria-checked="true"><svg class="ic"><use href="#i-cash"/></svg><span data-i18n="cash"></span></button>
+        <button type="button" role="radio" data-pay="airtel_money" aria-checked="false"><svg class="ic"><use href="#i-phone"/></svg><span>Airtel Money</span></button>
+        <button type="button" role="radio" data-pay="moov_money" aria-checked="false"><svg class="ic"><use href="#i-phone"/></svg><span>Moov Money</span></button>
       </div>
       <p id="moovNote" class="muted" style="margin:8px 2px 0" data-i18n="moovUnavailable"></p>
       <select id="paymentMethod" class="sr" tabindex="-1" aria-hidden="true"><option value="cash" data-i18n="cash"></option><option value="airtel_money">Airtel Money</option><option value="moov_money">Moov Money</option></select>
       <div id="airtelInstructions" class="msg warn hide"></div>
-      <button id="reqBtn" class="btn" type="button" data-i18n="requestBtn"></button>
+      <button id="reqBtn" class="btn" type="button"><svg class="ic"><use href="#i-moto"/></svg><span data-i18n="requestBtn"></span></button>
       <div id="custMsg"></div>
     </div>
     <div class="card"><h2 data-i18n="myRides"></h2><div id="custRides"></div></div>
   </section>
+
   <section id="vDrv" class="hide">
     <div class="card">
       <h2 data-i18n="myStatus"></h2><div id="drvInfo"></div>
-      <div id="drvSwitch" class="sw hide" style="margin-top:10px"><span data-i18n="available"></span><button id="availBtn" class="btn sm" type="button" style="margin:0"></button></div>
+      <div id="drvSwitch" class="sw hide" style="margin-top:12px"><span data-i18n="available"></span><button id="availBtn" class="btn sm" type="button" style="margin:0"></button></div>
       <div id="drvMsg"></div>
     </div>
     <div class="card"><h2 data-i18n="activeRides"></h2><div id="drvMine"></div></div>
     <div class="card"><h2 data-i18n="availableRequests"></h2><div id="drvPending"></div></div>
   </section>
+
   <section id="vAdm" class="hide">
     <div class="card"><h2 data-i18n="overview"></h2><div id="admStats" class="stats"></div></div>
     <div class="card"><h2 data-i18n="driversMap"></h2><div id="mapA" class="map"></div></div>
@@ -301,11 +442,14 @@ button.btn.sm{min-height:44px}
     <div id="admMsg"></div>
   </section>
 </main>
+
 <footer class="footer">
-  <h2>E&amp;Bz Mobility</h2><p data-i18n="footerTagline"></p>
+  <div class="brand-row"><span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="#0e0e10"><path transform="translate(11.34 38.0) scale(0.04 -0.04)" d="M390 241Q390 283 377.0 302.0Q364 321 341.5 325.5Q319 330 292 329L266 328V164Q266 137 265.0 113.0Q264 89 262 76H396Q426 76 454.0 89.5Q482 103 500.0 134.5Q518 166 518 220H583L578 0H50V66Q73 67 88.5 72.0Q104 77 112.5 95.0Q121 113 121 153V536Q121 563 122.5 588.0Q124 613 125 626Q109 625 85.0 624.5Q61 624 50 623V700H550L556 506H490Q490 561 471.0 589.0Q452 617 424.0 626.5Q396 636 369 635L333 634Q312 634 297.0 628.5Q282 623 274.0 604.5Q266 586 266 547V397H383L379 484H456V241Z"/></svg></span><span>E&amp;Bz <span class="brand-accent">Mobility</span></span></div>
+  <p class="tag" data-i18n="tagline"></p>
   <div id="social" class="social"></div>
-  <div data-i18n="initiative"></div><small data-i18n="copyright"></small>
+  <div class="init" data-i18n="initiative"></div><small data-i18n="copyright"></small>
 </footer>
+
 <script>
 /* Load map and database libraries with CDN fallbacks; the app starts once both attempts finish. */
 (function () {
@@ -381,96 +525,138 @@ const payNumber = m => (PAY[m] && PAY[m].number) || t('numberTba');
 const finalFare = r => (r.final_fare != null ? r.final_fare : r.estimated_fare);
 const isMissingFn = e => !!e && (e.code === 'PGRST202' || e.code === '42883' || /could not find the function|does not exist/i.test(e.message || ''));
 
+/* ============ ICONS (sprite defined in the page) ============ */
+const ic = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+
 /* ============ TRANSLATIONS ============ */
 const I18N = {
-fr:{install:'📲 Installer l’application',iosHint:'Sur iPhone : touchez le bouton Partager, puis « Sur l’écran d’accueil ».',tagline:'Transporter les personnes. Relier les opportunités.',logout:'Quitter',login:'Connexion',register:'Inscription',email:'E-mail',password:'Mot de passe',
-iam:'Je suis',customer:'Client',driver:'Conducteur',fullname:'Nom complet',phone:'Téléphone',vehicle:'Moto (marque/modèle)',plate:'Plaque d’immatriculation',
-createAccount:'Créer mon compte',requestRide:'Demander une moto-taxi',setPickup:'Départ (carte)',setDest:'Arrivée (carte)',useGps:'📍 Ma position',
-pickup:'Adresse de départ',destination:'Destination',pickupPh:'Ex. Marché de Dembé',destPh:'Ex. Gounou Gaya',search:'Chercher',
-mapHint:'Touchez la carte pour placer le départ ou l’arrivée.',estFare:'Tarif estimé',requestBtn:'Commander',myRides:'Mes courses',
-myStatus:'Mon statut conducteur',available:'Disponible',activeRides:'Mes courses en cours',availableRequests:'Demandes disponibles',
-overview:'Vue d’ensemble',driversMap:'Conducteurs disponibles',drivers:'Conducteurs',allRides:'Toutes les courses',
-pending:'En attente',approved:'Approuvé',rejected:'Refusé',accepted:'Acceptée',ongoing:'En cours',completed:'Terminée',cancelled:'Annulée',
-approve:'Approuver',reject:'Refuser',accept:'Accepter',start:'Démarrer',finish:'Terminer',cancel:'Annuler',
-on:'Disponible',off:'Indisponible',goOn:'Se mettre disponible',goOff:'Se mettre indisponible',
-sCustomers:'Clients',sDrivers:'Conducteurs',sActive:'Dispos',sRides:'Courses',sDone:'Terminées',sPend:'En attente',
-noRides:'Aucune course.',noDrivers:'Aucun conducteur.',noReq:'Aucune demande pour le moment.',
-needPick:'Placez le départ sur la carte ou utilisez votre position.',needDest:'Indiquez une destination.',
-sent:'Course demandée. Un conducteur va l’accepter.',confirmMail:'Compte créé. Vérifiez votre e-mail pour confirmer, puis connectez-vous.',
-created:'Compte créé.',drvPending:'Votre dossier est en cours d’examen par l’administrateur.',drvRejected:'Votre dossier a été refusé. Contactez E&Bz Mobility.',
-drvApproved:'Dossier approuvé. Vous pouvez recevoir des courses.',drvNone:'Aucun profil conducteur trouvé. Contactez E&Bz Mobility.',
-gpsDenied:'Position GPS indisponible ou refusée.',gpsNoFn:'Suivi GPS conducteur : fonction base de données non installée.',
-cfgMissing:'Configuration manquante : collez la clé publique Supabase (SUPABASE_KEY) dans index.html.',
-err:'Erreur : ',from:'De',to:'Vers',customerL:'Client',noPos:'Position non trouvée.',km:'km',heroLabel:'E&Bz MOBILITY · MOBILITÉ URBAINE',heroTitleHtml:'Vos déplacements.<br><span>En toute simplicité.</span>',heroText:'Commandez votre moto-taxi en quelques secondes. Retrouvez des conducteurs disponibles et déplacez-vous librement dans N’Djaména.',cityLabel:'📍 N’DJAMÉNA, TCHAD',cityTitle:'Votre ville, à portée de main.',cityText:'Repérez votre quartier et préparez votre prochain déplacement.',bookingTitle:'Où souhaitez-vous aller ?',bookingText:'Connectez-vous pour commander votre moto-taxi.',bookingBtn:'Commander une moto →',paymentMethod:'Mode de paiement',cash:'Espèces',airtelInstructions:'Envoyez le montant exact au <b>+235 65 28 92 22</b> via Airtel Money. Après le transfert, saisissez la référence de transaction dans « Mes courses ». Le paiement reste en attente jusqu’à vérification.',adminPayments:'Paiements à vérifier',footerTagline:'Moving People. Connecting Opportunities.',initiative:'Une initiative E&Bz Afrika',copyright:'© 2026 E&Bz Mobility · N’Djaména, République du Tchad 🇹🇩',vehiclePh:'Honda, Yamaha…',payment:'Paiement',unpaid:'Non payé',awaiting:'À vérifier',paid:'Payé',failed:'Échec',refunded:'Remboursé',reference:'Référence',transferPrompt:'Transférez {amount} au <b>+235 65 28 92 22</b>, puis indiquez la référence reçue.',referenceLabel:'Référence de transaction Airtel Money',referencePlaceholder:'Ex. référence SMS Airtel',sendReference:'Envoyer la référence',enterReference:'Veuillez saisir la référence de transaction.',referenceSent:'Référence envoyée. Paiement en attente de vérification.',amount:'Montant',confirmPayment:'Confirmer la réception du paiement',noPayment:'Aucun paiement à vérifier.',confirmReceived:'Avez-vous vérifié que le montant est bien arrivé sur votre compte Airtel Money ?',paymentConfirmed:'Paiement confirmé.',clientName:'Client',dayRate:'Tarif de jour',nightRate:'Tarif de nuit',mapPoint:'Point sur la carte',myGps:'Ma position GPS',
-mapFail:'La carte ne peut pas être chargée. Vérifiez votre connexion Internet puis rechargez la page.',sbFail:'Le service de connexion ne peut pas être chargé. Vérifiez votre connexion Internet puis rechargez la page.'},
-en:{install:'📲 Install the app',iosHint:'On iPhone: tap the Share button, then “Add to Home Screen”.',tagline:'Moving People. Connecting Opportunities.',logout:'Log out',login:'Log in',register:'Sign up',email:'Email',password:'Password',
-iam:'I am a',customer:'Customer',driver:'Driver',fullname:'Full name',phone:'Phone',vehicle:'Motorcycle (make/model)',plate:'License plate',
-createAccount:'Create my account',requestRide:'Request a moto-taxi',setPickup:'Pickup (map)',setDest:'Destination (map)',useGps:'📍 My location',
-pickup:'Pickup address',destination:'Destination',pickupPh:'e.g. Dembé market',destPh:'e.g. Gounou Gaya',search:'Search',
-mapHint:'Tap the map to place the pickup or destination.',estFare:'Estimated fare',requestBtn:'Request ride',myRides:'My rides',
-myStatus:'My driver status',available:'Available',activeRides:'My active rides',availableRequests:'Available requests',
-overview:'Overview',driversMap:'Available drivers',drivers:'Drivers',allRides:'All rides',
-pending:'Pending',approved:'Approved',rejected:'Rejected',accepted:'Accepted',ongoing:'Ongoing',completed:'Completed',cancelled:'Cancelled',
-approve:'Approve',reject:'Reject',accept:'Accept',start:'Start',finish:'Complete',cancel:'Cancel',
-on:'Available',off:'Unavailable',goOn:'Go available',goOff:'Go unavailable',
-sCustomers:'Customers',sDrivers:'Drivers',sActive:'Available',sRides:'Rides',sDone:'Completed',sPend:'Pending',
-noRides:'No rides.',noDrivers:'No drivers.',noReq:'No requests right now.',
-needPick:'Place the pickup on the map or use your location.',needDest:'Enter a destination.',
-sent:'Ride requested. A driver will accept it.',confirmMail:'Account created. Check your email to confirm, then log in.',
-created:'Account created.',drvPending:'Your application is being reviewed by the administrator.',drvRejected:'Your application was rejected. Contact E&Bz Mobility.',
-drvApproved:'Application approved. You can receive rides.',drvNone:'No driver profile found. Contact E&Bz Mobility.',
-gpsDenied:'GPS position unavailable or denied.',gpsNoFn:'Driver GPS tracking: database function not installed.',
-cfgMissing:'Missing configuration: paste the Supabase publishable key (SUPABASE_KEY) in index.html.',
-err:'Error: ',from:'From',to:'To',customerL:'Customer',noPos:'Location not found.',km:'km',heroLabel:'E&Bz MOBILITY · URBAN MOBILITY',heroTitleHtml:'Your journeys.<br><span>Made simple.</span>',heroText:'Book a motorcycle taxi in seconds. Find available drivers and move freely around N’Djamena.',cityLabel:'📍 N’DJAMENA, CHAD',cityTitle:'Your city, within reach.',cityText:'Find your neighbourhood and get ready for your next trip.',bookingTitle:'Where would you like to go?',bookingText:'Log in to book your motorcycle taxi.',bookingBtn:'Book a motorcycle →',paymentMethod:'Payment method',cash:'Cash',airtelInstructions:'Send the exact amount to <b>+235 65 28 92 22</b> via Airtel Money. After the transfer, enter the transaction reference under “My rides”. The payment will remain pending until it is verified.',adminPayments:'Payments to verify',footerTagline:'Moving People. Connecting Opportunities.',initiative:'An E&Bz Afrika initiative',copyright:'© 2026 E&Bz Mobility · N’Djamena, Republic of Chad 🇹🇩',vehiclePh:'Honda, Yamaha…',payment:'Payment',unpaid:'Unpaid',awaiting:'Awaiting verification',paid:'Paid',failed:'Failed',refunded:'Refunded',reference:'Reference',transferPrompt:'Transfer {amount} to <b>+235 65 28 92 22</b>, then enter the reference you received.',referenceLabel:'Airtel Money transaction reference',referencePlaceholder:'e.g. Airtel SMS reference',sendReference:'Submit reference',enterReference:'Please enter the transaction reference.',referenceSent:'Reference submitted. Payment is awaiting verification.',amount:'Amount',confirmPayment:'Confirm payment received',noPayment:'No payments to verify.',confirmReceived:'Have you confirmed that the amount has arrived in your Airtel Money account?',paymentConfirmed:'Payment confirmed.',clientName:'Customer',dayRate:'Day rate',nightRate:'Night rate',mapPoint:'Map point',myGps:'My GPS position',
-mapFail:'The map could not be loaded. Check your Internet connection and reload the page.',sbFail:'The sign-in service could not be loaded. Check your Internet connection and reload the page.'}
-};
-/* Live tracking, notifications and Moov Money texts (these override the older Airtel-only texts). */
-Object.assign(I18N.fr, {
+fr:{
+  tagline:'Transporter les personnes. Relier les opportunités.', logout:'Quitter', login:'Connexion', register:'Inscription',
+  email:'E-mail', password:'Mot de passe', authTitle:'Bienvenue', authSub:'Connectez-vous ou créez un compte pour commander votre moto-taxi.',
+  iam:'Je suis', customer:'Client', driver:'Conducteur', fullname:'Nom complet', phone:'Téléphone', vehicle:'Moto (marque/modèle)', vehiclePh:'Honda, Yamaha…', plate:'Plaque d’immatriculation',
+  createAccount:'Créer mon compte', confirmMail:'Compte créé. Vérifiez votre e-mail pour confirmer, puis connectez-vous.',
+  install:'Installer l’application', iosHint:'Sur iPhone : touchez le bouton Partager, puis « Sur l’écran d’accueil ».',
+  heroLabel:'E&Bz MOBILITY · MOBILITÉ URBAINE', heroTitleHtml:'Vos déplacements.<br><span>En toute simplicité.</span>',
+  heroText:'Commandez votre moto-taxi en quelques secondes. Retrouvez des conducteurs disponibles et déplacez-vous librement dans N’Djaména.',
+  heroMore:'Découvrir', feat1:'Moto-taxi en quelques secondes', feat2:'Suivi en direct', feat3:'Mobile money ou espèces',
+  cityLabel:'N’DJAMÉNA, TCHAD', cityTitle:'Votre ville, à portée de main.', cityText:'Repérez votre quartier et préparez votre prochain déplacement.',
+  bookingTitle:'Où souhaitez-vous aller ?', bookingText:'Connectez-vous pour commander votre moto-taxi.', bookingBtn:'Commander une moto',
+  howTitle:'Comment ça marche', how1T:'Choisissez votre trajet', how1B:'Placez le départ et l’arrivée sur la carte : le tarif s’affiche tout de suite.',
+  how2T:'Un conducteur accepte', how2B:'Suivez-le en direct jusqu’à votre point de départ et appelez-le si besoin.',
+  how3T:'Roulez et payez', how3B:'Réglez en espèces ou par mobile money, au tarif annoncé.',
+  drvCtaT:'Vous êtes conducteur ?', drvCtaB:'Rejoignez E&Bz Mobility et recevez des courses près de vous.', drvCtaBtn:'Devenir conducteur',
+  requestRide:'Demander une moto-taxi', setPickup:'Départ (carte)', setDest:'Arrivée (carte)', useGps:'Ma position',
+  pickup:'Adresse de départ', destination:'Destination', pickupPh:'Ex. Marché de Dembé', destPh:'Ex. Gounou Gaya', search:'Chercher',
+  mapHint:'Touchez la carte pour placer le départ ou l’arrivée.', estFare:'Tarif estimé', requestBtn:'Commander', myRides:'Mes courses',
+  mapPoint:'Point sur la carte', myGps:'Ma position GPS', dayRate:'Tarif de jour', nightRate:'Tarif de nuit',
+  needPick:'Placez le départ sur la carte ou utilisez votre position.', needDest:'Indiquez une destination.',
+  sent:'Course demandée. Un conducteur va l’accepter.', noPos:'Position non trouvée.', customerL:'Client', clientName:'Client',
+  myStatus:'Mon statut conducteur', available:'Disponible', activeRides:'Mes courses en cours', availableRequests:'Demandes disponibles',
+  overview:'Vue d’ensemble', driversMap:'Conducteurs disponibles', drivers:'Conducteurs', allRides:'Toutes les courses', adminPayments:'Paiements à vérifier',
+  pending:'En attente', approved:'Approuvé', rejected:'Refusé', accepted:'Acceptée', ongoing:'En cours', completed:'Terminée', cancelled:'Annulée',
+  approve:'Approuver', reject:'Refuser', accept:'Accepter', start:'Démarrer', finish:'Terminer', cancel:'Annuler',
+  on:'Disponible', off:'Indisponible', goOn:'Se mettre disponible', goOff:'Se mettre indisponible',
+  sCustomers:'Clients', sDrivers:'Conducteurs', sActive:'Dispos', sRides:'Courses', sDone:'Terminées', sPend:'En attente',
+  noRides:'Aucune course.', noDrivers:'Aucun conducteur.', noReq:'Aucune demande pour le moment.', noPayment:'Aucun paiement à vérifier.',
+  drvPending:'Votre dossier est en cours d’examen par l’administrateur.', drvRejected:'Votre dossier a été refusé. Contactez E&Bz Mobility.',
+  drvApproved:'Dossier approuvé. Vous pouvez recevoir des courses.', drvNone:'Aucun profil conducteur trouvé. Contactez E&Bz Mobility.',
+  gpsDenied:'Position GPS indisponible ou refusée.', gpsNoFn:'Suivi GPS conducteur : fonction base de données non installée.',
+  cfgMissing:'Configuration manquante : renseignez la clé publique Supabase (SUPABASE_KEY).',
+  mapFail:'La carte ne peut pas être chargée. Vérifiez votre connexion Internet puis rechargez la page.',
+  sbFail:'Le service de connexion ne peut pas être chargé. Vérifiez votre connexion Internet puis rechargez la page.',
+  err:'Erreur : ',
+  paymentMethod:'Mode de paiement', cash:'Espèces', payment:'Paiement', unpaid:'Non payé', awaiting:'À vérifier', paid:'Payé', failed:'Échec', refunded:'Remboursé',
+  reference:'Référence', referenceLabel:'Référence de transaction', referencePlaceholder:'Ex. référence du SMS de confirmation',
+  sendReference:'Envoyer la référence', enterReference:'Veuillez saisir la référence de transaction.', referenceSent:'Référence envoyée. Paiement en attente de vérification.',
+  amount:'Montant', confirmPayment:'Confirmer la réception du paiement',
+  confirmReceived:'Avez-vous vérifié que le montant est bien arrivé sur le compte marchand ?', paymentConfirmed:'Paiement confirmé.',
   liveTitle:'Ma course en direct', stReq:'Demandée', stRoute:'En route', stArrived:'Arrivé', stRide:'En course', stDone:'Terminée',
   liveWaiting:'En attente d’un conducteur…',
   liveComing:'Votre conducteur arrive : environ {min} min ({km} km)', liveComingNoPos:'Votre conducteur est en route. Position en cours de mise à jour…',
   liveArrived:'Votre conducteur est arrivé au point de départ.',
   liveOngoing:'Course en cours : environ {min} min avant l’arrivée ({km} km)', liveOngoingNoPos:'Course en cours. Bon trajet !',
   liveDone:'Course terminée. Merci d’avoir voyagé avec E&Bz Mobility.',
-  liveFare:'Tarif estimé', finalFare:'Coût final', call:'📞 Appeler', close:'Fermer',
+  liveFare:'Tarif estimé', finalFare:'Coût final', call:'Appeler', close:'Fermer',
   payPaid:'Paiement reçu : {amount}. Merci !', payAwaiting:'Référence envoyée. Paiement en attente de vérification.',
   payCash:'Payez {amount} en espèces au conducteur.', numberTba:'le numéro communiqué par E&Bz Mobility',
   mobileInstructions:'Envoyez le montant exact à <b>{number}</b> via {method}. Après le transfert, saisissez la référence de transaction dans « Ma course en direct » ou « Mes courses ». Le paiement reste en attente jusqu’à vérification.',
   transferPrompt:'Transférez {amount} à <b>{number}</b> via {method}, puis indiquez la référence reçue.',
-  nAcceptedT:'Conducteur trouvé 🏍️', nAcceptedB:'Un conducteur a accepté votre course et arrive vers vous.',
-  nArrivedT:'Votre conducteur est arrivé 📍', nArrivedB:'Il vous attend au point de départ.',
+  nAcceptedT:'Conducteur trouvé', nAcceptedB:'Un conducteur a accepté votre course et arrive vers vous.',
+  nArrivedT:'Votre conducteur est arrivé', nArrivedB:'Il vous attend au point de départ.',
   nOngoingT:'Course démarrée', nOngoingB:'Bon trajet !',
-  nDoneT:'Course terminée ✅', nDoneB:'Coût final : {amount}. Paiement : {method}.',
+  nDoneT:'Course terminée', nDoneB:'Coût final : {amount}. Paiement : {method}.',
   nCancelT:'Course annulée', nCancelB:'Cette course a été annulée.',
-  nPaidT:'Paiement confirmé 💚', nPaidB:'Votre paiement a bien été reçu. Merci !',
+  nPaidT:'Paiement confirmé', nPaidB:'Votre paiement a bien été reçu. Merci !',
   iArrived:'Je suis arrivé', iCash:'Espèces reçues', arrivedSent:'Arrivée signalée au client.',
   arrivedNoFn:'Fonction « arrivée » non installée en base. Le client sera tout de même averti automatiquement quand vous serez à moins de 100 m.',
   cashDone:'Paiement en espèces enregistré.',
-  heroMore:'Découvrir', feat1:'🏍️ Moto-taxi en quelques secondes', feat2:'📍 Suivi en direct', feat3:'💳 Airtel Money ou espèces', moovUnavailable:'Moov Money sera activé dès que le numéro marchand sera disponible.'
-});
-Object.assign(I18N.en, {
+  moovUnavailable:'Moov Money sera activé dès que le numéro marchand sera disponible.',
+  initiative:'Une initiative E&Bz Afrika', copyright:'© 2026 E&Bz Mobility · N’Djaména, République du Tchad'
+},
+en:{
+  tagline:'Moving People. Connecting Opportunities.', logout:'Log out', login:'Log in', register:'Sign up',
+  email:'Email', password:'Password', authTitle:'Welcome', authSub:'Log in or create an account to book your moto-taxi.',
+  iam:'I am a', customer:'Customer', driver:'Driver', fullname:'Full name', phone:'Phone', vehicle:'Motorcycle (make/model)', vehiclePh:'Honda, Yamaha…', plate:'License plate',
+  createAccount:'Create my account', confirmMail:'Account created. Check your email to confirm, then log in.',
+  install:'Install the app', iosHint:'On iPhone: tap the Share button, then “Add to Home Screen”.',
+  heroLabel:'E&Bz MOBILITY · URBAN MOBILITY', heroTitleHtml:'Your journeys.<br><span>Made simple.</span>',
+  heroText:'Book a motorcycle taxi in seconds. Find available drivers and move freely around N’Djamena.',
+  heroMore:'Learn more', feat1:'A moto-taxi in seconds', feat2:'Live tracking', feat3:'Mobile money or cash',
+  cityLabel:'N’DJAMENA, CHAD', cityTitle:'Your city, within reach.', cityText:'Find your neighbourhood and get ready for your next trip.',
+  bookingTitle:'Where would you like to go?', bookingText:'Log in to book your motorcycle taxi.', bookingBtn:'Book a motorcycle',
+  howTitle:'How it works', how1T:'Pick your trip', how1B:'Place the pickup and destination on the map: the fare shows instantly.',
+  how2T:'A driver accepts', how2B:'Follow them live to your pickup point and call them if needed.',
+  how3T:'Ride and pay', how3B:'Pay in cash or by mobile money, at the quoted fare.',
+  drvCtaT:'Are you a driver?', drvCtaB:'Join E&Bz Mobility and get ride requests near you.', drvCtaBtn:'Become a driver',
+  requestRide:'Request a moto-taxi', setPickup:'Pickup (map)', setDest:'Destination (map)', useGps:'My location',
+  pickup:'Pickup address', destination:'Destination', pickupPh:'e.g. Dembé market', destPh:'e.g. Gounou Gaya', search:'Search',
+  mapHint:'Tap the map to place the pickup or destination.', estFare:'Estimated fare', requestBtn:'Request ride', myRides:'My rides',
+  mapPoint:'Map point', myGps:'My GPS position', dayRate:'Day rate', nightRate:'Night rate',
+  needPick:'Place the pickup on the map or use your location.', needDest:'Enter a destination.',
+  sent:'Ride requested. A driver will accept it.', noPos:'Location not found.', customerL:'Customer', clientName:'Customer',
+  myStatus:'My driver status', available:'Available', activeRides:'My active rides', availableRequests:'Available requests',
+  overview:'Overview', driversMap:'Available drivers', drivers:'Drivers', allRides:'All rides', adminPayments:'Payments to verify',
+  pending:'Pending', approved:'Approved', rejected:'Rejected', accepted:'Accepted', ongoing:'Ongoing', completed:'Completed', cancelled:'Cancelled',
+  approve:'Approve', reject:'Reject', accept:'Accept', start:'Start', finish:'Complete', cancel:'Cancel',
+  on:'Available', off:'Unavailable', goOn:'Go available', goOff:'Go unavailable',
+  sCustomers:'Customers', sDrivers:'Drivers', sActive:'Available', sRides:'Rides', sDone:'Completed', sPend:'Pending',
+  noRides:'No rides.', noDrivers:'No drivers.', noReq:'No requests right now.', noPayment:'No payments to verify.',
+  drvPending:'Your application is being reviewed by the administrator.', drvRejected:'Your application was rejected. Contact E&Bz Mobility.',
+  drvApproved:'Application approved. You can receive rides.', drvNone:'No driver profile found. Contact E&Bz Mobility.',
+  gpsDenied:'GPS position unavailable or denied.', gpsNoFn:'Driver GPS tracking: database function not installed.',
+  cfgMissing:'Missing configuration: set the Supabase publishable key (SUPABASE_KEY).',
+  mapFail:'The map could not be loaded. Check your Internet connection and reload the page.',
+  sbFail:'The sign-in service could not be loaded. Check your Internet connection and reload the page.',
+  err:'Error: ',
+  paymentMethod:'Payment method', cash:'Cash', payment:'Payment', unpaid:'Unpaid', awaiting:'Awaiting verification', paid:'Paid', failed:'Failed', refunded:'Refunded',
+  reference:'Reference', referenceLabel:'Transaction reference', referencePlaceholder:'e.g. reference from the confirmation SMS',
+  sendReference:'Submit reference', enterReference:'Please enter the transaction reference.', referenceSent:'Reference submitted. Payment is awaiting verification.',
+  amount:'Amount', confirmPayment:'Confirm payment received',
+  confirmReceived:'Have you confirmed that the amount has arrived in the merchant account?', paymentConfirmed:'Payment confirmed.',
   liveTitle:'My ride, live', stReq:'Requested', stRoute:'On the way', stArrived:'Arrived', stRide:'Riding', stDone:'Completed',
   liveWaiting:'Waiting for a driver…',
   liveComing:'Your driver is coming: about {min} min away ({km} km)', liveComingNoPos:'Your driver is on the way. Updating position…',
   liveArrived:'Your driver has arrived at the pickup point.',
   liveOngoing:'Ride in progress: about {min} min to arrival ({km} km)', liveOngoingNoPos:'Ride in progress. Enjoy your trip!',
   liveDone:'Ride completed. Thank you for riding with E&Bz Mobility.',
-  liveFare:'Estimated fare', finalFare:'Final cost', call:'📞 Call', close:'Close',
+  liveFare:'Estimated fare', finalFare:'Final cost', call:'Call', close:'Close',
   payPaid:'Payment received: {amount}. Thank you!', payAwaiting:'Reference submitted. Payment is awaiting verification.',
   payCash:'Pay {amount} in cash to the driver.', numberTba:'the number provided by E&Bz Mobility',
   mobileInstructions:'Send the exact amount to <b>{number}</b> via {method}. After the transfer, enter the transaction reference under “My ride, live” or “My rides”. The payment stays pending until it is verified.',
   transferPrompt:'Transfer {amount} to <b>{number}</b> via {method}, then enter the reference you received.',
-  nAcceptedT:'Driver found 🏍️', nAcceptedB:'A driver accepted your ride and is heading to you.',
-  nArrivedT:'Your driver has arrived 📍', nArrivedB:'They are waiting at the pickup point.',
+  nAcceptedT:'Driver found', nAcceptedB:'A driver accepted your ride and is heading to you.',
+  nArrivedT:'Your driver has arrived', nArrivedB:'They are waiting at the pickup point.',
   nOngoingT:'Ride started', nOngoingB:'Enjoy your trip!',
-  nDoneT:'Ride completed ✅', nDoneB:'Final cost: {amount}. Payment: {method}.',
+  nDoneT:'Ride completed', nDoneB:'Final cost: {amount}. Payment: {method}.',
   nCancelT:'Ride cancelled', nCancelB:'This ride was cancelled.',
-  nPaidT:'Payment confirmed 💚', nPaidB:'Your payment was received. Thank you!',
+  nPaidT:'Payment confirmed', nPaidB:'Your payment was received. Thank you!',
   iArrived:'I have arrived', iCash:'Cash received', arrivedSent:'Arrival sent to the customer.',
   arrivedNoFn:'The “arrival” database function is not installed. The customer will still be alerted automatically when you are within 100 m.',
   cashDone:'Cash payment recorded.',
-  heroMore:'Learn more', feat1:'🏍️ A moto-taxi in seconds', feat2:'📍 Live tracking', feat3:'💳 Airtel Money or cash', moovUnavailable:'Moov Money will be enabled once the merchant number is available.'
-});
+  moovUnavailable:'Moov Money will be enabled once the merchant number is available.',
+  initiative:'An E&Bz Afrika initiative', copyright:'© 2026 E&Bz Mobility · N’Djamena, Republic of Chad'
+}
+};
 let lang = (()=>{try{return localStorage.getItem('klando_lang')||'fr'}catch(e){return 'fr'}})();
 if (!I18N[lang]) lang = 'fr';
 const t = k => (I18N[lang][k] ?? I18N.fr[k] ?? k);
@@ -492,7 +678,7 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll('[data-i18n-html]').forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
-  $('langBtn').textContent = lang === 'fr' ? 'EN' : 'FR';
+  $('langTxt').textContent = lang === 'fr' ? 'EN' : 'FR';
   syncPay();
   if (me.user) { renderAvail(); refresh(); }
 }
@@ -509,6 +695,7 @@ function keepInputs(container, render){
   if (actId) { const el = document.getElementById(actId); if (el) { el.focus(); try { if (selStart != null) el.setSelectionRange(selStart, selStart); } catch(e){} } }
 }
 
+/* ============ MAPS ============ */
 function mkMap(id){
   if (!window.L) {
     const el = $(id);
@@ -520,6 +707,18 @@ function mkMap(id){
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(m);
   maps[id] = m; setTimeout(()=>m.invalidateSize(),150); return m;
 }
+/* One marker style for every map (pickup / destination / driver). */
+const PIN = {
+  pick:'<span class="pin pin-pick"></span>',
+  dest:'<span class="pin pin-dest"></span>',
+  drv:`<span class="pin pin-drv">${ic('moto')}</span>`
+};
+const dIcon = k => L.divIcon({
+  html:`<div class="mk">${PIN[k]}</div>`, className:'', iconSize:[44,44],
+  iconAnchor: k === 'dest' ? [22,43] : [22,22],
+  popupAnchor: k === 'dest' ? [0,-40] : [0,-22]
+});
+
 function show(v){
   ['vAuth','vCust','vDrv','vAdm'].forEach(x => $(x).classList.toggle('hide', x !== v));
   $('publicHero').classList.toggle('hide', v !== 'vAuth');
@@ -544,6 +743,12 @@ $('tabLogin').onclick = () => { $('tabLogin').classList.add('on'); $('tabReg').c
 $('tabReg').onclick = () => { $('tabReg').classList.add('on'); $('tabLogin').classList.remove('on'); $('fReg').classList.remove('hide'); $('fLogin').classList.add('hide'); flash('authMsg',''); };
 $('rRole').onchange = () => $('drvFields').classList.toggle('hide', $('rRole').value !== 'driver');
 $('langBtn').onclick = () => { lang = lang === 'fr' ? 'en' : 'fr'; try{localStorage.setItem('klando_lang',lang)}catch(e){} applyLang(); };
+/* "Book a motorcycle" buttons scroll to the sign-in card; the driver banner opens the sign-up form as a driver. */
+document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => $(b.dataset.go).scrollIntoView({ behavior:'smooth', block:'start' }));
+$('drvCta').onclick = () => {
+  $('tabReg').click(); $('rRole').value = 'driver'; $('rRole').onchange();
+  $('vAuth').scrollIntoView({ behavior:'smooth', block:'start' });
+};
 
 function busy(btn, on){ if (btn) btn.disabled = on; }
 
@@ -636,7 +841,7 @@ $('modeD').onclick = () => setMode('d');
 function placeMarker(kind, ll){
   const m = maps.mapC; if (!m) return;
   if (C.mk[kind]) m.removeLayer(C.mk[kind]);
-  C.mk[kind] = L.marker(ll).addTo(m).bindPopup(kind==='p'?t('setPickup'):t('setDest'));
+  C.mk[kind] = L.marker(ll, { icon: dIcon(kind==='p' ? 'pick' : 'dest') }).addTo(m).bindPopup(kind==='p'?t('setPickup'):t('setDest'));
   updateFare();
 }
 function updateFare(){
@@ -795,7 +1000,7 @@ function paymentLabel(r){
 }
 function rideHtml(r, actions){
   return `<div class="item"><div class="top"><b>${esc(r.pickup_address)} → ${esc(r.destination)}</b>${pill(r.status)}</div>
-  <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(r.estimated_fare)} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${paymentLabel(r)}${actions||''}</div>`;
+  <div class="muted">${esc(t('customerL'))}: ${esc(r.customer_name)} · ${money(finalFare(r))} · ${new Date(r.created_at).toLocaleString(lang==='fr'?'fr-FR':'en-GB')}</div>${paymentLabel(r)}${actions||''}</div>`;
 }
 
 async function loadCustomer(){
@@ -806,7 +1011,7 @@ async function loadCustomer(){
     $('custRides').innerHTML = (data||[]).map(r => {
       let actions = r.status==='pending' ? `<button class="btn red sm" data-cancel="${esc(r.id)}">${t('cancel')}</button>` : '';
       if (PAY[r.payment_method] && ['unpaid','failed'].includes(r.payment_status) && r.status !== 'cancelled' && r.id !== liveRideId) {
-        actions += `<div class="msg warn">${transferText(r)}</div><label for="ref-${esc(r.id)}">${t('referenceLabel')}</label><input id="ref-${esc(r.id)}" maxlength="100" placeholder="${t('referencePlaceholder')}"><button class="btn alt sm" data-submit-payment="${esc(r.id)}">${t('sendReference')}</button>`;
+        actions += `<div class="msg warn">${transferText(r)}</div><label for="ref-${esc(r.id)}">${t('referenceLabel')}</label><input id="ref-${esc(r.id)}" maxlength="100" placeholder="${esc(t('referencePlaceholder'))}"><button class="btn alt sm" data-submit-payment="${esc(r.id)}">${t('sendReference')}</button>`;
       }
       return rideHtml(r, actions);
     }).join('') || `<p class="muted">${t('noRides')}</p>`;
@@ -927,15 +1132,14 @@ async function updateLive(rides){
     renderLive(live, driver);
   } catch(e){ console.error(e); }
 }
-const dIcon = emoji => L.divIcon({ html:`<div class="mk">${emoji}</div>`, className:'', iconSize:[36,36], iconAnchor:[18,18] });
 function updateLiveMap(m, r, dpos){
   if (LIVE.rideId !== r.id) {
     ['pick','dest','drv'].forEach(k => { if (LIVE[k]) { m.removeLayer(LIVE[k]); LIVE[k] = null; } });
     LIVE.rideId = r.id; LIVE.fit = null;
-    if (hasPos(r.pickup_lat, r.pickup_lng)) LIVE.pick = L.marker(ll(r.pickup_lat, r.pickup_lng), { icon:dIcon('📍') }).addTo(m).bindPopup(esc(t('pickup')));
-    if (hasPos(r.destination_lat, r.destination_lng)) LIVE.dest = L.marker(ll(r.destination_lat, r.destination_lng), { icon:dIcon('🏁') }).addTo(m).bindPopup(esc(t('destination')));
+    if (hasPos(r.pickup_lat, r.pickup_lng)) LIVE.pick = L.marker(ll(r.pickup_lat, r.pickup_lng), { icon:dIcon('pick') }).addTo(m).bindPopup(esc(t('pickup')));
+    if (hasPos(r.destination_lat, r.destination_lng)) LIVE.dest = L.marker(ll(r.destination_lat, r.destination_lng), { icon:dIcon('dest') }).addTo(m).bindPopup(esc(t('destination')));
   }
-  if (dpos) { if (!LIVE.drv) LIVE.drv = L.marker(dpos, { icon:dIcon('🏍️'), zIndexOffset:1000 }).addTo(m); else LIVE.drv.setLatLng(dpos); }
+  if (dpos) { if (!LIVE.drv) LIVE.drv = L.marker(dpos, { icon:dIcon('drv'), zIndexOffset:1000 }).addTo(m); else LIVE.drv.setLatLng(dpos); }
   else if (LIVE.drv) { m.removeLayer(LIVE.drv); LIVE.drv = null; }
   const pts = [];
   if (hasPos(r.pickup_lat, r.pickup_lng)) pts.push(ll(r.pickup_lat, r.pickup_lng));
@@ -947,7 +1151,7 @@ function updateLiveMap(m, r, dpos){
 function payBlock(r){
   const id = esc(r.id), amt = money(finalFare(r)), mobile = !!PAY[r.payment_method];
   let h = '';
-  if (r.payment_status === 'paid') h = `<div class="msg ok">✔ ${esc(t('payPaid').replace('{amount}', amt))}</div>`;
+  if (r.payment_status === 'paid') h = `<div class="msg ok">${ic('check')} ${esc(t('payPaid').replace('{amount}', amt))}</div>`;
   else if (mobile && ['unpaid','failed'].includes(r.payment_status)) h = `<div class="msg warn">${transferText(r)}</div><label for="lref-${id}">${t('referenceLabel')}</label><input id="lref-${id}" maxlength="100" placeholder="${esc(t('referencePlaceholder'))}"><button class="btn alt sm" data-live-pay="${id}">${t('sendReference')}</button>`;
   else if (mobile && r.payment_status === 'awaiting_verification') h = `<div class="msg warn">${t('payAwaiting')}</div>`;
   else if (!mobile && r.status === 'completed') h = `<div class="msg warn">${esc(t('payCash').replace('{amount}', amt))}</div>`;
@@ -963,7 +1167,7 @@ function renderLive(r, d){
   const arrived = !!r.arrived_at || !!geoArrived[r.id];
   const idx = r.status === 'pending' ? 0 : r.status === 'accepted' ? (arrived ? 2 : 1) : r.status === 'ongoing' ? 3 : 4;
   $('liveSteps').innerHTML = ['stReq','stRoute','stArrived','stRide','stDone'].map((k,i) =>
-    `<div class="step ${i < idx ? 'done' : i === idx ? 'cur' : ''}"><i>${i < idx ? '✓' : i + 1}</i><span>${t(k)}</span></div>`).join('');
+    `<div class="step ${i < idx ? 'done' : i === idx ? 'cur' : ''}"><i>${i < idx ? ic('check') : i + 1}</i><span>${t(k)}</span></div>`).join('');
   $('livePill').innerHTML = pill(r.status);
 
   const dpos = d && hasPos(d.latitude, d.longitude) && r.status !== 'completed' ? ll(d.latitude, d.longitude) : null;
@@ -981,7 +1185,7 @@ function renderLive(r, d){
   let who = '';
   if (d && d.display_name) {
     const tel = String(d.phone || '').replace(/[^0-9+]/g, '');
-    who = `<div class="drv"><span class="av">${esc(String(d.display_name).trim().charAt(0).toUpperCase())}</span><div><b>${esc(d.display_name)}</b><div class="muted">${esc(d.vehicle || '')} ${esc(d.vehicle_plate || '')}</div></div></div>` + (tel ? `<a class="call" href="tel:${esc(tel)}">${t('call')}</a>` : '');
+    who = `<div class="drv"><span class="av">${esc(String(d.display_name).trim().charAt(0).toUpperCase())}</span><div><b>${esc(d.display_name)}</b><div class="muted">${esc(d.vehicle || '')} ${esc(d.vehicle_plate || '')}</div></div></div>` + (tel ? `<a class="call" href="tel:${esc(tel)}">${ic('call')}${t('call')}</a>` : '');
   }
   $('liveInfo').innerHTML = `<div class="live-line">${esc(line)}</div>${who}
     <div class="sw" style="margin-top:8px"><span>${t(r.status === 'completed' ? 'finalFare' : 'liveFare')}</span><span class="fare">${money(finalFare(r))}</span></div>`;
@@ -1050,11 +1254,11 @@ async function loadDriver(){
   $('drvMine').innerHTML = (mine.data||[]).map(r => {
     let a = '';
     if (r.status==='accepted') {
-      if (!r.arrived_at) a += `<button class="btn alt sm" data-arrived="${esc(r.id)}">📍 ${t('iArrived')}</button>`;
+      if (!r.arrived_at) a += `<button class="btn alt sm" data-arrived="${esc(r.id)}">${ic('pin')}${t('iArrived')}</button>`;
       a += `<button class="btn sm" data-adv="${esc(r.id)}|ongoing">${t('start')}</button>`;
     }
     if (r.status==='ongoing') a = `<button class="btn sm" data-adv="${esc(r.id)}|completed">${t('finish')}</button>`;
-    if (r.status==='completed' && !PAY[r.payment_method] && r.payment_status !== 'paid') a = `<button class="btn sm" data-cash="${esc(r.id)}">💵 ${t('iCash')}</button>`;
+    if (r.status==='completed' && !PAY[r.payment_method] && r.payment_status !== 'paid') a = `<button class="btn sm" data-cash="${esc(r.id)}">${ic('cash')}${t('iCash')}</button>`;
     return rideHtml(r, a);
   }).join('') || `<p class="muted">${t('noRides')}</p>`;
   // Oldest request first, so the customer who has waited longest is served first.
@@ -1123,7 +1327,7 @@ async function loadAdmin(){
   if (!m) return;
   admMk.forEach(x => m.removeLayer(x)); admMk = [];
   drivers.filter(x => x.is_available && x.approval_status==='approved' && x.latitude != null && x.longitude != null)
-    .forEach(x => admMk.push(L.marker([x.latitude, x.longitude]).addTo(m).bindPopup(esc(x.display_name))));
+    .forEach(x => admMk.push(L.marker([x.latitude, x.longitude], { icon:dIcon('drv') }).addTo(m).bindPopup(esc(x.display_name))));
 }
 
 /* ============ BOOT ============ */
