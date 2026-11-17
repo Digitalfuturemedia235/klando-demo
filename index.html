@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="E&Bz Mobility – Commandez votre moto-taxi à N'Djaména. Moving People. Connecting Opportunities.">
+<meta name="description" content="E&Bz Mobility – Réservez une moto ou une voiture et commandez vos repas en livraison à N’Djaména. Moving People. Connecting Opportunities.">
 <meta name="theme-color" content="#0e0e10">
+<meta name="application-name" content="E&Bz Mobility · Phase 1 Pilot + SaaS-ready">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -223,6 +224,19 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
 .footer .init{margin:14px 0 4px;color:var(--orange);font-weight:700;font-size:14px}
 .footer small{color:#8f8f97}
 
+
+.business-platform{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center;margin:24px 0;padding:26px;border-radius:22px;background:#111114;color:#fff;box-shadow:var(--sh-1)}
+.business-platform .eyebrow{color:#ffad4a;font-size:11px;font-weight:900;letter-spacing:1.3px}
+.business-platform h2{margin:9px 0;font-size:clamp(22px,3vw,30px);line-height:1.12;letter-spacing:-.5px}
+.business-platform p{color:#c7c7cc;font-size:14px;line-height:1.55}
+.business-platform .btn{margin-top:10px}
+.business-features{display:grid;gap:10px}
+.business-features>div{padding:13px 15px;border:1px solid #39393f;border-radius:14px;background:#1b1b20}
+.business-features b{display:block;font-size:14px}
+.business-features small{display:block;margin:5px 0 0 25px;color:#b8b8c0;font-size:12px;line-height:1.4}
+.business-note{grid-column:1/-1;margin:0!important;padding-top:12px;border-top:1px solid #39393f;font-size:12px!important}
+@media(max-width:700px){.business-platform{grid-template-columns:1fr;padding:21px}.business-note{grid-column:auto}}
+
 /* ---------- Layout breakpoints ---------- */
 @media (min-width:900px){
   .landing{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}
@@ -276,6 +290,25 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
 .service-icon{font-size:27px}.service-option small{color:#666;font-size:12px}
 #vehicleClassWrap{margin:10px 0 16px}
 @media(max-width:420px){.service-option{padding:12px;min-height:105px}}
+.customer-modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}
+.customer-mode{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:18px;border:2px solid var(--line);border-radius:18px;background:#fff;text-align:left;color:var(--ink);min-height:132px}
+.customer-mode .mode-icon{font-size:30px}
+.customer-mode b{font-size:16px}
+.customer-mode small{font-size:12px;color:var(--muted);line-height:1.4}
+.customer-mode.on{border-color:var(--orange);background:#fff8ee;box-shadow:0 0 0 3px rgba(255,138,0,.12)}
+.public-services{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
+.public-service{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:var(--sh-1)}
+.public-service .mode-icon{font-size:32px}
+.public-service h3{margin:8px 0 5px;font-size:19px}
+.public-service p{margin:0;color:var(--muted);font-size:14px}
+.public-service .btn{margin-top:14px}
+.pilot-note{padding:12px 14px;margin:12px 0;border-radius:14px;background:var(--orange-soft);color:#704000;font-size:13px}
+.food-menu-preview{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--field)}
+.food-menu-preview img{width:88px;height:72px;object-fit:cover;border-radius:10px}
+.food-menu-preview .menu-placeholder{display:grid;place-items:center;width:88px;height:72px;border-radius:10px;background:#fff0dc;font-size:28px}
+.food-catalog{display:grid;gap:10px;margin:12px 0}.food-catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.food-menu-item{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--field)}.food-menu-item img{width:66px;height:66px;object-fit:cover;border-radius:9px}.food-menu-item .grow{flex:1;min-width:0}.food-menu-item button{white-space:nowrap}.food-cart{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}.food-cart-row{display:flex;justify-content:space-between;gap:8px;padding:5px 0}.food-cart-total{font-weight:800;border-top:1px solid var(--line);padding-top:8px;margin-top:6px}
+@media(max-width:600px){.customer-modes,.public-services{grid-template-columns:1fr}}
+
 
 
 textarea{width:100%;min-height:84px;padding:13px 15px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--field);color:var(--ink);font:inherit;resize:vertical}
@@ -406,6 +439,34 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       <h2 data-i18n="cityTitle"></h2>
       <p data-i18n="cityText"></p>
     </div>
+    <div class="public-services">
+      <article class="public-service">
+        <div class="mode-icon">🏍️🚗</div>
+        <h3 data-i18n="publicRideTitle">Book a ride</h3>
+        <p data-i18n="publicRideText">Choose a motorcycle or a car and travel across N’Djamena.</p>
+        <button class="btn" type="button" data-public-mode="ride" data-i18n="publicRideBtn">Find a ride</button>
+      </article>
+      <article class="public-service">
+        <div class="mode-icon">🍲🛵</div>
+        <h3 data-i18n="publicFoodTitle">Order food delivery</h3>
+        <p data-i18n="publicFoodText">Browse partner restaurants, choose your meal and receive it at home.</p>
+        <button class="btn" type="button" data-public-mode="food" data-i18n="publicFoodBtn">Order food</button>
+      </article>
+    </div>
+    <section class="business-platform" aria-labelledby="businessPlatformTitle">
+      <div class="business-platform-copy">
+        <span class="eyebrow" data-i18n="businessEyebrow">FOR BUSINESSES</span>
+        <h2 id="businessPlatformTitle" data-i18n="businessTitle">Digital tools for restaurants and transport businesses</h2>
+        <p data-i18n="businessText">E&Bz Mobility is also being developed as a SaaS platform: business profiles, online orders, dispatch and performance reporting in one place.</p>
+        <button id="businessCta" class="btn" type="button" data-i18n="businessCta">Register a business</button>
+      </div>
+      <div class="business-features">
+        <div><b>🍽️ <span data-i18n="businessF1">Restaurant dashboard</span></b><small data-i18n="businessF1s">Manage your profile, menu and incoming orders.</small></div>
+        <div><b>🚗 <span data-i18n="businessF2">Transport and delivery</span></b><small data-i18n="businessF2s">Connect with motorcycle and car drivers.</small></div>
+        <div><b>📊 <span data-i18n="businessF3">Business insights</span></b><small data-i18n="businessF3s">Prepare to track orders, sales and activity.</small></div>
+      </div>
+      <p class="business-note" data-i18n="businessNote">Pilot access is being onboarded directly by E&Bz. Subscription packages will be introduced after the pilot is validated.</p>
+    </section>
     <div id="mapHome" class="home-map"></div>
     <div class="booking-panel">
       <h3 data-i18n="bookingTitle"></h3>
@@ -430,7 +491,15 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
   <div id="globalMsg"></div>
 
   <section id="vCust" class="hide">
-    <div id="liveCard" class="card hide">
+    <div class="customer-modes" id="customerModes">
+      <button type="button" class="customer-mode on" data-customer-mode="ride" aria-pressed="true">
+        <span class="mode-icon">🏍️🚗</span><b data-i18n="modeRideTitle">I need a ride</b><small data-i18n="modeRideText">Book a motorcycle or car for your journey.</small>
+      </button>
+      <button type="button" class="customer-mode" data-customer-mode="food" aria-pressed="false">
+        <span class="mode-icon">🍲</span><b data-i18n="modeFoodTitle">I want food delivered</b><small data-i18n="modeFoodText">Choose a restaurant and order a meal.</small>
+      </button>
+    </div>
+    <div id="liveCard" class="card hide ride-workflow">
       <div class="sw"><h2 data-i18n="liveTitle" style="margin:0"></h2><span id="livePill"></span></div>
       <div id="liveSteps" class="steps"></div>
       <div id="liveInfo"></div>
@@ -439,7 +508,7 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       <div id="livePay"></div>
       <div id="liveMsg"></div>
     </div>
-    <div class="card">
+    <div class="card ride-workflow">
       <h2 id="reqTitle" data-i18n="requestRide"></h2>
       <div class="tabs" id="kindTabs">
         <button type="button" class="on" data-kind="ride" data-i18n="kindRide"></button>
@@ -483,11 +552,14 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       <button id="reqBtn" class="btn" type="button"><svg class="ic"><use href="#i-moto"/></svg><span id="reqBtnTxt" data-i18n="requestBtn"></span></button>
       <div id="custMsg"></div>
     </div>
-    <div class="card"><h2 data-i18n="myRides"></h2><div id="custRides"></div></div>
+    <div class="card ride-workflow"><h2 data-i18n="myRides"></h2><div id="custRides"></div></div>
     <div class="card hide" id="foodCard">
       <h2 data-i18n="foodTitle"></h2>
       <p class="muted" data-i18n="foodIntro"></p>
+      <div class="pilot-note" data-i18n="foodPilotNote">Pilot service: five selected restaurant partners. Menu photos and item details will be added as each partner is onboarded.</div>
       <label for="foodShop" data-i18n="foodRestaurant"></label><select id="foodShop"></select>
+      <div id="foodMenuPreview" class="food-menu-preview"><div class="menu-placeholder">🍽️</div><div class="muted" data-i18n="foodMenuHint">Select a partner restaurant to view its menu.</div></div>
+      <div id="foodCatalog" class="food-catalog hide"></div>
       <label for="foodItems" data-i18n="foodItems"></label><textarea id="foodItems" maxlength="300" data-i18n-ph="foodItemsPh"></textarea>
       <label for="foodAmount" data-i18n="foodAmount"></label><input id="foodAmount" type="number" inputmode="numeric" min="0" step="50" placeholder="5000">
       <p class="muted" data-i18n="foodAmountHelp"></p>
@@ -715,8 +787,8 @@ fr:{
   iam:'Je suis', customer:'Client', driver:'Conducteur', fullname:'Nom complet', phone:'Téléphone', vehicle:'Marque et modèle', vehiclePh:'Toyota Corolla, Honda, Yamaha…', plate:'Plaque d’immatriculation',
   createAccount:'Créer mon compte', confirmMail:'Compte créé. Vérifiez votre e-mail pour confirmer, puis connectez-vous.',
   install:'Installer l’application', iosHint:'Sur iPhone : touchez le bouton Partager, puis « Sur l’écran d’accueil ».',
-  heroLabel:'E&Bz MOBILITY · MOBILITÉ URBAINE', heroTitleHtml:'Vos déplacements.<br><span>En toute simplicité.</span>',
-  heroText:'Choisissez une moto ou une voiture, comparez le tarif estimé et réservez votre trajet à N’Djaména.',
+  heroLabel:'E&Bz MOBILITY · MOBILITÉ, COMMERCE & TECHNOLOGIE', heroTitleHtml:'Vos déplacements et vos repas.<br><span>Une seule plateforme.</span>',
+  heroText:'Réservez une moto ou une voiture, commandez vos repas auprès de restaurants partenaires et faites-vous livrer à N’Djaména. Le tout dans une seule application.',
   heroMore:'Découvrir', feat1:'Moto-taxi en quelques secondes', feat2:'Suivi en direct', feat3:'Mobile money ou espèces',
   cityLabel:'N’DJAMÉNA, TCHAD', cityTitle:'Votre ville, à portée de main.', cityText:'Repérez votre quartier et préparez votre prochain déplacement.',
   bookingTitle:'Où souhaitez-vous aller ?', bookingText:'Connectez-vous pour commander votre moto-taxi.', bookingBtn:'Commander une course',
@@ -770,19 +842,20 @@ fr:{
   arrivedNoFn:'Fonction « arrivée » non installée en base. Le client sera tout de même averti automatiquement quand vous serez à moins de 100 m.',
   cashDone:'Paiement en espèces enregistré.',
   moovUnavailable:'Moov Money sera activé dès que le numéro marchand sera disponible.',
+  businessEyebrow:'POUR LES ENTREPRISES', businessTitle:'Des outils numériques pour les restaurants et les professionnels du transport', businessText:'E&Bz Mobility évolue aussi vers une plateforme SaaS : profils professionnels, commandes en ligne, dispatch et suivi de l’activité au même endroit.', businessCta:'Inscrire mon entreprise', businessF1:'Espace restaurant', businessF1s:'Gérez votre profil, votre menu et les commandes reçues.', businessF2:'Transport et livraison', businessF2s:'Connectez-vous aux conducteurs de moto et de voiture.', businessF3:'Suivi de l’activité', businessF3s:'Préparez le suivi des commandes, ventes et opérations.', businessNote:'Pendant le pilote, l’intégration des entreprises est assurée directement par E&Bz. Les formules d’abonnement seront lancées après validation du pilote.',
   initiative:'Une initiative E&Bz Afrika', copyright:'© 2026 E&Bz Mobility · N’Djaména, République du Tchad'
 },
 en:{
   tagline:'Moving People. Connecting Opportunities.', serviceMoto:'Motorcycle', serviceVehicle:'Car', serviceMotoSub:'Fast and affordable', serviceVehicleSub:'Comfort by car', driverServiceLabel:'Service offered', vehicleClassLabel:'Vehicle category', classStandard:'Standard · Sedan', classComfort:'Comfort', classSuv:'SUV / 4x4', classXl:'XL · Large vehicle', logout:'Log out', login:'Log in', register:'Sign up',
-  email:'Email', password:'Password', authTitle:'Welcome', authSub:'Log in or create an account to book a motorcycle or car ride.',
+  email:'Email', password:'Password', authTitle:'Welcome', authSub:'Log in or create an account to book a ride or order food delivery.',
   iam:'I am a', customer:'Customer', driver:'Driver', fullname:'Full name', phone:'Phone', vehicle:'Vehicle make and model', vehiclePh:'Toyota Corolla, Honda, Yamaha…', plate:'License plate',
   createAccount:'Create my account', confirmMail:'Account created. Check your email to confirm, then log in.',
   install:'Install the app', iosHint:'On iPhone: tap the Share button, then “Add to Home Screen”.',
-  heroLabel:'E&Bz MOBILITY · URBAN MOBILITY', heroTitleHtml:'Your journeys.<br><span>Made simple.</span>',
-  heroText:'Choose a motorcycle or car, see your estimated fare and book a ride in N’Djamena. Find available drivers and move freely around N’Djamena.',
+  heroLabel:'E&Bz MOBILITY · MOBILITY, COMMERCE & TECHNOLOGY', heroTitleHtml:'Your rides and meals.<br><span>One platform.</span>',
+  heroText:'Book a motorcycle or car, order meals from partner restaurants and get them delivered in N’Djamena — all in one platform.',
   heroMore:'Learn more', feat1:'A moto-taxi in seconds', feat2:'Live tracking', feat3:'Mobile money or cash',
   cityLabel:'N’DJAMENA, CHAD', cityTitle:'Your city, within reach.', cityText:'Find your neighbourhood and get ready for your next trip.',
-  bookingTitle:'Where would you like to go?', bookingText:'Log in to book your motorcycle taxi.', bookingBtn:'Book a ride',
+  bookingTitle:'Where would you like to go?', bookingText:'Log in to book a motorcycle or car ride, or order food delivery.', bookingBtn:'Book a ride',
   howTitle:'How it works', how1T:'Pick your trip', how1B:'Place the pickup and destination on the map: the fare shows instantly.',
   how2T:'A driver accepts', how2B:'Follow them live to your pickup point and call them if needed.',
   how3T:'Ride and pay', how3B:'Pay in cash or by mobile money, at the quoted fare.',
@@ -833,6 +906,7 @@ en:{
   arrivedNoFn:'The “arrival” database function is not installed. The customer will still be alerted automatically when you are within 100 m.',
   cashDone:'Cash payment recorded.',
   moovUnavailable:'Moov Money will be enabled once the merchant number is available.',
+  businessEyebrow:'FOR BUSINESSES', businessTitle:'Digital tools for restaurants and transport businesses', businessText:'E&Bz Mobility is also evolving into a SaaS platform: business profiles, online orders, dispatch and activity reporting in one place.', businessCta:'Register my business', businessF1:'Restaurant dashboard', businessF1s:'Manage your profile, menu and incoming orders.', businessF2:'Transport and delivery', businessF2s:'Connect with motorcycle and car drivers.', businessF3:'Business insights', businessF3s:'Prepare to track orders, sales and operations.', businessNote:'During the pilot, businesses are onboarded directly by E&Bz. Subscription packages will launch after the pilot is validated.',
   initiative:'An E&Bz Afrika initiative', copyright:'© 2026 E&Bz Mobility · N’Djamena, Republic of Chad'
 }
 };
@@ -1053,7 +1127,7 @@ async function start(){
   me.role = pRole === 'admin' ? 'admin' : (me.driver || pRole === 'driver') ? 'driver' : 'customer';
   if (me.role === 'admin') { show('vAdm'); mkMap('mapA'); }
   else if (me.role === 'driver') show('vDrv');
-  else { show('vCust'); initCustomer(); loadAccount(); }
+  else { show('vCust'); initCustomer(); loadAccount(); setCustomerMode(sessionStorage.getItem('ebz_customer_mode') || 'ride'); sessionStorage.removeItem('ebz_customer_mode'); }
   applyLang();
   scheduleRefresh();
 }
@@ -1639,6 +1713,42 @@ function scoreHtml(m){
   return `<div class="muted" style="margin-top:4px">${badgeHtml(m.badge)} ${esc(line)}</div>`;
 }
 
+/* ---- customer intent: ride booking or restaurant food ordering ---- */
+var customerMode = 'ride';
+function setCustomerMode(mode){
+  customerMode = mode === 'food' ? 'food' : 'ride';
+  document.querySelectorAll('[data-customer-mode]').forEach(b => {
+    const on = b.dataset.customerMode === customerMode;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  $('vCust').querySelectorAll('.ride-workflow').forEach(el => el.classList.toggle('hide', customerMode !== 'ride'));
+  $('foodCard').classList.toggle('hide', customerMode !== 'food' || FOOD.missing);
+  $('foodOrdersCard').classList.toggle('hide', customerMode !== 'food' || FOOD.missing);
+  if (customerMode === 'food') $('foodCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('[data-customer-mode]').forEach(b => b.addEventListener('click', () => setCustomerMode(b.dataset.customerMode)));
+const businessCta = $('businessCta');
+if (businessCta) businessCta.addEventListener('click', () => {
+  if (me.user && me.role === 'customer') {
+    $('acctType').value = 'restaurant';
+    $('acctType').dispatchEvent(new Event('change'));
+    $('acctCard').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  $('tabReg').click();
+  $('rRole').value = 'customer';
+  $('rRole').dispatchEvent(new Event('change'));
+  $('rAcct').value = 'restaurant';
+  $('rAcct').dispatchEvent(new Event('change'));
+  $('vAuth').scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.querySelectorAll('[data-public-mode]').forEach(b => b.addEventListener('click', () => {
+  const mode = b.dataset.publicMode;
+  if (me.user && me.role === 'customer') { setCustomerMode(mode); return; }
+  sessionStorage.setItem('ebz_customer_mode', mode);
+  document.querySelector('[data-go="vAuth"]').click();
+}));
+
 /* ---- ride type: ride or delivery ---- */
 function setKind(k){
   kind = k;
@@ -1900,6 +2010,7 @@ function renderComplaints(list){
 Object.assign(I18N.fr, {
   foodTitle:'Commander un repas', foodIntro:'Choisissez un restaurant vérifié. Vous payez le repas directement au restaurant par Airtel Money ou Moov Money. La livraison et les frais de service se paient en espèces au livreur.',
   foodRestaurant:'Restaurant ou commerce', foodChoose:'Choisir…', foodNoShops:'Aucun restaurant disponible pour le moment.',
+  foodCatalogTitle:'Menu disponible', foodCatalogHelp:'Touchez Ajouter pour composer votre commande. Les prix affichés sont en FCFA.', foodAdd:'Ajouter', foodCartTitle:'Votre panier', foodCartEmpty:'Votre panier est vide. Si le menu détaillé n’est pas encore publié, décrivez votre commande ci-dessous.', foodCartTotal:'Sous-total',
   foodItems:'Votre commande', foodItemsPh:'Ex. : 2 plats de riz au poulet, 1 jus', foodAmount:'Montant du repas (FCFA)', foodAmountHelp:'Montant convenu avec le restaurant, sans la livraison.',
   foodAddr:'Adresse de livraison', foodAddrPh:'Quartier, rue, repère connu', foodPhone:'Votre téléphone', foodGps:'Utiliser ma position', foodGpsOk:'✓ Position enregistrée', foodGpsFail:'Position indisponible. Autorisez la localisation.',
   foodQuoteFood:'Repas (payé au restaurant)', foodQuoteDeliv:'Livraison (espèces au livreur)', foodQuoteSvc:'Frais de service E&Bz (espèces au livreur)', foodQuoteCash:'À payer en espèces à la livraison', foodQuoteTotal:'Total général', foodKm:'Distance estimée : {km} km',
@@ -1925,6 +2036,7 @@ Object.assign(I18N.fr, {
 Object.assign(I18N.en, {
   foodTitle:'Order food', foodIntro:'Choose a verified restaurant. You pay the meal directly to the restaurant by Airtel Money or Moov Money. Delivery and the service fee are paid in cash to the courier.',
   foodRestaurant:'Restaurant or shop', foodChoose:'Choose…', foodNoShops:'No restaurant available right now.',
+  foodCatalogTitle:'Available menu', foodCatalogHelp:'Tap Add to build your order. Prices are in FCFA.', foodAdd:'Add', foodCartTitle:'Your basket', foodCartEmpty:'Your basket is empty. If the detailed menu is not published yet, describe your order below.', foodCartTotal:'Subtotal',
   foodItems:'Your order', foodItemsPh:'E.g. 2 plates of chicken rice, 1 juice', foodAmount:'Meal amount (FCFA)', foodAmountHelp:'Amount agreed with the restaurant, delivery not included.',
   foodAddr:'Delivery address', foodAddrPh:'Area, street, known landmark', foodPhone:'Your phone', foodGps:'Use my location', foodGpsOk:'✓ Location saved', foodGpsFail:'Location unavailable. Please allow location access.',
   foodQuoteFood:'Meal (paid to the restaurant)', foodQuoteDeliv:'Delivery (cash to the courier)', foodQuoteSvc:'E&Bz service fee (cash to the courier)', foodQuoteCash:'To pay in cash on delivery', foodQuoteTotal:'Grand total', foodKm:'Estimated distance: {km} km',
@@ -1966,19 +2078,55 @@ async function loadFood(){
   if (FOOD.missing) return;
   const [m, o, s, so] = await Promise.all([ sb.rpc('ebz_food_merchants'), sb.rpc('ebz_food_orders', { p_as:'customer' }), sb.rpc('ebz_my_merchant'), sb.rpc('ebz_food_orders', { p_as:'merchant' }) ]);
   if ((m.error && isMissingFn(m.error)) || (s.error && isMissingFn(s.error))) { FOOD.missing = true; return; }   // database update not installed yet
-  ['foodCard','foodOrdersCard','shopCard'].forEach(id => $(id).classList.remove('hide'));
+  ['foodCard','foodOrdersCard','shopCard'].forEach(id => $(id).classList.remove('hide')); setCustomerMode(customerMode);
   // restaurant list (kept stable so the selection is not lost on refresh)
-  const shops = m.data || [], key = JSON.stringify(shops.map(x => x.id));
+  const shops = (m.data || []).slice(0, 5); FOOD.cachedShops = shops; const key = JSON.stringify(shops.map(x => x.id));
   if (key !== FOOD.shopsKey) {
     FOOD.shopsKey = key; const cur = $('foodShop').value;
     $('foodShop').innerHTML = shops.length ? `<option value="">${esc(t('foodChoose'))}</option>` + shops.map(x => `<option value="${esc(x.id)}">${esc(x.name)} – ${esc(x.address)}</option>`).join('') : `<option value="">${esc(t('foodNoShops'))}</option>`;
     if (cur && shops.some(x => x.id === cur)) $('foodShop').value = cur;
   }
+  renderFoodMenuPreview(shops.find(x => x.id === $('foodShop').value) || null);
   // my orders as a customer
   keepInputs($('foodOrders'), () => { $('foodOrders').innerHTML = (o.data || []).map(foodOrderCustomer).join('') || `<p class="muted">${t('foodNoOrders')}</p>`; });
   // my restaurant
   renderShop(s.data || null, so.data || []);
 }
+
+function getShopMenu(shop){
+  if (!shop) return [];
+  let raw = shop.menu_items || shop.menuItems || shop.catalog || shop.items || shop.menu || [];
+  if (typeof raw === 'string') { try { raw = JSON.parse(raw); } catch (_) { raw = []; } }
+  if (raw && !Array.isArray(raw) && Array.isArray(raw.items)) raw = raw.items;
+  if (!Array.isArray(raw)) return [];
+  return raw.map((x,i) => ({ id:String(x.id ?? x.item_id ?? i), name:String(x.name || x.title || x.label || '').trim(), description:String(x.description || ''), price:Number(x.price ?? x.amount ?? x.price_fcfa), image:x.image_url || x.image || '', available:x.available !== false && x.is_available !== false }))
+    .filter(x => x.name && Number.isFinite(x.price) && x.price > 0 && x.available);
+}
+function renderFoodMenuPreview(shop){
+  const box = $('foodMenuPreview'), catalog = $('foodCatalog');
+  if (!box) return;
+  if (!shop) { box.innerHTML = `<div class="menu-placeholder">🍽️</div><div class="muted">${t('foodMenuHint')}</div>`; catalog.classList.add('hide'); catalog.innerHTML=''; FOOD.cart={}; return; }
+  const img = shop.menu_image_url || shop.menu_image || shop.image_url || '';
+  box.innerHTML = `${img ? `<img src="${esc(img)}" alt="${esc(shop.name)} menu" onerror="this.outerHTML='<div class=\\"menu-placeholder\\">🍽️</div>'">` : '<div class="menu-placeholder">🍽️</div>'}
+    <div><b>${esc(shop.name)}</b><div class="muted">${esc(shop.address || '')}</div><div class="muted">${t('foodMenuHint')}</div></div>`;
+  FOOD.cart = {};
+  const items = getShopMenu(shop);
+  if (!items.length) { catalog.classList.add('hide'); catalog.innerHTML=''; return; }
+  catalog.classList.remove('hide');
+  catalog._items = items;
+  catalog.innerHTML = `<b>${t('foodCatalogTitle')}</b><div class="muted">${t('foodCatalogHelp')}</div><div class="food-catalog-grid">${items.map((it,i)=>`<div class="food-menu-item">${it.image ? `<img src="${esc(it.image)}" alt="${esc(it.name)}" onerror="this.style.display='none'">` : '<div class="menu-placeholder">🍽️</div>'}<div class="grow"><b>${esc(it.name)}</b>${it.description ? `<div class="muted">${esc(it.description)}</div>`:''}<div><b>${money(it.price)}</b></div></div><button class="btn sm" type="button" data-menu-add="${i}">${t('foodAdd')}</button></div>`).join('')}</div><div id="foodCart" class="food-cart">${t('foodCartEmpty')}</div>`;
+}
+function updateFoodCart(){
+  const catalog=$('foodCatalog'), cart=$('foodCart'), items=catalog && catalog._items || [];
+  if (!cart) return;
+  const chosen=Object.entries(FOOD.cart || {}).filter(([k,q])=>q>0).map(([k,q])=>({item:items[Number(k)],qty:q})).filter(x=>x.item);
+  const total=chosen.reduce((n,x)=>n+x.item.price*x.qty,0);
+  if (!chosen.length){cart.textContent=t('foodCartEmpty'); $('foodItems').value=''; $('foodAmount').value=''; scheduleQuote(); return;}
+  cart.innerHTML=`<b>${t('foodCartTitle')}</b>${chosen.map(x=>`<div class="food-cart-row"><span>${x.qty} × ${esc(x.item.name)}</span><span>${money(x.qty*x.item.price)}</span></div>`).join('')}<div class="food-cart-total">${t('foodCartTotal')}: ${money(total)}</div>`;
+  $('foodItems').value=chosen.map(x=>`${x.qty} × ${x.item.name}`).join(', ').slice(0,300); $('foodAmount').value=String(total); scheduleQuote();
+}
+$('foodCatalog').addEventListener('click', e=>{const b=e.target.closest('[data-menu-add]');if(!b)return;const i=Number(b.dataset.menuAdd);FOOD.cart=FOOD.cart||{};FOOD.cart[i]=(FOOD.cart[i]||0)+1;updateFoodCart();});
+$('foodShop').addEventListener('change', () => renderFoodMenuPreview((FOOD.cachedShops || []).find(x => x.id === $('foodShop').value) || null));
 
 function foodOrderCustomer(o){
   let h = `<div class="item"><div class="top"><b>#${o.id} · ${esc(o.merchant_name)}</b>${fpill(o.status)}</div>
