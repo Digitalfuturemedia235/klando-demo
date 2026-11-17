@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="E&Bz Mobility – Réservez une moto ou une voiture et commandez vos repas en livraison à N’Djaména. Moving People. Connecting Opportunities.">
 <meta name="theme-color" content="#0e0e10">
-<meta name="application-name" content="E&Bz Mobility · Phase 1 Pilot + SaaS-ready">
+<meta name="application-name" content="E&Bz Mobility · Phase 1 Pilot">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,13 +16,13 @@
 <title>E&Bz Mobility</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
 <style>
 /* =====================================================================
    E&Bz MOBILITY — design system
    Palette: ink (near-black) + signal orange. One radius scale, one shadow
-   scale, one icon style (stroke 2px), one font (Plus Jakarta Sans).
+   scale, one icon style (stroke 2px), one font (Inter).
    ===================================================================== */
 :root{
   --ink:#0e0e10; --ink-2:#17171a; --ink-3:#26262b;
@@ -32,11 +32,11 @@
   --r-sm:12px; --r-md:16px; --r-lg:22px;
   --sh-1:0 1px 2px rgba(14,14,16,.05),0 8px 24px rgba(14,14,16,.06);
   --sh-2:0 2px 4px rgba(14,14,16,.06),0 18px 44px rgba(14,14,16,.14);
-  --font:"Plus Jakarta Sans",Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:transparent}
 .hide{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
@@ -104,13 +104,14 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
 
 /* ---------- Landing (hero + auth) ---------- */
 .landing{display:grid;gap:20px;align-items:start;margin-bottom:6px}
-.hero{position:relative;overflow:hidden;padding:36px 30px 30px;border-radius:26px;color:#fff;box-shadow:var(--sh-2);
-  background:radial-gradient(120% 90% at 100% 0%,rgba(255,138,0,.28),transparent 55%),
-             linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/44px 44px,
-             linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/44px 44px,
-             linear-gradient(135deg,#0e0e10,#1d1d21)}
-.hero>*{position:relative;z-index:1}
-.hero-art{position:absolute!important;right:-30px;bottom:-10px;width:min(78%,430px);opacity:.9;z-index:0!important;pointer-events:none}
+.hero{position:relative;isolation:isolate;overflow:hidden;padding:36px 30px 48px;border-radius:26px;color:#fff;box-shadow:var(--sh-2);background:#101114}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(10,12,16,.94) 0%,rgba(10,12,16,.82) 48%,rgba(10,12,16,.42) 100%)}
+.hero>*{position:relative;z-index:2}
+.hero .hero-city-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 44%;z-index:0;}
+.hero-photo-credit{position:absolute!important;right:16px;bottom:10px;z-index:3!important;max-width:calc(100% - 32px);color:rgba(255,255,255,.82);font-size:10px;line-height:1.3;text-align:right;text-decoration:none}
+.hero-photo-credit:hover{text-decoration:underline;color:#fff}
+.hero-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:14px 22px;border:0;border-radius:var(--r-md);background:linear-gradient(180deg,var(--orange-2),var(--orange));color:var(--ink);font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 8px 20px rgba(255,138,0,.28)}
+.hero-primary:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(255,138,0,.36)}
 .hero-label{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,138,0,.14);border:1px solid rgba(255,138,0,.35);color:var(--orange-2);font-size:11px;font-weight:800;letter-spacing:1.6px}
 .hero h2{margin:18px 0 12px;font-size:clamp(30px,5.4vw,46px);line-height:1.08;font-weight:800;letter-spacing:-1.2px;color:#fff}
 .hero h2 span{color:var(--orange)}
@@ -251,8 +252,7 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
   #vAdm>#admMsg{grid-column:1/-1}
 }
 @media (max-width:899px){
-  .hero{padding:28px 22px 24px}
-  .hero-art{opacity:.45;width:70%}
+  .hero{padding:28px 22px 48px}
 }
 @media (max-width:700px){
   .how{grid-template-columns:1fr}
@@ -274,7 +274,7 @@ input:focus,select:focus{outline:none;background:#fff;border-color:var(--orange)
   .booking-panel .btn{width:100%}
   .stats{grid-template-columns:repeat(2,1fr)}
   .row{gap:6px}
-  .hero-cta .btn,.hero-cta .ghost{width:100%;justify-content:center}
+  .hero-cta .hero-primary,.hero-cta .ghost{width:100%;justify-content:center}
   .paypick button{font-size:12px}
   #toasts{top:72px}
 }
@@ -369,21 +369,12 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
 <main>
   <div class="landing">
     <section id="publicHero" class="hero">
-      <svg class="hero-art" viewBox="0 0 440 260" fill="none" aria-hidden="true">
-        <path d="M20 230C90 230 90 150 170 150S250 215 300 175 360 70 410 40" stroke="#ff8a00" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12" opacity=".75"/>
-        <circle cx="20" cy="230" r="9" fill="#0e0e10" stroke="#fff" stroke-width="4"/>
-        <path d="M410 14c-14 0-24 11-24 24 0 18 24 40 24 40s24-22 24-40c0-13-10-24-24-24z" fill="#ff8a00"/>
-        <circle cx="410" cy="38" r="8" fill="#0e0e10"/>
-        <rect x="140" y="104" width="120" height="44" rx="14" fill="#fff" fill-opacity=".08" stroke="#fff" stroke-opacity=".18"/>
-        <circle cx="160" cy="126" r="9" fill="#ff8a00"/>
-        <rect x="178" y="116" width="62" height="7" rx="3.5" fill="#fff" fill-opacity=".5"/>
-        <rect x="178" y="129" width="40" height="7" rx="3.5" fill="#fff" fill-opacity=".25"/>
-      </svg>
+      <img class="hero-city-image" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Place_de_la_Nation_-_N%27djamena.jpg/1280px-Place_de_la_Nation_-_N%27djamena.jpg" alt="Place de la Nation in central N’Djamena, with its commemorative monument" data-i18n-alt="heroImageAlt" fetchpriority="high" decoding="async">
       <div class="hero-label"><svg class="ic"><use href="#i-pin"/></svg><span data-i18n="heroLabel"></span></div>
       <h2 data-i18n-html="heroTitleHtml"></h2>
       <p data-i18n="heroText"></p>
       <div class="hero-cta">
-        <button class="btn" type="button" data-go="vAuth"><span data-i18n="bookingBtn"></span><svg class="ic"><use href="#i-arrow"/></svg></button>
+        <a class="hero-primary" href="#services"><span data-i18n="heroExplore"></span><svg class="ic"><use href="#i-arrow"/></svg></a>
         <a class="ghost" href="#how"><span data-i18n="heroMore"></span></a>
       </div>
       <ul class="hero-feats">
@@ -393,6 +384,7 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       </ul>
       <button id="installBtn" type="button" class="hbtn hide"><svg class="ic"><use href="#i-download"/></svg><span data-i18n="install"></span></button>
       <p id="iosHint" class="hide" data-i18n="iosHint"></p>
+      <a class="hero-photo-credit" href="https://commons.wikimedia.org/wiki/File:Place_de_la_Nation_-_N%27djamena.jpg" target="_blank" rel="noopener noreferrer" data-i18n="heroPhotoCredit">Photo : Rossignol Georges · Wikimedia Commons · CC BY-SA 4.0</a>
     </section>
 
     <section id="vAuth" class="hide">
@@ -439,7 +431,7 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       <h2 data-i18n="cityTitle"></h2>
       <p data-i18n="cityText"></p>
     </div>
-    <div class="public-services">
+    <div id="services" class="public-services">
       <article class="public-service">
         <div class="mode-icon">🏍️🚗</div>
         <h3 data-i18n="publicRideTitle">Book a ride</h3>
@@ -720,17 +712,17 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       loadWithFallback('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js','https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js'),
       loadWithFallback('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2')
     ]);
-    window.KLANDO_DEPENDENCIES = { leafletOK, supabaseOK };
-    document.dispatchEvent(new Event('klando-dependencies-ready'));
+    window.EBZ_DEPENDENCIES = { leafletOK, supabaseOK };
+    document.dispatchEvent(new Event('ebz-dependencies-ready'));
   })();
 })();
 </script>
 <script>
-document.addEventListener('klando-dependencies-ready', function () {
+document.addEventListener('ebz-dependencies-ready', function () {
 /* ============ CONFIGURATION ============ */
 const SUPABASE_URL = 'https://mhtzbdopqfibdpowxyxm.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_3OyX775wvqnzXQHqY4tcSg_klYZRBwY';
-const CITY_CENTER = [12.1348, 15.0557];
+const CITY_CENTER = [12.10672, 15.04440]; // GeoNames city reference point for N’Djamena
 /* Fare limits in XAF (FCFA). Night hours are measured on N'Djaména time, whatever the phone's clock says. */
 const FARE = {
   base: 300, perKm: 100, step: 50,
@@ -749,7 +741,7 @@ function isNight(){
 const REFRESH_MS = 10000;   // normal refresh
 const LIVE_MS = 4000;       // refresh while a customer has a ride in progress
 const GPS_PUSH_MS = 8000;   // driver position upload (feeds the customer's live map)
-/* Mobile-money accounts. Fill in MOOV_NUMBER (e.g. '+235 6x xx xx xx') once KLANDO has its Moov Money number. */
+/* Mobile-money accounts. Fill in MOOV_NUMBER (e.g. '+235 6x xx xx xx') once E&Bz Mobility has its Moov Money merchant number. */
 const MOOV_NUMBER = '';
 const PAY = {
   airtel_money: { label: 'Airtel Money', number: '+235 65 28 92 22' },
@@ -789,15 +781,15 @@ fr:{
   install:'Installer l’application', iosHint:'Sur iPhone : touchez le bouton Partager, puis « Sur l’écran d’accueil ».',
   heroLabel:'E&Bz MOBILITY · MOBILITÉ, COMMERCE & TECHNOLOGIE', heroTitleHtml:'Vos déplacements et vos repas.<br><span>Une seule plateforme.</span>',
   heroText:'Réservez une moto ou une voiture, commandez vos repas auprès de restaurants partenaires et faites-vous livrer à N’Djaména. Le tout dans une seule application.',
-  heroMore:'Découvrir', feat1:'Moto-taxi en quelques secondes', feat2:'Suivi en direct', feat3:'Mobile money ou espèces',
+  heroExplore:'Choisir un service', heroMore:'Comment ça marche', feat1:'Moto ou voiture selon disponibilité', feat2:'Suivi de la course', feat3:'Espèces ou paiement mobile activé',
   cityLabel:'N’DJAMÉNA, TCHAD', cityTitle:'Votre ville, à portée de main.', cityText:'Repérez votre quartier et préparez votre prochain déplacement.',
-  bookingTitle:'Où souhaitez-vous aller ?', bookingText:'Connectez-vous pour commander votre moto-taxi.', bookingBtn:'Commander une course',
-  howTitle:'Comment ça marche', how1T:'Choisissez votre trajet', how1B:'Placez le départ et l’arrivée sur la carte : le tarif s’affiche tout de suite.',
+  bookingTitle:'Que souhaitez-vous faire ?', bookingText:'Connectez-vous pour réserver une moto ou une voiture, ou commander un repas en livraison.', bookingBtn:'Continuer',
+  howTitle:'Comment fonctionne une course', how1T:'Choisissez votre trajet', how1B:'Placez le départ et l’arrivée sur la carte : une estimation s’affiche à partir de la distance calculée.',
   how2T:'Un conducteur accepte', how2B:'Suivez-le en direct jusqu’à votre point de départ et appelez-le si besoin.',
   how3T:'Roulez et payez', how3B:'Réglez en espèces ou par mobile money, au tarif annoncé.',
   drvCtaT:'Vous êtes conducteur ?', drvCtaB:'Rejoignez E&Bz Mobility et recevez des courses près de vous.', drvCtaBtn:'Devenir conducteur',
   requestRide:'Demander une moto-taxi', setPickup:'Départ (carte)', setDest:'Arrivée (carte)', useGps:'Ma position',
-  pickup:'Adresse de départ', destination:'Destination', pickupPh:'Ex. Marché de Dembé', destPh:'Ex. Gounou Gaya', search:'Chercher',
+  pickup:'Adresse de départ', destination:'Destination', pickupPh:'Ex. Marché de Dembé', destPh:'Ex. Place de la Nation', search:'Chercher',
   mapHint:'Touchez la carte pour placer le départ ou l’arrivée.', estFare:'Tarif estimé', requestBtn:'Commander', myRides:'Mes courses',
   mapPoint:'Point sur la carte', myGps:'Ma position GPS', dayRate:'Tarif de jour', fixedFare:'prix fixe dans N’Djaména', nightRate:'Tarif de nuit',
   needPick:'Placez le départ sur la carte ou utilisez votre position.', needDest:'Indiquez une destination.',
@@ -842,7 +834,7 @@ fr:{
   arrivedNoFn:'Fonction « arrivée » non installée en base. Le client sera tout de même averti automatiquement quand vous serez à moins de 100 m.',
   cashDone:'Paiement en espèces enregistré.',
   moovUnavailable:'Moov Money sera activé dès que le numéro marchand sera disponible.',
-  businessEyebrow:'POUR LES ENTREPRISES', businessTitle:'Des outils numériques pour les restaurants et les professionnels du transport', businessText:'E&Bz Mobility évolue aussi vers une plateforme SaaS : profils professionnels, commandes en ligne, dispatch et suivi de l’activité au même endroit.', businessCta:'Inscrire mon entreprise', businessF1:'Espace restaurant', businessF1s:'Gérez votre profil, votre menu et les commandes reçues.', businessF2:'Transport et livraison', businessF2s:'Connectez-vous aux conducteurs de moto et de voiture.', businessF3:'Suivi de l’activité', businessF3s:'Préparez le suivi des commandes, ventes et opérations.', businessNote:'Pendant le pilote, l’intégration des entreprises est assurée directement par E&Bz. Les formules d’abonnement seront lancées après validation du pilote.',
+  businessEyebrow:'POUR LES ENTREPRISES', businessTitle:'Des outils numériques pour les restaurants et les professionnels du transport', businessText:'La plateforme est conçue pour évoluer vers un service SaaS réunissant profils professionnels, commandes en ligne, dispatch et outils de suivi.', businessCta:'Inscrire mon entreprise', businessF1:'Espace restaurant', businessF1s:'Gérez votre profil et les commandes reçues ; le menu est configuré avec E&Bz pendant le pilote.', businessF2:'Transport et livraison', businessF2s:'Connectez-vous aux conducteurs de moto et de voiture.', businessF3:'Suivi de l’activité', businessF3s:'Des indicateurs de commandes et d’activité sont prévus dans les prochaines versions.', businessNote:'Pendant le pilote, l’intégration des entreprises est assurée directement par E&Bz. Les formules d’abonnement seront lancées après validation du pilote.',
   initiative:'Une initiative E&Bz Afrika', copyright:'© 2026 E&Bz Mobility · N’Djaména, République du Tchad'
 },
 en:{
@@ -853,15 +845,15 @@ en:{
   install:'Install the app', iosHint:'On iPhone: tap the Share button, then “Add to Home Screen”.',
   heroLabel:'E&Bz MOBILITY · MOBILITY, COMMERCE & TECHNOLOGY', heroTitleHtml:'Your rides and meals.<br><span>One platform.</span>',
   heroText:'Book a motorcycle or car, order meals from partner restaurants and get them delivered in N’Djamena — all in one platform.',
-  heroMore:'Learn more', feat1:'A moto-taxi in seconds', feat2:'Live tracking', feat3:'Mobile money or cash',
+  heroExplore:'Choose a service', heroMore:'How it works', feat1:'Motorcycle or car, subject to availability', feat2:'Ride tracking', feat3:'Cash or enabled mobile payment',
   cityLabel:'N’DJAMENA, CHAD', cityTitle:'Your city, within reach.', cityText:'Find your neighbourhood and get ready for your next trip.',
-  bookingTitle:'Where would you like to go?', bookingText:'Log in to book a motorcycle or car ride, or order food delivery.', bookingBtn:'Book a ride',
-  howTitle:'How it works', how1T:'Pick your trip', how1B:'Place the pickup and destination on the map: the fare shows instantly.',
+  bookingTitle:'What would you like to do?', bookingText:'Log in to book a motorcycle or car ride, or order food for delivery.', bookingBtn:'Continue',
+  howTitle:'How rides work', how1T:'Pick your trip', how1B:'Set the pickup and destination on the map: an estimate is calculated from the mapped distance.',
   how2T:'A driver accepts', how2B:'Follow them live to your pickup point and call them if needed.',
   how3T:'Ride and pay', how3B:'Pay in cash or by mobile money, at the quoted fare.',
   drvCtaT:'Are you a driver?', drvCtaB:'Join E&Bz Mobility and get ride requests near you.', drvCtaBtn:'Become a driver',
   requestRide:'Request a moto-taxi', setPickup:'Pickup (map)', setDest:'Destination (map)', useGps:'My location',
-  pickup:'Pickup address', destination:'Destination', pickupPh:'e.g. Dembé market', destPh:'e.g. Gounou Gaya', search:'Search',
+  pickup:'Pickup address', destination:'Destination', pickupPh:'e.g. Dembé market', destPh:'e.g. Place de la Nation', search:'Search',
   mapHint:'Tap the map to place the pickup or destination.', estFare:'Estimated fare', requestBtn:'Request ride', myRides:'My rides',
   mapPoint:'Map point', myGps:'My GPS position', dayRate:'Day rate', fixedFare:'fixed price within N’Djamena', nightRate:'Night rate',
   needPick:'Place the pickup on the map or use your location.', needDest:'Enter a destination.',
@@ -906,11 +898,12 @@ en:{
   arrivedNoFn:'The “arrival” database function is not installed. The customer will still be alerted automatically when you are within 100 m.',
   cashDone:'Cash payment recorded.',
   moovUnavailable:'Moov Money will be enabled once the merchant number is available.',
-  businessEyebrow:'FOR BUSINESSES', businessTitle:'Digital tools for restaurants and transport businesses', businessText:'E&Bz Mobility is also evolving into a SaaS platform: business profiles, online orders, dispatch and activity reporting in one place.', businessCta:'Register my business', businessF1:'Restaurant dashboard', businessF1s:'Manage your profile, menu and incoming orders.', businessF2:'Transport and delivery', businessF2s:'Connect with motorcycle and car drivers.', businessF3:'Business insights', businessF3s:'Prepare to track orders, sales and operations.', businessNote:'During the pilot, businesses are onboarded directly by E&Bz. Subscription packages will launch after the pilot is validated.',
+  businessEyebrow:'FOR BUSINESSES', businessTitle:'Digital tools for restaurants and transport businesses', businessText:'The platform is being designed to evolve into a SaaS service bringing together business profiles, online orders, dispatch and reporting tools.', businessCta:'Register my business', businessF1:'Restaurant dashboard', businessF1s:'Manage your business profile and incoming orders; E&Bz coordinates menu setup during the pilot.', businessF2:'Transport and delivery', businessF2s:'Connect with motorcycle and car drivers.', businessF3:'Business insights', businessF3s:'Order and activity reporting is planned for a future release.', businessNote:'During the pilot, businesses are onboarded directly by E&Bz. Subscription packages will launch after the pilot is validated.',
   initiative:'An E&Bz Afrika initiative', copyright:'© 2026 E&Bz Mobility · N’Djamena, Republic of Chad'
 }
 };
 Object.assign(I18N.fr, {
+  heroImageAlt:'Place de la Nation, au centre de N’Djaména, avec son monument commémoratif', heroPhotoCredit:'Photo : Rossignol Georges · Wikimedia Commons · CC BY-SA 4.0', publicRideTitle:'Réserver un trajet', publicRideText:'Choisissez une moto ou une voiture pour vos déplacements à N’Djaména.', publicRideBtn:'Trouver un trajet', publicFoodTitle:'Commander un repas', publicFoodText:'Parcourez les restaurants partenaires du pilote, choisissez vos plats et faites-vous livrer.', publicFoodBtn:'Voir les restaurants', modeRideTitle:'Je veux me déplacer', modeRideText:'Réservez une moto ou une voiture.', modeFoodTitle:'Je veux commander un repas', modeFoodText:'Choisissez un restaurant partenaire et composez votre commande.', foodPilotNote:'Phase pilote : jusqu’à cinq restaurants partenaires. Les menus seront publiés au fur et à mesure de leur intégration.', foodMenuHint:'Sélectionnez un restaurant partenaire pour consulter son menu.',
   requestRide:'Demander une course', requestDeliv:'Demander une livraison', requestBtnD:'Demander une livraison →',
   kindRide:'🏍️ Course', kindDelivery:'📦 Livraison', pickupD:'Adresse de collecte', destinationD:'Adresse de livraison',
   acctLabel:'Je suis', bizName:'Nom de l’établissement', myAccount:'Mon compte', save:'Enregistrer', saved:'Enregistré.',
@@ -942,6 +935,7 @@ Object.assign(I18N.fr, {
   codeText:'Votre livraison E&Bz Mobility arrive. Code de remise : {pin}. Donnez ce code au livreur.'
 });
 Object.assign(I18N.en, {
+  heroImageAlt:'Place de la Nation in central N’Djamena, with its commemorative monument', heroPhotoCredit:'Photo: Rossignol Georges · Wikimedia Commons · CC BY-SA 4.0', publicRideTitle:'Book a ride', publicRideText:'Choose a motorcycle or a car for trips around N’Djamena.', publicRideBtn:'Find a ride', publicFoodTitle:'Order food', publicFoodText:'Browse the pilot’s partner restaurants, choose your meals and have them delivered.', publicFoodBtn:'View restaurants', modeRideTitle:'I need a ride', modeRideText:'Book a motorcycle or car.', modeFoodTitle:'I want food delivered', modeFoodText:'Choose a partner restaurant and build your order.', foodPilotNote:'Pilot phase: up to five partner restaurants. Menus will be published as partners are onboarded.', foodMenuHint:'Select a partner restaurant to view its menu.',
   requestRide:'Request a ride', requestDeliv:'Request a delivery', requestBtnD:'Request a delivery →',
   kindRide:'🏍️ Ride', kindDelivery:'📦 Delivery', pickupD:'Pickup address', destinationD:'Delivery address',
   acctLabel:'I am', bizName:'Business name', myAccount:'My account', save:'Save', saved:'Saved.',
@@ -994,6 +988,7 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
   document.querySelectorAll('[data-i18n-html]').forEach(e => e.innerHTML = t(e.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
+  document.querySelectorAll('[data-i18n-alt]').forEach(e => e.alt = t(e.dataset.i18nAlt));
   $('langTxt').textContent = lang === 'fr' ? 'EN' : 'FR';
   syncPay();
   if (me.user) { renderAvail(); refresh(); }
@@ -2008,7 +2003,7 @@ function renderComplaints(list){
 
 /* ============ FOOD ORDERS: restaurants, pay the restaurant directly, E&Bz fees ============ */
 Object.assign(I18N.fr, {
-  foodTitle:'Commander un repas', foodIntro:'Choisissez un restaurant vérifié. Vous payez le repas directement au restaurant par Airtel Money ou Moov Money. La livraison et les frais de service se paient en espèces au livreur.',
+  foodTitle:'Commander un repas', foodIntro:'Choisissez un restaurant vérifié. Réglez le repas directement au restaurant avec les coordonnées mobile money affichées. La livraison et les frais de service E&Bz se paient en espèces au livreur.',
   foodRestaurant:'Restaurant ou commerce', foodChoose:'Choisir…', foodNoShops:'Aucun restaurant disponible pour le moment.',
   foodCatalogTitle:'Menu disponible', foodCatalogHelp:'Touchez Ajouter pour composer votre commande. Les prix affichés sont en FCFA.', foodAdd:'Ajouter', foodCartTitle:'Votre panier', foodCartEmpty:'Votre panier est vide. Si le menu détaillé n’est pas encore publié, décrivez votre commande ci-dessous.', foodCartTotal:'Sous-total',
   foodItems:'Votre commande', foodItemsPh:'Ex. : 2 plats de riz au poulet, 1 jus', foodAmount:'Montant du repas (FCFA)', foodAmountHelp:'Montant convenu avec le restaurant, sans la livraison.',
@@ -2023,18 +2018,18 @@ Object.assign(I18N.fr, {
   fRefundMsg:'Le restaurant doit vous rembourser le repas. Contactez-le ou E&Bz si besoin.', fCashLine:'Espèces au livreur', fCancel:'Annuler la commande', fNotePrompt:'Précisez la raison (facultatif) :', fDone:'Fait.',
   shopTitle:'Mon restaurant / commerce', shopIntro:'Recevez des commandes et soyez payé directement sur votre compte Airtel Money ou Moov Money. Votre compte est vérifié par E&Bz avant l’activation.',
   shopName:'Nom du commerce', shopKind:'Type', kindRestaurant:'Restaurant', kindShop:'Boutique', shopPhone:'Téléphone du commerce', shopAddr:'Adresse', shopGps:'Utiliser la position du commerce', shopGpsOk:'✓ Position enregistrée',
-  shopProvider:'Opérateur mobile money', shopMomo:'Numéro mobile money', shopMomoName:'Nom du titulaire du compte', shopMomoHelp:'Le compte doit être à votre nom ou au nom du commerce. E&Bz vérifie le nom en envoyant 100 FCFA. Changer de numéro demande une nouvelle vérification.',
+  shopProvider:'Opérateur mobile money', shopMomo:'Numéro mobile money', shopMomoName:'Nom du titulaire du compte', shopMomoHelp:'Le compte doit être au nom du responsable ou du commerce. E&Bz vérifie la concordance avant activation. Ne communiquez jamais votre code secret. Tout changement de numéro demande une nouvelle vérification.',
   shopSave:'Enregistrer', shopSaved:'Enregistré. E&Bz va vérifier votre compte.', shopNeed:'Complétez tous les champs et la position.',
   shop_pending:'Vérification en cours par E&Bz. Vous pourrez recevoir des commandes dès la validation.', shop_verified:'Compte vérifié. Vous recevez des commandes.', shop_suspended:'Compte suspendu. Contactez E&Bz.',
   shopOrders:'Commandes reçues', shopNoOrders:'Aucune commande reçue.',
   fAccept:'Accepter', fReject:'Refuser', fPayOk:'Paiement reçu', fPayNo:'Pas reçu', fAskDriver:'🏍️ Repas prêt : demander un livreur', fCheckPay:'Vérifiez votre application mobile money : avez-vous reçu {amt} avec la référence {ref} ?',
   fRefundDue:'Remboursement à effectuer au client :', fWaitCustPay:'En attente du paiement du client.', fDriverAsked:'Livreur demandé. Remettez le repas à son arrivée.',
-  admShops:'Restaurants et commerces', admVerifyTip:'Pour vérifier : envoyez 100 FCFA au numéro et contrôlez que le nom affiché correspond au titulaire indiqué.', admNoShops:'Aucun commerce inscrit.',
+  admShops:'Restaurants et commerces', admVerifyTip:'Avant validation, comparez le nom du titulaire affiché avec les informations du commerce. Ne demandez jamais de code secret et n’effectuez aucun transfert hors de la procédure officielle approuvée.', admNoShops:'Aucun commerce inscrit.',
   admVerify:'Valider', admSuspend:'Suspendre', admLedger:'Frais E&Bz à encaisser', admNoLedger:'Rien à encaisser.', admSettle:'Marquer comme encaissé', admSettleConfirm:'Confirmer que ce montant a bien été remis à E&Bz ?',
   admFoodOrders:'Commandes de repas', admSettings:'Tarifs et frais', admSave:'Enregistrer', drvOwes:'À remettre à E&Bz (frais de service + commission sur les livraisons de repas) :', pDriver:'Livreur', pMerchant:'Commerce'
 });
 Object.assign(I18N.en, {
-  foodTitle:'Order food', foodIntro:'Choose a verified restaurant. You pay the meal directly to the restaurant by Airtel Money or Moov Money. Delivery and the service fee are paid in cash to the courier.',
+  foodTitle:'Order food', foodIntro:'Choose a verified restaurant. Pay for the meal directly to the restaurant using the mobile-money details displayed. Delivery and the E&Bz service fee are paid in cash to the courier.',
   foodRestaurant:'Restaurant or shop', foodChoose:'Choose…', foodNoShops:'No restaurant available right now.',
   foodCatalogTitle:'Available menu', foodCatalogHelp:'Tap Add to build your order. Prices are in FCFA.', foodAdd:'Add', foodCartTitle:'Your basket', foodCartEmpty:'Your basket is empty. If the detailed menu is not published yet, describe your order below.', foodCartTotal:'Subtotal',
   foodItems:'Your order', foodItemsPh:'E.g. 2 plates of chicken rice, 1 juice', foodAmount:'Meal amount (FCFA)', foodAmountHelp:'Amount agreed with the restaurant, delivery not included.',
@@ -2049,13 +2044,13 @@ Object.assign(I18N.en, {
   fRefundMsg:'The restaurant must refund your meal. Contact it or E&Bz if needed.', fCashLine:'Cash to the courier', fCancel:'Cancel the order', fNotePrompt:'Give a reason (optional):', fDone:'Done.',
   shopTitle:'My restaurant / shop', shopIntro:'Receive orders and get paid directly into your Airtel Money or Moov Money account. E&Bz verifies your account before activation.',
   shopName:'Business name', shopKind:'Type', kindRestaurant:'Restaurant', kindShop:'Shop', shopPhone:'Business phone', shopAddr:'Address', shopGps:'Use the business location', shopGpsOk:'✓ Location saved',
-  shopProvider:'Mobile-money operator', shopMomo:'Mobile-money number', shopMomoName:'Account holder name', shopMomoHelp:'The account must be in your name or the business name. E&Bz checks the name by sending 100 FCFA. Changing the number requires a new verification.',
+  shopProvider:'Mobile-money operator', shopMomo:'Mobile-money number', shopMomoName:'Account holder name', shopMomoHelp:'The account must be in the responsible person’s or business’s name. E&Bz checks that the details match before activation. Never share your secret PIN. Changing the number requires a new verification.',
   shopSave:'Save', shopSaved:'Saved. E&Bz will verify your account.', shopNeed:'Please complete every field and the location.',
   shop_pending:'E&Bz is verifying your account. You can receive orders once it is approved.', shop_verified:'Account verified. You can receive orders.', shop_suspended:'Account suspended. Contact E&Bz.',
   shopOrders:'Orders received', shopNoOrders:'No orders received yet.',
   fAccept:'Accept', fReject:'Decline', fPayOk:'Payment received', fPayNo:'Not received', fAskDriver:'🏍️ Meal ready: request a courier', fCheckPay:'Check your mobile-money app: did you receive {amt} with reference {ref}?',
   fRefundDue:'Refund to be paid to the customer:', fWaitCustPay:'Waiting for the customer’s payment.', fDriverAsked:'Courier requested. Hand over the meal on arrival.',
-  admShops:'Restaurants and shops', admVerifyTip:'To verify: send 100 FCFA to the number and check that the name shown matches the stated account holder.', admNoShops:'No business registered.',
+  admShops:'Restaurants and shops', admVerifyTip:'Before approval, compare the displayed account-holder name with the business details. Never request a secret PIN or make a transfer outside an officially approved verification procedure.', admNoShops:'No business registered.',
   admVerify:'Approve', admSuspend:'Suspend', admLedger:'E&Bz fees to collect', admNoLedger:'Nothing to collect.', admSettle:'Mark as collected', admSettleConfirm:'Confirm this amount was handed to E&Bz?',
   admFoodOrders:'Food orders', admSettings:'Prices and fees', admSave:'Save', drvOwes:'To remit to E&Bz (service fees + commission on meal deliveries):', pDriver:'Courier', pMerchant:'Business'
 });
