@@ -304,6 +304,10 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
 .pin{display:inline-block;letter-spacing:6px;font-size:26px;font-weight:900;background:var(--orange-soft);border:1px dashed var(--orange);border-radius:12px;padding:6px 14px;margin:6px 0}
 .sub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .sub-actions a.btn,.sub-actions button.btn{width:auto;margin:0;min-height:40px;padding:8px 14px;font-size:13px;text-decoration:none}
+.qrow{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:14px}
+.qrow.tot{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;font-weight:800;font-size:15px}
+.qbox{margin:14px 0 4px;padding:12px 16px;border-radius:var(--r-md);background:var(--field);border:1px solid var(--line)}
+.subtitle{margin:18px 0 6px;font-size:15px;font-weight:800}
 </style>
 </head>
 <body>
@@ -480,6 +484,40 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       <div id="custMsg"></div>
     </div>
     <div class="card"><h2 data-i18n="myRides"></h2><div id="custRides"></div></div>
+    <div class="card hide" id="foodCard">
+      <h2 data-i18n="foodTitle"></h2>
+      <p class="muted" data-i18n="foodIntro"></p>
+      <label for="foodShop" data-i18n="foodRestaurant"></label><select id="foodShop"></select>
+      <label for="foodItems" data-i18n="foodItems"></label><textarea id="foodItems" maxlength="300" data-i18n-ph="foodItemsPh"></textarea>
+      <label for="foodAmount" data-i18n="foodAmount"></label><input id="foodAmount" type="number" inputmode="numeric" min="0" step="50" placeholder="5000">
+      <p class="muted" data-i18n="foodAmountHelp"></p>
+      <label for="foodAddr" data-i18n="foodAddr"></label><input id="foodAddr" maxlength="200" data-i18n-ph="foodAddrPh">
+      <button id="foodGps" class="btn alt sm" type="button"><svg class="ic"><use href="#i-target"/></svg><span data-i18n="foodGps"></span></button>
+      <span id="foodGpsState" class="muted"></span>
+      <label for="foodPhone" data-i18n="foodPhone"></label><input id="foodPhone" type="tel" placeholder="+235 ..." autocomplete="tel">
+      <div id="foodQuote" class="qbox hide"></div>
+      <button id="foodOrderBtn" class="btn" type="button"><span data-i18n="foodOrderBtn"></span></button>
+      <div id="foodMsg"></div>
+    </div>
+    <div class="card hide" id="foodOrdersCard"><h2 data-i18n="foodOrdersTitle"></h2><div id="foodOrders"></div></div>
+    <div class="card hide" id="shopCard">
+      <h2 data-i18n="shopTitle"></h2>
+      <p class="muted" data-i18n="shopIntro"></p>
+      <div id="shopStatus"></div>
+      <label for="shopName" data-i18n="shopName"></label><input id="shopName" maxlength="80" autocomplete="organization">
+      <label for="shopKind" data-i18n="shopKind"></label><select id="shopKind"><option value="restaurant" data-i18n="kindRestaurant"></option><option value="shop" data-i18n="kindShop"></option></select>
+      <label for="shopPhone" data-i18n="shopPhone"></label><input id="shopPhone" type="tel" placeholder="+235 ...">
+      <label for="shopAddr" data-i18n="shopAddr"></label><input id="shopAddr" maxlength="200">
+      <button id="shopGps" class="btn alt sm" type="button"><svg class="ic"><use href="#i-target"/></svg><span data-i18n="shopGps"></span></button>
+      <span id="shopGpsState" class="muted"></span>
+      <label for="shopProvider" data-i18n="shopProvider"></label><select id="shopProvider"><option value="airtel">Airtel Money</option><option value="moov">Moov Money</option></select>
+      <label for="shopMomo" data-i18n="shopMomo"></label><input id="shopMomo" type="tel" inputmode="tel" placeholder="+235 6x xx xx xx">
+      <label for="shopMomoName" data-i18n="shopMomoName"></label><input id="shopMomoName" maxlength="80" autocomplete="off">
+      <p class="muted" data-i18n="shopMomoHelp"></p>
+      <button id="shopSave" class="btn" type="button"><span data-i18n="shopSave"></span></button>
+      <div id="shopMsg"></div>
+      <div id="shopOrdersWrap" class="hide"><div class="subtitle" data-i18n="shopOrders"></div><div id="shopOrders"></div></div>
+    </div>
     <div class="card" id="acctCard">
       <h2 data-i18n="myAccount"></h2>
       <label for="acctType" data-i18n="acctLabel"></label><select id="acctType"></select>
@@ -494,6 +532,7 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
       <h2 data-i18n="myStatus"></h2><div id="drvInfo"></div>
       <div id="drvSwitch" class="sw hide" style="margin-top:12px"><span data-i18n="available"></span><button id="availBtn" class="btn sm" type="button" style="margin:0"></button></div>
       <div id="drvMsg"></div>
+      <div id="drvBalance"></div>
     </div>
     <div class="card" id="drvStatsCard"><h2 data-i18n="myPerf"></h2><div id="drvStats"></div></div>
     <div class="card"><h2 data-i18n="activeRides"></h2><div id="drvMine"></div></div>
@@ -505,6 +544,10 @@ button.btn.ghost2{background:#fff;color:var(--ink);border:1px solid var(--line);
     <div class="card"><h2 data-i18n="driversMap"></h2><div id="mapA" class="map"></div></div>
     <div class="card"><h2 data-i18n="drivers"></h2><div id="admDrivers"></div></div>
     <div class="card"><h2 data-i18n="complaints"></h2><div id="admComplaints"></div></div>
+    <div class="card hide" id="admShopsCard"><h2 data-i18n="admShops"></h2><p class="muted" data-i18n="admVerifyTip"></p><div id="admShops"></div></div>
+    <div class="card hide" id="admLedgerCard"><h2 data-i18n="admLedger"></h2><div id="admLedger"></div></div>
+    <div class="card hide" id="admFoodCard"><h2 data-i18n="admFoodOrders"></h2><div id="admFood"></div></div>
+    <div class="card hide" id="admSettingsCard"><h2 data-i18n="admSettings"></h2><div id="admSettings"></div></div>
     <div class="card"><h2 data-i18n="allRides"></h2><div id="admRides"></div></div>
     <div class="card"><h2 data-i18n="adminPayments"></h2><div id="admPayments"></div></div>
     <div id="admMsg"></div>
@@ -1029,9 +1072,9 @@ async function refresh(){
   if (!me.user || refreshing) return;
   refreshing = true;
   try {
-    if (me.role === 'customer') { updateFare(); await loadCustomer(); } // updateFare also flips day/night rate on time
-    else if (me.role === 'driver') await loadDriver();
-    else if (me.role === 'admin') await loadAdmin();
+    if (me.role === 'customer') { updateFare(); await loadCustomer(); await loadFood(); } // updateFare also flips day/night rate on time
+    else if (me.role === 'driver') { await loadDriver(); await loadBalance(); }
+    else if (me.role === 'admin') { await loadAdmin(); await loadAdminFood(); }
   } catch(e){ console.error(e); }
   finally { refreshing = false; }
 }
@@ -1852,6 +1895,262 @@ function renderComplaints(list){
     if (error) { b.disabled = false; flash('admMsg', t('err') + error.message); } else loadAdmin();
   });
 }
+
+/* ============ FOOD ORDERS: restaurants, pay the restaurant directly, E&Bz fees ============ */
+Object.assign(I18N.fr, {
+  foodTitle:'Commander un repas', foodIntro:'Choisissez un restaurant vérifié. Vous payez le repas directement au restaurant par Airtel Money ou Moov Money. La livraison et les frais de service se paient en espèces au livreur.',
+  foodRestaurant:'Restaurant ou commerce', foodChoose:'Choisir…', foodNoShops:'Aucun restaurant disponible pour le moment.',
+  foodItems:'Votre commande', foodItemsPh:'Ex. : 2 plats de riz au poulet, 1 jus', foodAmount:'Montant du repas (FCFA)', foodAmountHelp:'Montant convenu avec le restaurant, sans la livraison.',
+  foodAddr:'Adresse de livraison', foodAddrPh:'Quartier, rue, repère connu', foodPhone:'Votre téléphone', foodGps:'Utiliser ma position', foodGpsOk:'✓ Position enregistrée', foodGpsFail:'Position indisponible. Autorisez la localisation.',
+  foodQuoteFood:'Repas (payé au restaurant)', foodQuoteDeliv:'Livraison (espèces au livreur)', foodQuoteSvc:'Frais de service E&Bz (espèces au livreur)', foodQuoteCash:'À payer en espèces à la livraison', foodQuoteTotal:'Total général', foodKm:'Distance estimée : {km} km',
+  foodOrderBtn:'Envoyer la commande', foodSent:'Commande envoyée au restaurant. Attendez sa confirmation.', foodNeed:'Complétez : restaurant, commande, montant, adresse, position et téléphone.',
+  foodOrdersTitle:'Mes commandes de repas', foodNoOrders:'Aucune commande de repas.',
+  fs_placed:'En attente du restaurant', fs_accepted:'Acceptée : à payer', fs_rejected:'Refusée', fs_payment_declared:'Paiement à confirmer', fs_paid:'Payée', fs_dispatched:'Livreur demandé', fs_delivered:'Livrée', fs_cancelled:'Annulée',
+  fPayHow:'Envoyez {amt} à {prov} au {num} (au nom de {name}), puis saisissez l’identifiant de transaction reçu par SMS.', fPayWarn:'Payez uniquement le numéro affiché ici. E&Bz ne vous demandera jamais de payer un repas à un autre numéro, ni votre code secret.',
+  fRefLabel:'Identifiant de transaction', fRefPh:'Ex. : MP240101.1234', fSendRef:'J’ai payé', fRefSent:'Merci. Le restaurant va confirmer votre paiement.',
+  fWaitShop:'Le restaurant doit accepter votre commande.', fWaitPay:'Le restaurant vérifie votre paiement. Référence :', fPaidWait:'Paiement confirmé. Votre repas est en préparation.', fDriverComing:'Un livreur est demandé. Suivez-le dans « Suivi en direct ».', fDelivered:'Commande livrée. Bon appétit !',
+  fRefundMsg:'Le restaurant doit vous rembourser le repas. Contactez-le ou E&Bz si besoin.', fCashLine:'Espèces au livreur', fCancel:'Annuler la commande', fNotePrompt:'Précisez la raison (facultatif) :', fDone:'Fait.',
+  shopTitle:'Mon restaurant / commerce', shopIntro:'Recevez des commandes et soyez payé directement sur votre compte Airtel Money ou Moov Money. Votre compte est vérifié par E&Bz avant l’activation.',
+  shopName:'Nom du commerce', shopKind:'Type', kindRestaurant:'Restaurant', kindShop:'Boutique', shopPhone:'Téléphone du commerce', shopAddr:'Adresse', shopGps:'Utiliser la position du commerce', shopGpsOk:'✓ Position enregistrée',
+  shopProvider:'Opérateur mobile money', shopMomo:'Numéro mobile money', shopMomoName:'Nom du titulaire du compte', shopMomoHelp:'Le compte doit être à votre nom ou au nom du commerce. E&Bz vérifie le nom en envoyant 100 FCFA. Changer de numéro demande une nouvelle vérification.',
+  shopSave:'Enregistrer', shopSaved:'Enregistré. E&Bz va vérifier votre compte.', shopNeed:'Complétez tous les champs et la position.',
+  shop_pending:'Vérification en cours par E&Bz. Vous pourrez recevoir des commandes dès la validation.', shop_verified:'Compte vérifié. Vous recevez des commandes.', shop_suspended:'Compte suspendu. Contactez E&Bz.',
+  shopOrders:'Commandes reçues', shopNoOrders:'Aucune commande reçue.',
+  fAccept:'Accepter', fReject:'Refuser', fPayOk:'Paiement reçu', fPayNo:'Pas reçu', fAskDriver:'🏍️ Repas prêt : demander un livreur', fCheckPay:'Vérifiez votre application mobile money : avez-vous reçu {amt} avec la référence {ref} ?',
+  fRefundDue:'Remboursement à effectuer au client :', fWaitCustPay:'En attente du paiement du client.', fDriverAsked:'Livreur demandé. Remettez le repas à son arrivée.',
+  admShops:'Restaurants et commerces', admVerifyTip:'Pour vérifier : envoyez 100 FCFA au numéro et contrôlez que le nom affiché correspond au titulaire indiqué.', admNoShops:'Aucun commerce inscrit.',
+  admVerify:'Valider', admSuspend:'Suspendre', admLedger:'Frais E&Bz à encaisser', admNoLedger:'Rien à encaisser.', admSettle:'Marquer comme encaissé', admSettleConfirm:'Confirmer que ce montant a bien été remis à E&Bz ?',
+  admFoodOrders:'Commandes de repas', admSettings:'Tarifs et frais', admSave:'Enregistrer', drvOwes:'À remettre à E&Bz (frais de service + commission sur les livraisons de repas) :', pDriver:'Livreur', pMerchant:'Commerce'
+});
+Object.assign(I18N.en, {
+  foodTitle:'Order food', foodIntro:'Choose a verified restaurant. You pay the meal directly to the restaurant by Airtel Money or Moov Money. Delivery and the service fee are paid in cash to the courier.',
+  foodRestaurant:'Restaurant or shop', foodChoose:'Choose…', foodNoShops:'No restaurant available right now.',
+  foodItems:'Your order', foodItemsPh:'E.g. 2 plates of chicken rice, 1 juice', foodAmount:'Meal amount (FCFA)', foodAmountHelp:'Amount agreed with the restaurant, delivery not included.',
+  foodAddr:'Delivery address', foodAddrPh:'Area, street, known landmark', foodPhone:'Your phone', foodGps:'Use my location', foodGpsOk:'✓ Location saved', foodGpsFail:'Location unavailable. Please allow location access.',
+  foodQuoteFood:'Meal (paid to the restaurant)', foodQuoteDeliv:'Delivery (cash to the courier)', foodQuoteSvc:'E&Bz service fee (cash to the courier)', foodQuoteCash:'To pay in cash on delivery', foodQuoteTotal:'Grand total', foodKm:'Estimated distance: {km} km',
+  foodOrderBtn:'Send the order', foodSent:'Order sent to the restaurant. Wait for its confirmation.', foodNeed:'Please complete: restaurant, order, amount, address, location and phone.',
+  foodOrdersTitle:'My food orders', foodNoOrders:'No food orders yet.',
+  fs_placed:'Waiting for the restaurant', fs_accepted:'Accepted: payment due', fs_rejected:'Declined', fs_payment_declared:'Payment to confirm', fs_paid:'Paid', fs_dispatched:'Courier requested', fs_delivered:'Delivered', fs_cancelled:'Cancelled',
+  fPayHow:'Send {amt} to {prov} on {num} (in the name of {name}), then enter the transaction ID you receive by SMS.', fPayWarn:'Only pay the number shown here. E&Bz will never ask you to pay a meal to another number, nor for your secret code.',
+  fRefLabel:'Transaction ID', fRefPh:'E.g. MP240101.1234', fSendRef:'I have paid', fRefSent:'Thank you. The restaurant will confirm your payment.',
+  fWaitShop:'The restaurant must accept your order.', fWaitPay:'The restaurant is checking your payment. Reference:', fPaidWait:'Payment confirmed. Your meal is being prepared.', fDriverComing:'A courier is requested. Follow it in “Live tracking”.', fDelivered:'Order delivered. Enjoy your meal!',
+  fRefundMsg:'The restaurant must refund your meal. Contact it or E&Bz if needed.', fCashLine:'Cash to the courier', fCancel:'Cancel the order', fNotePrompt:'Give a reason (optional):', fDone:'Done.',
+  shopTitle:'My restaurant / shop', shopIntro:'Receive orders and get paid directly into your Airtel Money or Moov Money account. E&Bz verifies your account before activation.',
+  shopName:'Business name', shopKind:'Type', kindRestaurant:'Restaurant', kindShop:'Shop', shopPhone:'Business phone', shopAddr:'Address', shopGps:'Use the business location', shopGpsOk:'✓ Location saved',
+  shopProvider:'Mobile-money operator', shopMomo:'Mobile-money number', shopMomoName:'Account holder name', shopMomoHelp:'The account must be in your name or the business name. E&Bz checks the name by sending 100 FCFA. Changing the number requires a new verification.',
+  shopSave:'Save', shopSaved:'Saved. E&Bz will verify your account.', shopNeed:'Please complete every field and the location.',
+  shop_pending:'E&Bz is verifying your account. You can receive orders once it is approved.', shop_verified:'Account verified. You can receive orders.', shop_suspended:'Account suspended. Contact E&Bz.',
+  shopOrders:'Orders received', shopNoOrders:'No orders received yet.',
+  fAccept:'Accept', fReject:'Decline', fPayOk:'Payment received', fPayNo:'Not received', fAskDriver:'🏍️ Meal ready: request a courier', fCheckPay:'Check your mobile-money app: did you receive {amt} with reference {ref}?',
+  fRefundDue:'Refund to be paid to the customer:', fWaitCustPay:'Waiting for the customer’s payment.', fDriverAsked:'Courier requested. Hand over the meal on arrival.',
+  admShops:'Restaurants and shops', admVerifyTip:'To verify: send 100 FCFA to the number and check that the name shown matches the stated account holder.', admNoShops:'No business registered.',
+  admVerify:'Approve', admSuspend:'Suspend', admLedger:'E&Bz fees to collect', admNoLedger:'Nothing to collect.', admSettle:'Mark as collected', admSettleConfirm:'Confirm this amount was handed to E&Bz?',
+  admFoodOrders:'Food orders', admSettings:'Prices and fees', admSave:'Save', drvOwes:'To remit to E&Bz (service fees + commission on meal deliveries):', pDriver:'Courier', pMerchant:'Business'
+});
+
+var FOOD = { lat:null, lng:null, qTimer:null, qSeq:0, shopLat:null, shopLng:null, missing:false, shopsKey:'', shopLoaded:false };
+const PROVIDERS = { airtel:'Airtel Money', moov:'Moov Money' };
+const F_CLASS = { placed:'pending', accepted:'accepted', rejected:'cancelled', payment_declared:'pending', paid:'accepted', dispatched:'ongoing', delivered:'completed', cancelled:'cancelled' };
+const fpill = s => `<span class="pill ${F_CLASS[s] || ''}">${esc(t('fs_' + s))}</span>`;
+const SETTING_LABEL = {
+  service_fee:'Frais de service (FCFA)', delivery_base:'Livraison : base (FCFA)', delivery_per_km:'Livraison : par km (FCFA)', delivery_min:'Livraison : minimum (FCFA)', delivery_max:'Livraison : maximum (FCFA)',
+  delivery_commission_pct:'Commission E&Bz sur la livraison (%)', restaurant_commission_pct:'Commission E&Bz sur le repas (%)', food_min:'Commande minimum (FCFA)', food_max:'Commande maximum (FCFA)',
+  max_delivery_km:'Distance maximum (km)', max_open_orders:'Commandes ouvertes par client', order_expiry_min:'Expiration sans réponse (min)' };
+
+function getPosition(done, fail){
+  if (!navigator.geolocation) return fail();
+  navigator.geolocation.getCurrentPosition(p => done(p.coords.latitude, p.coords.longitude), fail, { enableHighAccuracy:true, timeout:12000, maximumAge:30000 });
+}
+
+async function loadFood(){
+  if (FOOD.missing) return;
+  const [m, o, s, so] = await Promise.all([ sb.rpc('ebz_food_merchants'), sb.rpc('ebz_food_orders', { p_as:'customer' }), sb.rpc('ebz_my_merchant'), sb.rpc('ebz_food_orders', { p_as:'merchant' }) ]);
+  if ((m.error && isMissingFn(m.error)) || (s.error && isMissingFn(s.error))) { FOOD.missing = true; return; }   // database update not installed yet
+  ['foodCard','foodOrdersCard','shopCard'].forEach(id => $(id).classList.remove('hide'));
+  // restaurant list (kept stable so the selection is not lost on refresh)
+  const shops = m.data || [], key = JSON.stringify(shops.map(x => x.id));
+  if (key !== FOOD.shopsKey) {
+    FOOD.shopsKey = key; const cur = $('foodShop').value;
+    $('foodShop').innerHTML = shops.length ? `<option value="">${esc(t('foodChoose'))}</option>` + shops.map(x => `<option value="${esc(x.id)}">${esc(x.name)} – ${esc(x.address)}</option>`).join('') : `<option value="">${esc(t('foodNoShops'))}</option>`;
+    if (cur && shops.some(x => x.id === cur)) $('foodShop').value = cur;
+  }
+  // my orders as a customer
+  keepInputs($('foodOrders'), () => { $('foodOrders').innerHTML = (o.data || []).map(foodOrderCustomer).join('') || `<p class="muted">${t('foodNoOrders')}</p>`; });
+  // my restaurant
+  renderShop(s.data || null, so.data || []);
+}
+
+function foodOrderCustomer(o){
+  let h = `<div class="item"><div class="top"><b>#${o.id} · ${esc(o.merchant_name)}</b>${fpill(o.status)}</div>
+    <div class="muted">${esc(o.items)}</div>
+    <div class="muted">${t('foodQuoteFood')}: ${money(o.food_amount)} · ${t('fCashLine')}: ${money(o.cash_on_delivery)}</div>`;
+  if (o.payment_note) h += `<div class="msg warn">${esc(o.payment_note)}</div>`;
+  if (o.status === 'placed') h += `<div class="muted">${t('fWaitShop')}</div>`;
+  if (o.status === 'accepted' && o.momo_number) {
+    const how = t('fPayHow').replace('{amt}', money(o.food_amount)).replace('{prov}', PROVIDERS[o.momo_provider] || '').replace('{num}', o.momo_number).replace('{name}', o.momo_account_name);
+    h += `<div class="msg warn"><b>${esc(how)}</b><div class="muted">${t('fPayWarn')}</div></div>
+      <label for="fref-${o.id}">${t('fRefLabel')}</label><input id="fref-${o.id}" maxlength="30" autocomplete="off" placeholder="${esc(t('fRefPh'))}">
+      <button class="btn sm" type="button" data-f="pay:${o.id}">${t('fSendRef')}</button>`;
+  }
+  if (o.status === 'payment_declared') h += `<div class="muted">${t('fWaitPay')} <b>${esc(o.momo_ref || '')}</b></div>`;
+  if (o.status === 'paid') h += `<div class="msg ok">${t('fPaidWait')}</div>`;
+  if (o.status === 'dispatched') h += `<div class="msg ok">${t('fDriverComing')}</div>`;
+  if (o.status === 'delivered') h += `<div class="msg ok">${t('fDelivered')}</div>`;
+  if (o.refund_due) h += `<div class="msg err">${t('fRefundMsg')}${o.merchant_phone ? ` <a class="call" href="tel:${esc(String(o.merchant_phone).replace(/[^0-9+]/g, ''))}">${esc(o.merchant_phone)}</a>` : ''}</div>`;
+  if (['placed','accepted'].includes(o.status)) h += `<button class="btn red sm" type="button" data-f="ccancel:${o.id}">${t('fCancel')}</button>`;
+  return h + '</div>';
+}
+
+function renderShop(shop, orders){
+  const st = shop ? shop.status : null;
+  $('shopStatus').innerHTML = shop ? `<div class="msg ${st === 'verified' ? 'ok' : st === 'suspended' ? 'err' : 'warn'}">${esc(t('shop_' + st))}${shop.admin_note ? ' — ' + esc(shop.admin_note) : ''}</div>` : '';
+  if (shop && !FOOD.shopLoaded) {   // fill the form once; never overwrite what the user is typing
+    FOOD.shopLoaded = true;
+    $('shopName').value = shop.business_name || ''; $('shopKind').value = shop.kind; $('shopPhone').value = shop.phone || ''; $('shopAddr').value = shop.address || '';
+    $('shopProvider').value = shop.momo_provider; $('shopMomo').value = shop.momo_number || ''; $('shopMomoName').value = shop.momo_account_name || '';
+    FOOD.shopLat = shop.lat; FOOD.shopLng = shop.lng; $('shopGpsState').textContent = t('shopGpsOk');
+  }
+  $('shopOrdersWrap').classList.toggle('hide', !(shop && st === 'verified'));
+  if (shop && st === 'verified') $('shopOrders').innerHTML = orders.map(foodOrderMerchant).join('') || `<p class="muted">${t('shopNoOrders')}</p>`;
+}
+
+function foodOrderMerchant(o){
+  const tel = String(o.customer_phone || '').replace(/[^0-9+]/g, '');
+  let h = `<div class="item"><div class="top"><b>#${o.id} · ${esc(o.customer_name || '')}</b>${fpill(o.status)}</div>
+    <div>${esc(o.items)}</div>
+    <div class="muted">${money(o.food_amount)} · ${esc(o.dest_address || '')} ${tel ? `<a class="call" href="tel:${esc(tel)}">${esc(o.customer_phone)}</a>` : ''}</div>`;
+  if (o.status === 'placed') h += `<button class="btn sm" type="button" data-f="yes:${o.id}">${t('fAccept')}</button><button class="btn red sm" type="button" data-f="no:${o.id}">${t('fReject')}</button>`;
+  if (o.status === 'accepted') h += `<div class="muted">${t('fWaitCustPay')}</div>${o.payment_note ? `<div class="muted">${esc(o.payment_note)}</div>` : ''}<button class="btn red sm" type="button" data-f="mcancel:${o.id}">${t('fCancel')}</button>`;
+  if (o.status === 'payment_declared') h += `<div class="msg warn">${esc(t('fCheckPay').replace('{amt}', money(o.food_amount)).replace('{ref}', o.momo_ref || ''))}</div>
+    <button class="btn sm" type="button" data-f="pok:${o.id}">${t('fPayOk')}</button><button class="btn red sm" type="button" data-f="pno:${o.id}">${t('fPayNo')}</button>`;
+  if (o.status === 'paid') h += `<button class="btn sm" type="button" data-f="drv:${o.id}">${t('fAskDriver')}</button><button class="btn red sm" type="button" data-f="mcancel:${o.id}">${t('fCancel')}</button>`;
+  if (o.status === 'dispatched') h += `<div class="msg ok">${t('fDriverAsked')}</div>`;
+  if (o.refund_due) h += `<div class="msg err">${t('fRefundDue')} <b>${money(o.food_amount)}</b></div>`;
+  return h + '</div>';
+}
+
+/* ---- customer: quote + order ---- */
+function foodInputs(){
+  return { shop:$('foodShop').value, items:$('foodItems').value.trim(), amount:parseInt($('foodAmount').value, 10), addr:$('foodAddr').value.trim(), phone:$('foodPhone').value.trim() };
+}
+function scheduleQuote(){
+  clearTimeout(FOOD.qTimer); FOOD.qTimer = setTimeout(runQuote, 450);
+}
+async function runQuote(){
+  const f = foodInputs(), box = $('foodQuote');
+  if (!f.shop || !(f.amount > 0) || FOOD.lat == null) { box.classList.add('hide'); return; }
+  const seq = ++FOOD.qSeq;
+  const { data, error } = await sb.rpc('ebz_food_quote', { p_merchant:f.shop, p_lat:FOOD.lat, p_lng:FOOD.lng, p_food:f.amount });
+  if (seq !== FOOD.qSeq) return;
+  box.classList.remove('hide');
+  if (error) { box.innerHTML = `<div class="msg err" style="margin:0">${esc(error.message)}</div>`; return; }
+  box.innerHTML = `<div class="qrow"><span>${t('foodQuoteFood')}</span><b>${money(data.food_amount)}</b></div>
+    <div class="qrow"><span>${t('foodQuoteDeliv')}</span><b>${money(data.delivery_fee)}</b></div>
+    <div class="qrow"><span>${t('foodQuoteSvc')}</span><b>${money(data.service_fee)}</b></div>
+    <div class="qrow tot"><span>${t('foodQuoteCash')}</span><b>${money(data.cash_on_delivery)}</b></div>
+    <div class="qrow"><span>${t('foodQuoteTotal')}</span><b>${money(data.total)}</b></div>
+    <div class="muted">${esc(t('foodKm').replace('{km}', data.distance_km))}</div>`;
+}
+['foodShop','foodAmount'].forEach(id => { $(id).addEventListener('input', scheduleQuote); $(id).addEventListener('change', scheduleQuote); });
+$('foodGps').onclick = () => {
+  $('foodGpsState').textContent = '…';
+  getPosition((la, lo) => { FOOD.lat = la; FOOD.lng = lo; $('foodGpsState').textContent = t('foodGpsOk'); scheduleQuote(); },
+              () => { $('foodGpsState').textContent = t('foodGpsFail'); });
+};
+$('foodOrderBtn').onclick = async () => {
+  flash('foodMsg', '');
+  const f = foodInputs();
+  if (!f.shop || f.items.length < 2 || !(f.amount > 0) || f.addr.length < 3 || FOOD.lat == null || f.phone.replace(/\D/g, '').length < 8) return flash('foodMsg', t('foodNeed'), 'warn');
+  const btn = $('foodOrderBtn'); busy(btn, true);
+  try {
+    const { error } = await sb.rpc('ebz_place_food_order', { p_merchant:f.shop, p_items:f.items, p_food:f.amount, p_address:f.addr, p_lat:FOOD.lat, p_lng:FOOD.lng, p_phone:f.phone });
+    if (error) return flash('foodMsg', t('err') + error.message);
+    flash('foodMsg', t('foodSent'), 'ok');
+    $('foodItems').value = ''; $('foodAmount').value = ''; $('foodQuote').classList.add('hide');
+    loadFood();
+  } finally { busy(btn, false); }
+};
+(function(){ const md = () => (me.user && me.user.user_metadata) || {}; $('foodPhone').addEventListener('focus', () => { if (!$('foodPhone').value && md().phone) $('foodPhone').value = md().phone; }); })();
+
+/* ---- restaurant: register / update ---- */
+$('shopGps').onclick = () => {
+  $('shopGpsState').textContent = '…';
+  getPosition((la, lo) => { FOOD.shopLat = la; FOOD.shopLng = lo; $('shopGpsState').textContent = t('shopGpsOk'); }, () => { $('shopGpsState').textContent = t('foodGpsFail'); });
+};
+$('shopSave').onclick = async () => {
+  flash('shopMsg', '');
+  const a = { p_name:$('shopName').value.trim(), p_kind:$('shopKind').value, p_phone:$('shopPhone').value.trim(), p_address:$('shopAddr').value.trim(), p_lat:FOOD.shopLat, p_lng:FOOD.shopLng,
+              p_provider:$('shopProvider').value, p_number:$('shopMomo').value.trim(), p_account_name:$('shopMomoName').value.trim() };
+  if (!a.p_name || !a.p_address || FOOD.shopLat == null || !a.p_number || !a.p_account_name) return flash('shopMsg', t('shopNeed'), 'warn');
+  const btn = $('shopSave'); busy(btn, true);
+  try {
+    const { error } = await sb.rpc('ebz_merchant_apply', a);
+    if (error) return flash('shopMsg', t('err') + error.message);
+    flash('shopMsg', t('shopSaved'), 'ok'); FOOD.shopLoaded = false; loadFood();
+  } finally { busy(btn, false); }
+};
+
+/* ---- actions on orders (customer and restaurant) ---- */
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-f]'); if (!b) return;
+  const [act, rawId] = b.dataset.f.split(':'), id = Number(rawId);
+  const merchantSide = ['yes','no','pok','pno','drv','mcancel'].includes(act), msgId = merchantSide ? 'shopMsg' : 'foodMsg';
+  let name, args;
+  if (act === 'pay') { const ref = ($('fref-' + id) || {}).value; if (!ref || !ref.trim()) return flash(msgId, t('foodNeed'), 'warn'); name = 'ebz_customer_declare_payment'; args = { p_order:id, p_ref:ref }; }
+  else if (act === 'ccancel' || act === 'mcancel') { const n = prompt(t('fNotePrompt'), ''); if (n === null) return; name = 'ebz_cancel_food_order'; args = { p_order:id, p_reason:n || null }; }
+  else if (act === 'yes') { name = 'ebz_merchant_respond'; args = { p_order:id, p_accept:true }; }
+  else if (act === 'no') { const n = prompt(t('fNotePrompt'), ''); if (n === null) return; name = 'ebz_merchant_respond'; args = { p_order:id, p_accept:false, p_note:n || null }; }
+  else if (act === 'pok') { name = 'ebz_merchant_confirm_payment'; args = { p_order:id, p_ok:true }; }
+  else if (act === 'pno') { const n = prompt(t('fNotePrompt'), ''); if (n === null) return; name = 'ebz_merchant_confirm_payment'; args = { p_order:id, p_ok:false, p_note:n || null }; }
+  else if (act === 'drv') { name = 'ebz_merchant_request_driver'; args = { p_order:id }; }
+  else return;
+  b.disabled = true;
+  const { error } = await sb.rpc(name, args);
+  if (error) { b.disabled = false; return flash(msgId, t('err') + error.message); }
+  flash(msgId, act === 'pay' ? t('fRefSent') : t('fDone'), 'ok'); loadFood();
+});
+
+/* ---- driver: what is owed to E&Bz ---- */
+async function loadBalance(){
+  const box = $('drvBalance'); if (!box) return;
+  const r = await sb.rpc('ebz_my_balance');
+  if (r.error || !r.data || !(r.data.due > 0)) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="msg warn">${esc(t('drvOwes'))} <b>${money(r.data.due)}</b></div>`;
+}
+
+/* ---- admin: restaurants, fees to collect, orders, prices ---- */
+async function loadAdminFood(){
+  const [sh, lg, od, st] = await Promise.all([ sb.rpc('ebz_admin_merchants'), sb.rpc('ebz_admin_ledger'), sb.rpc('ebz_admin_food_orders'), sb.rpc('ebz_admin_settings') ]);
+  if (sh.error) return;   // database update not installed yet
+  ['admShopsCard','admLedgerCard','admFoodCard','admSettingsCard'].forEach(id => $(id).classList.remove('hide'));
+  $('admShops').innerHTML = (sh.data || []).map(x => `<div class="item"><div class="top"><b>${esc(x.business_name)}</b><span class="pill ${x.status === 'verified' ? 'completed' : x.status === 'suspended' ? 'cancelled' : 'pending'}">${esc(x.status)}</span></div>
+    <div class="muted">${esc(x.kind)} · ${esc(x.address)} · ${esc(x.phone || '')}</div>
+    <div>${esc(PROVIDERS[x.momo_provider] || '')} <b>${esc(x.momo_number)}</b> · ${esc(x.momo_account_name)}</div>
+    ${x.status !== 'verified' ? `<button class="btn sm" data-shop="${esc(x.user_id)}|verified">${t('admVerify')}</button>` : ''}${x.status !== 'suspended' ? `<button class="btn red sm" data-shop="${esc(x.user_id)}|suspended">${t('admSuspend')}</button>` : ''}</div>`).join('') || `<p class="muted">${t('admNoShops')}</p>`;
+  $('admLedger').innerHTML = (lg.data || []).map(x => `<div class="item"><div class="top"><b>${esc(x.name)}</b><span class="pill pending">${esc(t(x.party_type === 'driver' ? 'pDriver' : 'pMerchant'))}</span></div>
+    <div class="fare" style="font-size:22px">${money(x.due)}</div><div class="muted">${x.lines}</div>
+    <button class="btn sm" data-settle="${esc(x.party_type)}|${esc(x.party_id)}">${t('admSettle')}</button></div>`).join('') || `<p class="muted">${t('admNoLedger')}</p>`;
+  $('admFood').innerHTML = (od.data || []).map(x => `<div class="item"><div class="top"><b>#${x.id} · ${esc(x.merchant_name)} → ${esc(x.customer_name || '')}</b>${fpill(x.status)}</div>
+    <div class="muted">${money(x.food_amount)} + ${money(x.delivery_fee)} + ${money(x.service_fee)}${x.momo_ref ? ' · ' + esc(x.momo_ref) : ''}${x.refund_due ? ' · ⚠ refund' : ''}</div></div>`).join('') || `<p class="muted">${t('foodNoOrders')}</p>`;
+  keepInputs($('admSettings'), () => {
+    $('admSettings').innerHTML = (st.data || []).map(x => `<label for="set-${esc(x.key)}">${esc(SETTING_LABEL[x.key] || x.note || x.key)}</label>
+      <div class="row"><input id="set-${esc(x.key)}" type="number" min="0" value="${esc(x.value)}"><button class="btn alt sm" style="flex:none;margin:0" data-set="${esc(x.key)}">${t('admSave')}</button></div>`).join('');
+  });
+}
+document.addEventListener('click', async e => {
+  const sp = e.target.closest('[data-shop]');
+  if (sp) { const [id, s] = sp.dataset.shop.split('|'); const n = s === 'suspended' ? prompt(t('fNotePrompt'), '') : ''; if (n === null) return; sp.disabled = true;
+    const { error } = await sb.rpc('ebz_admin_set_merchant', { p_user:id, p_status:s, p_note:n || null });
+    if (error) { sp.disabled = false; return flash('admMsg', t('err') + error.message); } flash('admMsg', ''); return loadAdminFood(); }
+  const se = e.target.closest('[data-settle]');
+  if (se) { if (!confirm(t('admSettleConfirm'))) return; const [pt, pid] = se.dataset.settle.split('|'); se.disabled = true;
+    const { error } = await sb.rpc('ebz_admin_settle', { p_party_type:pt, p_party_id:pid });
+    if (error) { se.disabled = false; return flash('admMsg', t('err') + error.message); } flash('admMsg', ''); return loadAdminFood(); }
+  const sg = e.target.closest('[data-set]');
+  if (sg) { const k = sg.dataset.set, v = Number($('set-' + k).value); sg.disabled = true;
+    const { error } = await sb.rpc('ebz_admin_set_setting', { p_key:k, p_value:v });
+    sg.disabled = false; if (error) return flash('admMsg', t('err') + error.message); flash('admMsg', t('saved'), 'ok'); }
+});
 
 /* ============ BOOT ============ */
 (async function boot(){
